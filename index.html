@@ -287,29 +287,75 @@
             opacity: 1;
         }
 
-        .add-row {
+        /* ===== КОМПАКТНЫЙ БЛОК ДОБАВЛЕНИЯ ===== */
+        .add-row-compact {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin-top: 10px;
+            align-items: center;
+            flex-wrap: nowrap;
         }
-        .add-row input {
+
+        .compact-input {
             flex: 1;
-            padding: 12px 14px;
+            padding: 10px 12px;
             border: 1px solid var(--tg-theme-hint-color, #d1d5db);
-            border-radius: 12px;
-            font-size: 15px;
+            border-radius: 10px;
+            font-size: 14px;
             background: var(--tg-theme-bg-color, white);
             outline: none;
             transition: 0.2s;
             color: var(--tg-theme-text-color, #1c1c1e);
+            min-width: 0;
         }
-        .add-row input:focus {
+
+        .compact-input:focus {
             border-color: var(--tg-theme-button-color, #007aff);
             box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
         }
-        .add-row input[type="number"] {
-            flex: 0 0 70px;
+
+        .compact-number {
+            flex: 0 0 60px;
             text-align: center;
+            padding: 10px 4px;
+        }
+
+        .compact-btn {
+            flex: 0 0 44px;
+            padding: 10px 0;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--tg-theme-button-color, #007aff);
+            border-color: var(--tg-theme-button-color, #0066d9);
+            color: var(--tg-theme-button-text-color, white);
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            touch-action: manipulation;
+        }
+
+        .compact-btn:active {
+            transform: scale(0.92);
+            opacity: 0.8;
+        }
+
+        @media (max-width: 380px) {
+            .compact-input {
+                font-size: 13px;
+                padding: 8px 10px;
+            }
+            .compact-number {
+                flex: 0 0 50px;
+            }
+            .compact-btn {
+                flex: 0 0 38px;
+                font-size: 18px;
+                padding: 8px 0;
+            }
         }
 
         .select-all-row {
@@ -720,10 +766,12 @@
                 <label for="selectAllEx">Выбрать все для тренировки</label>
             </div>
             <div id="exerciseList"></div>
-            <div class="add-row">
-                <input type="text" id="newExName" placeholder="Упражнение" />
-                <input type="number" id="newExMax" placeholder="Макс" min="1" value="10" />
-                <button class="btn btn-primary" id="addExBtn">+</button>
+            
+            <!-- КОМПАКТНЫЙ БЛОК ДОБАВЛЕНИЯ -->
+            <div class="add-row-compact">
+                <input type="text" id="newExName" placeholder="Упражнение" class="compact-input" />
+                <input type="number" id="newExMax" placeholder="Макс" min="1" value="10" class="compact-input compact-number" />
+                <button class="compact-btn" id="addExBtn">+</button>
             </div>
         </div>
         <div class="card">
@@ -768,41 +816,21 @@
     // 0. ИНИЦИАЛИЗАЦИЯ TELEGRAM WEB APP
     // ================================================================
     
-    // Проверяем, запущено ли приложение в Telegram
     function isTelegramApp() {
         return window.Telegram && window.Telegram.WebApp;
     }
 
-    // Получаем объект Telegram WebApp (или заглушку для браузера)
     function getTelegramApp() {
         if (isTelegramApp()) {
             return window.Telegram.WebApp;
         }
-        // Заглушка для обычного браузера
         return {
             ready: () => {},
             sendData: () => {},
-            MainButton: { 
-                show: () => {}, 
-                hide: () => {}, 
-                setText: () => {}, 
-                onClick: () => {},
-                disable: () => {},
-                enable: () => {},
-                setParams: () => {}
-            },
-            CloudStorage: { 
-                setItem: () => Promise.resolve(), 
-                getItem: () => Promise.resolve(null),
-                getItems: () => Promise.resolve(null),
-                removeItem: () => Promise.resolve()
-            },
+            MainButton: { show: () => {}, hide: () => {}, setText: () => {}, onClick: () => {}, disable: () => {}, enable: () => {}, setParams: () => {} },
+            CloudStorage: { setItem: () => Promise.resolve(), getItem: () => Promise.resolve(null), getItems: () => Promise.resolve(null), removeItem: () => Promise.resolve() },
             shareToStory: () => {},
-            HapticFeedback: { 
-                impactOccurred: () => {}, 
-                notificationOccurred: () => {},
-                selectionChanged: () => {}
-            },
+            HapticFeedback: { impactOccurred: () => {}, notificationOccurred: () => {}, selectionChanged: () => {} },
             showAlert: () => {},
             showConfirm: () => {},
             openPopup: () => {},
@@ -811,10 +839,7 @@
         };
     }
 
-    // Инициализируем Telegram App
     const tg = getTelegramApp();
-    
-    // Если мы в Telegram — сообщаем, что приложение готово
     if (isTelegramApp()) {
         tg.ready();
         console.log('📱 Telegram Mini App инициализирован');
@@ -823,54 +848,41 @@
     }
 
     // ================================================================
-    // 1. УНИВЕРСАЛЬНОЕ ХРАНИЛИЩЕ (облако Telegram + localStorage)
+    // 1. УНИВЕРСАЛЬНОЕ ХРАНИЛИЩЕ
     // ================================================================
 
-    // Сохранение данных: пробуем облако, если не вышло — локально
     async function saveToCloud(key, data) {
         try {
             if (isTelegramApp()) {
                 await tg.CloudStorage.setItem(key, JSON.stringify(data));
-                console.log(`☁️ Данные сохранены в облако: ${key}`);
+                console.log(`☁️ Сохранено в облако: ${key}`);
                 return true;
             }
-        } catch (e) {
-            console.warn(`⚠️ Ошибка сохранения в облако (${key}):`, e);
-        }
-        // fallback — локальное сохранение
+        } catch (e) { console.warn(`⚠️ Ошибка облака (${key}):`, e); }
         try {
             localStorage.setItem(key, JSON.stringify(data));
-            console.log(`💾 Данные сохранены локально: ${key}`);
+            console.log(`💾 Сохранено локально: ${key}`);
             return true;
-        } catch (e) {
-            console.warn(`⚠️ Ошибка локального сохранения (${key}):`, e);
-            return false;
-        }
+        } catch (e) { return false; }
     }
 
-    // Загрузка данных: сначала облако, потом localStorage
     async function loadFromCloud(key) {
         try {
             if (isTelegramApp()) {
                 const data = await tg.CloudStorage.getItem(key);
                 if (data !== null && data !== undefined) {
-                    console.log(`☁️ Данные загружены из облака: ${key}`);
+                    console.log(`☁️ Загружено из облака: ${key}`);
                     return JSON.parse(data);
                 }
             }
-        } catch (e) {
-            console.warn(`⚠️ Ошибка загрузки из облака (${key}):`, e);
-        }
-        // fallback — локальное хранилище
+        } catch (e) { console.warn(`⚠️ Ошибка загрузки из облака (${key}):`, e); }
         try {
             const data = localStorage.getItem(key);
             if (data) {
-                console.log(`💾 Данные загружены локально: ${key}`);
+                console.log(`💾 Загружено локально: ${key}`);
                 return JSON.parse(data);
             }
-        } catch (e) {
-            console.warn(`⚠️ Ошибка локальной загрузки (${key}):`, e);
-        }
+        } catch (e) {}
         return null;
     }
 
@@ -889,7 +901,6 @@
         const volumeSlider = document.getElementById('radioVolume');
         const liveDot = document.getElementById('radioLiveDot');
 
-        // Загружаем состояние громкости
         try {
             const savedVol = localStorage.getItem('radio_volume');
             if (savedVol !== null) {
@@ -916,7 +927,6 @@
                     showToast('🎵 Lofi Radio включено');
                 }).catch(err => {
                     showToast('⚠️ Не удалось запустить радио: ' + err.message);
-                    console.warn('Radio play error:', err);
                 });
             }
         }
@@ -924,31 +934,15 @@
         volumeSlider.addEventListener('input', function() {
             const vol = parseFloat(this.value);
             audio.volume = vol;
-            try {
-                localStorage.setItem('radio_volume', vol.toString());
-            } catch (e) {}
-        });
-
-        audio.addEventListener('error', (e) => {
-            showToast('⚠️ Ошибка радио, попробуйте перезагрузить');
-            console.warn('Audio error:', e);
-            isPlaying = false;
-            toggleBtn.textContent = '▶ Вкл';
-            toggleBtn.classList.remove('active');
-            liveDot.className = 'live-dot paused';
+            try { localStorage.setItem('radio_volume', vol.toString()); } catch (e) {}
         });
 
         toggleBtn.addEventListener('click', toggleRadio);
-
-        window.addEventListener('beforeunload', () => {
-            audio.pause();
-        });
-
         console.log('🎵 Радио-плеер инициализирован');
     })();
 
     // ================================================================
-    // 3. ОСНОВНОЙ КОД ПРИЛОЖЕНИЯ
+    // 3. ОСНОВНОЙ КОД
     // ================================================================
 
     const STORAGE_KEY = 'circuit_trainer_data';
@@ -970,24 +964,19 @@
     let data = getDefaultData();
     let dataLoaded = false;
 
-    // Загрузка данных при старте
     async function loadAllData() {
         const loaded = await loadFromCloud(STORAGE_KEY);
         if (loaded) {
             data = loaded;
-            // Миграция: добавляем checked для старых данных
-            if (data.exercises) {
-                data.exercises = data.exercises.map(e => ({ ...e, checked: e.checked !== undefined ? e.checked : true }));
-            }
+            data.exercises = data.exercises.map(e => ({ ...e, checked: e.checked !== undefined ? e.checked : true }));
             if (!data.stats) data.stats = { totalWorkouts: 0, totalReps: 0 };
             if (!data.history) data.history = [];
             if (!data.programs) data.programs = [];
         } else {
-            // Если данных нет — создаём по умолчанию
             data = getDefaultData();
         }
         dataLoaded = true;
-        saveData(); // сохраняем, чтобы синхронизировать
+        saveData();
         renderAll();
         console.log('📊 Данные загружены');
     }
@@ -998,7 +987,6 @@
 
     function generateId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 
-    // ===== TOAST =====
     function showToast(msg) {
         const old = document.querySelector('.toast-ios');
         if (old) old.remove();
@@ -1009,7 +997,6 @@
         setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 400); }, 2200);
     }
 
-    // ===== ВКЛАДКИ =====
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -1024,7 +1011,6 @@
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
 
-    // ===== РЕНДЕР =====
     function renderAll() {
         renderExercises();
         renderPrograms();
@@ -1230,7 +1216,6 @@
         lastResult: null,
     };
 
-    // ===== АУДИО-СИГНАЛЫ =====
     let audioCtx = null;
 
     function playBeep(frequency = 800, duration = 200, count = 1) {
@@ -1264,13 +1249,11 @@
     function notifySetComplete() {
         playBeep(600, 150, 1);
         vibrate(100);
-        // Haptic в Telegram
         if (isTelegramApp()) {
             try { tg.HapticFeedback.impactOccurred('light'); } catch (e) {}
         }
     }
 
-    // ===== УПРАВЛЕНИЕ ТРЕНИРОВКОЙ =====
     function startWorkout() {
         const selected = getSelectedExercises();
         if (selected.length === 0) {
@@ -1296,14 +1279,8 @@
         workoutState.totalSeconds = 0;
         workoutState.finishedEarly = false;
 
-        if (workoutState.timerInterval) {
-            clearInterval(workoutState.timerInterval);
-            workoutState.timerInterval = null;
-        }
-        if (workoutState.totalInterval) {
-            clearInterval(workoutState.totalInterval);
-            workoutState.totalInterval = null;
-        }
+        if (workoutState.timerInterval) clearInterval(workoutState.timerInterval);
+        if (workoutState.totalInterval) clearInterval(workoutState.totalInterval);
 
         document.getElementById('workoutSetup').classList.add('hidden');
         document.getElementById('workoutActive').classList.remove('hidden');
@@ -1316,7 +1293,6 @@
     }
 
     function startTotalTimer() {
-        if (workoutState.totalInterval) clearInterval(workoutState.totalInterval);
         workoutState.totalInterval = setInterval(() => {
             workoutState.totalSeconds++;
             updateTotalTimeDisplay();
@@ -1325,9 +1301,8 @@
 
     function updateTotalTimeDisplay() {
         const s = workoutState.totalSeconds;
-        const mins = String(Math.floor(s / 60)).padStart(2, '0');
-        const secs = String(s % 60).padStart(2, '0');
-        document.getElementById('totalTimeDisplay').textContent = `${mins}:${secs}`;
+        document.getElementById('totalTimeDisplay').textContent = 
+            `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
     }
 
     function updateWorkoutUI() {
@@ -1339,9 +1314,7 @@
         document.getElementById('currentRound').textContent = setIdx + 1;
         document.getElementById('progressFraction').textContent = completed;
         document.getElementById('totalSetsNum').textContent = total;
-
-        const progress = total > 0 ? (completed / total * 100) : 0;
-        document.getElementById('progressFill').style.width = Math.min(100, progress) + '%';
+        document.getElementById('progressFill').style.width = Math.min(100, (completed / total * 100)) + '%';
 
         const badge = document.getElementById('statusBadge');
         if (workoutState.isResting) {
@@ -1365,9 +1338,7 @@
         const timerEl = document.getElementById('timerDisplay');
         if (workoutState.isResting) {
             const s = Math.max(0, workoutState.timerSeconds);
-            const mins = String(Math.floor(s / 60)).padStart(2, '0');
-            const secs = String(s % 60).padStart(2, '0');
-            timerEl.textContent = `${mins}:${secs}`;
+            timerEl.textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
             timerEl.className = s <= 5 ? 'timer-display resting-warning' : 'timer-display resting';
         } else {
             timerEl.textContent = '🏋️';
@@ -1378,9 +1349,7 @@
     }
 
     function startRestTimer() {
-        if (workoutState.timerInterval) {
-            clearInterval(workoutState.timerInterval);
-        }
+        if (workoutState.timerInterval) clearInterval(workoutState.timerInterval);
         workoutState.isResting = true;
         workoutState.timerSeconds = 120;
         workoutState.restAlerted = false;
@@ -1438,13 +1407,7 @@
         const setIdx = workoutState.currentSetIndex;
         const reps = ex.sets[setIdx] || 0;
 
-        workoutState.workoutLog.push({
-            exName: ex.name,
-            setNum: setIdx + 1,
-            reps: reps,
-            max: ex.max
-        });
-
+        workoutState.workoutLog.push({ exName: ex.name, setNum: setIdx + 1, reps, max: ex.max });
         workoutState.completedSets++;
         notifySetComplete();
 
@@ -1459,10 +1422,7 @@
 
     function skipRest() {
         if (!workoutState.isResting) return;
-        if (workoutState.timerInterval) {
-            clearInterval(workoutState.timerInterval);
-            workoutState.timerInterval = null;
-        }
+        if (workoutState.timerInterval) clearInterval(workoutState.timerInterval);
         workoutState.isResting = false;
         workoutState.restAlerted = false;
         advanceToNext();
@@ -1473,35 +1433,21 @@
         workoutState.active = false;
         workoutState.finishedEarly = early;
 
-        if (workoutState.timerInterval) {
-            clearInterval(workoutState.timerInterval);
-            workoutState.timerInterval = null;
-        }
-        if (workoutState.totalInterval) {
-            clearInterval(workoutState.totalInterval);
-            workoutState.totalInterval = null;
-        }
+        if (workoutState.timerInterval) clearInterval(workoutState.timerInterval);
+        if (workoutState.totalInterval) clearInterval(workoutState.totalInterval);
 
         const totalReps = workoutState.workoutLog.reduce((sum, log) => sum + log.reps, 0);
         const duration = workoutState.totalSeconds;
-        const durationStr = `${Math.floor(duration/60)} мин ${duration%60} сек`;
+        const durationStr = `${Math.floor(duration / 60)} мин ${duration % 60} сек`;
 
-        workoutState.lastResult = {
-            totalReps: totalReps,
-            duration: durationStr,
-            durationSeconds: duration,
-            log: workoutState.workoutLog,
-            early: early
-        };
+        workoutState.lastResult = { totalReps, duration: durationStr, durationSeconds: duration, log: workoutState.workoutLog, early };
 
         document.getElementById('workoutActive').classList.add('hidden');
         const summary = document.getElementById('workoutSummary');
         summary.style.display = 'block';
 
         let html = '';
-        if (early) {
-            html += `<div style="color:#ff9500; font-weight:600; margin-bottom:8px;">⏹ Досрочное завершение</div>`;
-        }
+        if (early) html += `<div style="color:#ff9500; font-weight:600; margin-bottom:8px;">⏹ Досрочное завершение</div>`;
         html += `<div style="font-size:15px; margin-bottom:8px;">✅ Выполнено подходов: ${workoutState.workoutLog.length}</div>`;
         html += `<div style="font-size:28px; font-weight:700; color:var(--tg-theme-button-color, #007aff); margin:6px 0;">${totalReps} повторений</div>`;
         html += `<div class="text-muted" style="font-size:13px;">⏱ ${durationStr}</div>`;
@@ -1520,8 +1466,6 @@
         document.getElementById('saveWorkoutBtn').dataset.log = JSON.stringify(workoutState.workoutLog);
         document.getElementById('saveWorkoutBtn').disabled = false;
         document.getElementById('saveWorkoutBtn').textContent = '💾 Сохранить результат';
-        
-        // Показываем кнопку шеринга
         document.getElementById('shareStoryBtn').style.display = 'block';
 
         if (!early) {
@@ -1533,25 +1477,16 @@
 
     function finishEarly() {
         if (!workoutState.active) return;
-        if (!confirm('Завершить тренировку досрочно? Прогресс будет сохранён.')) return;
+        if (!confirm('Завершить досрочно? Прогресс будет сохранён.')) return;
         finishWorkout(true);
     }
 
-    // ===== СОХРАНЕНИЕ РЕЗУЛЬТАТА =====
     async function saveWorkoutResult() {
         const btn = document.getElementById('saveWorkoutBtn');
         const reps = parseInt(btn.dataset.reps) || 0;
         const log = JSON.parse(btn.dataset.log || '[]');
 
-        const entry = {
-            date: Date.now(),
-            reps: reps,
-            name: workoutState.finishedEarly ? 'Досрочно' : 'Круговая',
-            details: log,
-            early: workoutState.finishedEarly
-        };
-
-        data.history.push(entry);
+        data.history.push({ date: Date.now(), reps, name: workoutState.finishedEarly ? 'Досрочно' : 'Круговая', details: log, early: workoutState.finishedEarly });
         data.stats.totalWorkouts = (data.stats.totalWorkouts || 0) + 1;
         data.stats.totalReps = (data.stats.totalReps || 0) + reps;
         
@@ -1561,78 +1496,41 @@
         
         btn.disabled = true;
         btn.textContent = '✅ Сохранено';
-        
-        // Haptic
         if (isTelegramApp()) {
             try { tg.HapticFeedback.notificationOccurred('success'); } catch (e) {}
         }
-        
         showToast('💾 Результат сохранён' + (isTelegramApp() ? ' в облако!' : '!'));
     }
 
-    // ===== ШЕРИНГ В STORIES =====
     function shareToStory() {
         const result = workoutState.lastResult;
-        if (!result) {
-            showToast('⚠️ Нет результата для публикации');
-            return;
-        }
+        if (!result) { showToast('⚠️ Нет результата'); return; }
 
-        const text = `🏋️ Тренировка завершена!\n` +
-                     `📊 Повторений: ${result.totalReps}\n` +
-                     `⏱ Время: ${result.duration}\n` +
-                     `🔥 #тренировка #спорт #lofi`;
+        const text = `🏋️ Тренировка завершена!\n📊 Повторений: ${result.totalReps}\n⏱ Время: ${result.duration}\n🔥 #тренировка #спорт #lofi`;
 
-        // Если мы в Telegram и есть поддержка shareToStory
         if (isTelegramApp() && tg.shareToStory) {
-            try {
-                tg.shareToStory(text);
-                showToast('📤 Результат отправлен в Stories!');
-                return;
-            } catch (e) {
-                console.warn('Ошибка shareToStory:', e);
-            }
+            try { tg.shareToStory(text); showToast('📤 В Stories!'); return; } catch (e) {}
         }
 
-        // fallback: копируем в буфер
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('📋 Результат скопирован! Вставьте в Stories.');
-            }).catch(() => {
-                fallbackCopy(text);
-            });
+            navigator.clipboard.writeText(text).then(() => showToast('📋 Скопировано! Вставьте в Stories.'));
         } else {
-            fallbackCopy(text);
-        }
-    }
-
-    function fallbackCopy(text) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
             document.execCommand('copy');
-            showToast('📋 Результат скопирован! Вставьте в Stories.');
-        } catch (e) {
-            showToast('⚠️ Не удалось скопировать. Скопируйте вручную.');
+            ta.remove();
+            showToast('📋 Скопировано! Вставьте в Stories.');
         }
-        textarea.remove();
     }
 
-    // ===== СБРОС =====
     function resetWorkout() {
         workoutState.active = false;
-        if (workoutState.timerInterval) {
-            clearInterval(workoutState.timerInterval);
-            workoutState.timerInterval = null;
-        }
-        if (workoutState.totalInterval) {
-            clearInterval(workoutState.totalInterval);
-            workoutState.totalInterval = null;
-        }
+        if (workoutState.timerInterval) clearInterval(workoutState.timerInterval);
+        if (workoutState.totalInterval) clearInterval(workoutState.totalInterval);
         document.getElementById('workoutActive').classList.add('hidden');
         document.getElementById('workoutSummary').style.display = 'none';
         document.getElementById('workoutSetup').classList.remove('hidden');
@@ -1671,12 +1569,7 @@
         if (!name) { showToast('Введите название'); return; }
         const selected = getSelectedExercises();
         if (selected.length === 0) { showToast('Отметьте упражнения'); return; }
-        const prog = {
-            id: generateId(),
-            name: name,
-            exercises: selected.map(e => ({ name: e.name, max: e.max }))
-        };
-        data.programs.push(prog);
+        data.programs.push({ id: generateId(), name, exercises: selected.map(e => ({ name: e.name, max: e.max })) });
         saveData();
         renderPrograms();
         updateProgramSelect();
@@ -1718,8 +1611,7 @@
     });
 
     document.getElementById('selectAllEx').addEventListener('change', (e) => {
-        const checked = e.target.checked;
-        data.exercises.forEach(ex => ex.checked = checked);
+        data.exercises.forEach(ex => ex.checked = e.target.checked);
         saveData();
         renderExercises();
     });
