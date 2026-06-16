@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Круговые тренировки</title>
     <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -27,6 +28,7 @@
             padding: 16px 14px;
         }
 
+        /* ===== ВКЛАДКИ ===== */
         .tabs {
             display: flex;
             background: #d1d3d8;
@@ -76,6 +78,7 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
+        /* ===== КАРТОЧКИ ===== */
         .card {
             background: rgba(255,255,255,0.92);
             backdrop-filter: blur(4px);
@@ -102,6 +105,113 @@
             margin-left: 6px;
         }
 
+        /* ===== РАДИО-ПЛЕЕР ===== */
+        .radio-player {
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid rgba(255,255,255,0.6);
+            flex-wrap: wrap;
+        }
+
+        .radio-player .radio-info {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .radio-player .radio-info .title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1c1c1e;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .radio-player .radio-info .title .live-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #ff3b30;
+            border-radius: 50%;
+            animation: blink 1.2s infinite;
+        }
+        .radio-player .radio-info .title .live-dot.paused {
+            animation: none;
+            background: #8e8e93;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        .radio-player .radio-info .sub {
+            font-size: 12px;
+            color: #8e8e93;
+            margin-top: 2px;
+        }
+
+        .radio-player .radio-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-player .radio-controls .btn-radio {
+            background: linear-gradient(180deg, #ffffff 0%, #f0f2f5 100%);
+            border: 1px solid #d1d5db;
+            border-radius: 30px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1c1c1e;
+            cursor: pointer;
+            transition: all 0.15s;
+            touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .radio-player .radio-controls .btn-radio:active {
+            transform: scale(0.94);
+        }
+
+        .radio-player .radio-controls .btn-radio.active {
+            background: linear-gradient(180deg, #007aff 0%, #0066d9 100%);
+            border-color: #0066d9;
+            color: white;
+        }
+
+        .radio-player .radio-controls .volume-slider {
+            width: 60px;
+            accent-color: #007aff;
+            cursor: pointer;
+        }
+
+        @media (max-width: 400px) {
+            .radio-player {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .radio-player .radio-controls {
+                justify-content: space-between;
+            }
+            .radio-player .radio-controls .volume-slider {
+                width: 80px;
+            }
+        }
+
+        /* ===== УПРАЖНЕНИЯ ===== */
         .exercise-item {
             display: flex;
             align-items: center;
@@ -109,11 +219,9 @@
             border-bottom: 1px solid #e9ecef;
             gap: 10px;
         }
-
         .exercise-item:last-child {
             border-bottom: none;
         }
-
         .exercise-item input[type="checkbox"] {
             width: 22px;
             height: 22px;
@@ -121,13 +229,11 @@
             cursor: pointer;
             flex-shrink: 0;
         }
-
         .exercise-name {
             font-size: 16px;
             font-weight: 500;
             flex: 1;
         }
-
         .exercise-max {
             font-size: 15px;
             color: #007aff;
@@ -142,19 +248,16 @@
             transition: all 0.15s;
             border: 2px solid transparent;
         }
-
         .exercise-max:active {
             transform: scale(0.92);
             background: #d4e2ff;
         }
-
         .exercise-max.editing {
             border-color: #007aff;
             background: white;
             padding: 4px 8px;
             min-width: 50px;
         }
-
         .exercise-max input {
             width: 50px;
             border: none;
@@ -166,7 +269,6 @@
             outline: none;
             padding: 0;
         }
-
         .delete-ex {
             background: none;
             border: none;
@@ -177,7 +279,6 @@
             font-weight: 300;
             opacity: 0.6;
         }
-
         .delete-ex:active {
             opacity: 1;
         }
@@ -187,7 +288,6 @@
             gap: 8px;
             margin-top: 10px;
         }
-
         .add-row input {
             flex: 1;
             padding: 12px 14px;
@@ -198,17 +298,37 @@
             outline: none;
             transition: 0.2s;
         }
-
         .add-row input:focus {
             border-color: #007aff;
             box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
         }
-
         .add-row input[type="number"] {
             flex: 0 0 70px;
             text-align: center;
         }
 
+        .select-all-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 4px;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 4px;
+        }
+        .select-all-row input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: #007aff;
+            cursor: pointer;
+        }
+        .select-all-row label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #8e8e93;
+            cursor: pointer;
+        }
+
+        /* ===== КНОПКИ ===== */
         .btn {
             background: linear-gradient(180deg, #ffffff 0%, #f0f2f5 100%);
             border: 1px solid #d1d5db;
@@ -222,56 +342,49 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.04);
             touch-action: manipulation;
         }
-
         .btn:active {
             transform: scale(0.95);
             background: #e5e7eb;
         }
-
         .btn-primary {
             background: linear-gradient(180deg, #007aff 0%, #0066d9 100%);
             border-color: #0066d9;
             color: white;
             text-shadow: 0 1px 0 rgba(0,0,0,0.1);
         }
-
         .btn-primary:active {
             background: #0055b3;
         }
-
         .btn-success {
             background: linear-gradient(180deg, #34c759 0%, #28a745 100%);
             border-color: #28a745;
             color: white;
             text-shadow: 0 1px 0 rgba(0,0,0,0.1);
         }
-
         .btn-danger {
             background: linear-gradient(180deg, #ff3b30 0%, #dc3545 100%);
             border-color: #dc3545;
             color: white;
             text-shadow: 0 1px 0 rgba(0,0,0,0.1);
         }
-
         .btn-warning {
             background: linear-gradient(180deg, #ff9500 0%, #e68a00 100%);
             border-color: #e68a00;
             color: white;
             text-shadow: 0 1px 0 rgba(0,0,0,0.1);
         }
-
         .btn-block {
             width: 100%;
             padding: 14px;
             font-size: 17px;
             border-radius: 14px;
         }
-
         .btn:disabled {
             opacity: 0.5;
             transform: none;
         }
 
+        /* ===== ТРЕНИРОВКА ===== */
         .workout-header {
             display: flex;
             justify-content: space-between;
@@ -281,20 +394,17 @@
             border-radius: 14px;
             margin-bottom: 12px;
         }
-
         .workout-header .total-time {
             font-size: 18px;
             font-weight: 600;
             font-variant-numeric: tabular-nums;
             color: #1c1c1e;
         }
-
         .workout-header .total-time small {
             font-size: 13px;
             font-weight: 400;
             color: #8e8e93;
         }
-
         .workout-header .status-badge {
             font-size: 13px;
             font-weight: 600;
@@ -303,7 +413,6 @@
             background: #34c759;
             color: white;
         }
-
         .workout-header .status-badge.resting {
             background: #ff9500;
         }
@@ -312,13 +421,11 @@
             text-align: center;
             margin-bottom: 12px;
         }
-
         .workout-progress .round {
             font-size: 14px;
             color: #8e8e93;
             font-weight: 500;
         }
-
         .workout-progress .big-num {
             font-size: 38px;
             font-weight: 700;
@@ -326,13 +433,11 @@
             line-height: 1.1;
             letter-spacing: -1px;
         }
-
         .workout-progress .big-num span {
             font-size: 18px;
             font-weight: 400;
             color: #8e8e93;
         }
-
         .progress-bar-bg {
             width: 100%;
             height: 6px;
@@ -341,7 +446,6 @@
             margin-top: 8px;
             overflow: hidden;
         }
-
         .progress-bar-fill {
             height: 100%;
             background: linear-gradient(90deg, #007aff, #34c759);
@@ -358,18 +462,15 @@
             box-shadow: 0 4px 16px rgba(0,0,0,0.06);
             margin-bottom: 14px;
         }
-
         .workout-exercise .ex-name {
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 2px;
         }
-
         .workout-exercise .ex-detail {
             font-size: 14px;
             color: #8e8e93;
         }
-
         .workout-exercise .ex-target {
             font-size: 56px;
             font-weight: 800;
@@ -377,7 +478,6 @@
             margin: 4px 0 2px;
             line-height: 1.1;
         }
-
         .workout-exercise .ex-label {
             font-size: 14px;
             color: #8e8e93;
@@ -393,16 +493,13 @@
             color: #1c1c1e;
             transition: color 0.3s;
         }
-
         .timer-display.resting {
             color: #ff9500;
         }
-
         .timer-display.resting-warning {
             color: #ff3b30;
             animation: pulse 0.8s infinite;
         }
-
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.3; }
@@ -415,7 +512,6 @@
             margin-top: 12px;
             flex-wrap: wrap;
         }
-
         .btn-group .btn {
             flex: 1;
             min-width: 80px;
@@ -424,6 +520,7 @@
             font-size: 16px;
         }
 
+        /* ===== ПРОГРАММЫ И СТАТИСТИКА ===== */
         .program-item {
             background: white;
             border-radius: 14px;
@@ -434,22 +531,18 @@
             align-items: center;
             box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         }
-
         .program-item .p-name {
             font-weight: 600;
             font-size: 16px;
         }
-
         .program-item .p-count {
             font-size: 13px;
             color: #8e8e93;
         }
-
         .program-actions {
             display: flex;
             gap: 6px;
         }
-
         .program-actions .btn {
             padding: 6px 12px;
             font-size: 13px;
@@ -462,20 +555,17 @@
             gap: 10px;
             margin-top: 6px;
         }
-
         .stat-item {
             background: white;
             border-radius: 14px;
             padding: 14px;
             text-align: center;
         }
-
         .stat-item .num {
             font-size: 28px;
             font-weight: 700;
             color: #1c1c1e;
         }
-
         .stat-item .label {
             font-size: 12px;
             color: #8e8e93;
@@ -489,7 +579,6 @@
             max-height: 240px;
             overflow-y: auto;
         }
-
         .history-item {
             display: flex;
             justify-content: space-between;
@@ -497,7 +586,6 @@
             border-bottom: 1px solid #f0f2f5;
             font-size: 14px;
         }
-
         .history-item .date {
             color: #8e8e93;
         }
@@ -505,38 +593,13 @@
         .hidden {
             display: none !important;
         }
-
         .mt-2 { margin-top: 12px; }
         .mt-3 { margin-top: 18px; }
         .mb-2 { margin-bottom: 12px; }
         .gap-2 { gap: 8px; }
         .flex { display: flex; }
-        .flex-center { align-items: center; justify-content: center; }
         .text-center { text-align: center; }
         .text-muted { color: #8e8e93; font-size: 14px; }
-
-        .select-all-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 4px;
-            border-bottom: 1px solid #e9ecef;
-            margin-bottom: 4px;
-        }
-
-        .select-all-row input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
-            accent-color: #007aff;
-            cursor: pointer;
-        }
-
-        .select-all-row label {
-            font-size: 14px;
-            font-weight: 500;
-            color: #8e8e93;
-            cursor: pointer;
-        }
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -567,6 +630,22 @@
 <body>
 <div class="container" id="app">
 
+    <!-- ===== РАДИО-ПЛЕЕР (НОВЫЙ, НА <AUDIO>) ===== -->
+    <div class="radio-player" id="radioPlayer">
+        <div class="radio-info">
+            <div class="title">
+                <span class="live-dot" id="radioLiveDot"></span>
+                Lofi Radio
+            </div>
+            <div class="sub">🎧 beats to relax / study</div>
+        </div>
+        <div class="radio-controls">
+            <button class="btn-radio active" id="radioToggleBtn">⏸ Пауза</button>
+            <input type="range" class="volume-slider" id="radioVolume" min="0" max="1" step="0.05" value="0.6" />
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКИ ===== -->
     <div class="tabs">
         <button class="tab-btn active" data-tab="tab-workout">🏋️ Тренировка</button>
         <button class="tab-btn" data-tab="tab-exercises">📋 База</button>
@@ -574,7 +653,7 @@
         <button class="tab-btn" data-tab="tab-stats">📊 Статистика</button>
     </div>
 
-    <!-- Тренировка -->
+    <!-- ===== ТРЕНИРОВКА ===== -->
     <div id="tab-workout" class="tab-content active">
         <div class="card">
             <div class="card-title">Круговая тренировка <small>чередование</small></div>
@@ -590,31 +669,22 @@
             </div>
 
             <div id="workoutActive" class="hidden">
-                <!-- Шапка с общим таймером -->
                 <div class="workout-header">
-                    <div class="total-time">
-                        <span id="totalTimeDisplay">00:00</span> <small>всего</small>
-                    </div>
+                    <div class="total-time"><span id="totalTimeDisplay">00:00</span> <small>всего</small></div>
                     <span class="status-badge" id="statusBadge">▶ Активно</span>
                 </div>
-
                 <div class="workout-progress">
                     <div class="round">Круг <span id="currentRound">1</span> / 5</div>
                     <div class="big-num"><span id="progressFraction">0</span> / <span id="totalSetsNum">0</span></div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" id="progressFill"></div>
-                    </div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
                 </div>
-
                 <div class="workout-exercise">
                     <div class="ex-name" id="currentExName">—</div>
                     <div class="ex-detail" id="currentExDetail">подход 1 · макс: 10</div>
                     <div class="ex-target" id="currentExTarget">10</div>
                     <div class="ex-label">повторов</div>
                 </div>
-
                 <div class="timer-display" id="timerDisplay">02:00</div>
-
                 <div class="btn-group">
                     <button class="btn btn-success" id="completeSetBtn">✅ Выполнил</button>
                     <button class="btn btn-danger" id="stopWorkoutBtn">⏹ Стоп</button>
@@ -623,7 +693,6 @@
                 <button class="btn btn-block mt-2" id="skipRestBtn" style="background:#f0f2f5;">⏭ Пропустить отдых</button>
             </div>
         </div>
-
         <div class="card" id="workoutSummary" style="display:none;">
             <div class="card-title">✅ Тренировка завершена!</div>
             <div id="summaryContent"></div>
@@ -632,7 +701,7 @@
         </div>
     </div>
 
-    <!-- База -->
+    <!-- ===== БАЗА ===== -->
     <div id="tab-exercises" class="tab-content">
         <div class="card">
             <div class="card-title">Упражнения <small>максимум повторений</small></div>
@@ -656,7 +725,7 @@
         </div>
     </div>
 
-    <!-- Программы -->
+    <!-- ===== ПРОГРАММЫ ===== -->
     <div id="tab-programs" class="tab-content">
         <div class="card">
             <div class="card-title">Сохранённые программы</div>
@@ -665,7 +734,7 @@
         </div>
     </div>
 
-    <!-- Статистика -->
+    <!-- ===== СТАТИСТИКА ===== -->
     <div id="tab-stats" class="tab-content">
         <div class="card">
             <div class="card-title">📈 Статистика</div>
@@ -685,9 +754,96 @@
 </div>
 
 <script>
-    // ============================================================
-    //  DATA
-    // ============================================================
+    // ================================================================
+    //  1. РАДИО-ПЛЕЕР (НА ОСНОВЕ <AUDIO>)
+    // ================================================================
+    (function initRadio() {
+        const STREAM_URL = 'https://play.streamafrica.net/lofiradio';
+
+        const audio = new Audio(STREAM_URL);
+        audio.loop = true;
+        audio.volume = 0.6;
+
+        let isPlaying = false;
+
+        const toggleBtn = document.getElementById('radioToggleBtn');
+        const volumeSlider = document.getElementById('radioVolume');
+        const liveDot = document.getElementById('radioLiveDot');
+
+        // Загружаем состояние громкости
+        try {
+            const savedVol = localStorage.getItem('radio_volume');
+            if (savedVol !== null) {
+                const vol = parseFloat(savedVol);
+                audio.volume = vol;
+                volumeSlider.value = vol;
+            }
+        } catch (e) {}
+
+        function toggleRadio() {
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                toggleBtn.textContent = '▶ Вкл';
+                toggleBtn.classList.remove('active');
+                liveDot.className = 'live-dot paused';
+                showToast('⏸ Радио на паузе');
+            } else {
+                // Пробуем запустить
+                audio.play().then(() => {
+                    isPlaying = true;
+                    toggleBtn.textContent = '⏸ Пауза';
+                    toggleBtn.classList.add('active');
+                    liveDot.className = 'live-dot';
+                    showToast('🎵 Lofi Radio включено');
+                }).catch(err => {
+                    showToast('⚠️ Не удалось запустить радио: ' + err.message);
+                    console.warn('Radio play error:', err);
+                });
+            }
+        }
+
+        // Громкость
+        volumeSlider.addEventListener('input', function() {
+            const vol = parseFloat(this.value);
+            audio.volume = vol;
+            try {
+                localStorage.setItem('radio_volume', vol.toString());
+            } catch (e) {}
+        });
+
+        // Обработка ошибок воспроизведения
+        audio.addEventListener('error', (e) => {
+            showToast('⚠️ Ошибка радио, попробуйте перезагрузить');
+            console.warn('Audio error:', e);
+            isPlaying = false;
+            toggleBtn.textContent = '▶ Вкл';
+            toggleBtn.classList.remove('active');
+            liveDot.className = 'live-dot paused';
+        });
+
+        // Когда стрим загружается успешно
+        audio.addEventListener('loadeddata', () => {
+            console.log('🎵 Радио поток загружен');
+        });
+
+        // Попытка авто-запуска (может быть заблокирована браузером)
+        // Поэтому просто создаём кнопку для ручного запуска
+
+        toggleBtn.addEventListener('click', toggleRadio);
+
+        // Сохраняем состояние при выгрузке страницы
+        window.addEventListener('beforeunload', () => {
+            audio.pause();
+        });
+
+        console.log('🎵 Радио-плеер (Audio) инициализирован. Ссылка:', STREAM_URL);
+    })();
+
+    // ================================================================
+    //  2. ОСНОВНОЙ КОД ПРИЛОЖЕНИЯ (ДАННЫЕ, ТРЕНИРОВКИ, БАЗА)
+    // ================================================================
+
     const STORAGE_KEY = 'circuit_trainer_data';
 
     function getDefaultData() {
@@ -727,69 +883,33 @@
 
     function generateId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 
-    // ============================================================
-    //  AUDIO
-    // ============================================================
-    let audioCtx = null;
-
-    function playBeep(frequency = 800, duration = 200, count = 1) {
-        try {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            for (let i = 0; i < count; i++) {
-                setTimeout(() => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.frequency.value = frequency;
-                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration / 1000);
-                    osc.start(audioCtx.currentTime);
-                    osc.stop(audioCtx.currentTime + duration / 1000);
-                }, i * 300);
-            }
-        } catch (e) {}
+    // ===== TOAST =====
+    function showToast(msg) {
+        const old = document.querySelector('.toast-ios');
+        if (old) old.remove();
+        const div = document.createElement('div');
+        div.className = 'toast-ios';
+        div.textContent = msg;
+        document.body.appendChild(div);
+        setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 400); }, 2200);
     }
 
-    function vibrate(pattern = [200, 100, 200]) {
-        try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
+    // ===== ВКЛАДКИ =====
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+        if (tabId === 'tab-stats') { renderStats(); renderHistory(); }
+        if (tabId === 'tab-programs') renderPrograms();
+        if (tabId === 'tab-exercises') renderExercises();
     }
 
-    function notifyRestEnd() {
-        playBeep(880, 300, 3);
-        vibrate([300, 150, 300, 150, 400]);
-    }
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
 
-    function notifySetComplete() {
-        playBeep(600, 150, 1);
-        vibrate(100);
-    }
-
-    // ============================================================
-    //  STATE
-    // ============================================================
-    let workoutState = {
-        active: false,
-        exercises: [],
-        currentExIndex: 0,
-        currentSetIndex: 0,
-        isResting: false,
-        timerSeconds: 120,
-        timerInterval: null,
-        completedSets: 0,
-        totalSets: 0,
-        workoutLog: [],
-        startTime: null,
-        restAlerted: false,
-        totalSeconds: 0,
-        totalInterval: null,
-        finishedEarly: false,
-    };
-
-    // ============================================================
-    //  RENDER
-    // ============================================================
-
+    // ===== РЕНДЕР БАЗЫ =====
     function renderExercises() {
         const container = document.getElementById('exerciseList');
         if (data.exercises.length === 0) {
@@ -953,40 +1073,7 @@
             data.programs.map((p, i) => `<option value="${i}">${p.name}</option>`).join('');
     }
 
-    // ============================================================
-    //  TABS
-    // ============================================================
-    function switchTab(tabId) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
-        if (tabId === 'tab-stats') { renderStats(); renderHistory(); }
-        if (tabId === 'tab-programs') renderPrograms();
-        if (tabId === 'tab-exercises') renderExercises();
-    }
-
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-    });
-
-    // ============================================================
-    //  TOAST
-    // ============================================================
-    function showToast(msg) {
-        const old = document.querySelector('.toast-ios');
-        if (old) old.remove();
-        const div = document.createElement('div');
-        div.className = 'toast-ios';
-        div.textContent = msg;
-        document.body.appendChild(div);
-        setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 400); }, 2200);
-    }
-
-    // ============================================================
-    //  WORKOUT ENGINE
-    // ============================================================
-
+    // ===== ТРЕНИРОВКА =====
     function getPyramid(max) {
         return [
             max,
@@ -999,6 +1086,60 @@
 
     function getSelectedExercises() {
         return data.exercises.filter(e => e.checked && e.max > 0);
+    }
+
+    let workoutState = {
+        active: false,
+        exercises: [],
+        currentExIndex: 0,
+        currentSetIndex: 0,
+        isResting: false,
+        timerSeconds: 120,
+        timerInterval: null,
+        completedSets: 0,
+        totalSets: 0,
+        workoutLog: [],
+        startTime: null,
+        restAlerted: false,
+        totalSeconds: 0,
+        totalInterval: null,
+        finishedEarly: false,
+    };
+
+    // ===== АУДИО-СИГНАЛЫ =====
+    let audioCtx = null;
+
+    function playBeep(frequency = 800, duration = 200, count = 1) {
+        try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.value = frequency;
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration / 1000);
+                    osc.start(audioCtx.currentTime);
+                    osc.stop(audioCtx.currentTime + duration / 1000);
+                }, i * 300);
+            }
+        } catch (e) {}
+    }
+
+    function vibrate(pattern = [200, 100, 200]) {
+        try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
+    }
+
+    function notifyRestEnd() {
+        playBeep(880, 300, 3);
+        vibrate([300, 150, 300, 150, 400]);
+    }
+
+    function notifySetComplete() {
+        playBeep(600, 150, 1);
+        vibrate(100);
     }
 
     function startWorkout() {
@@ -1301,10 +1442,7 @@
         resetWorkout();
     }
 
-    // ============================================================
-    //  EVENTS
-    // ============================================================
-
+    // ===== СОБЫТИЯ =====
     document.getElementById('addExBtn').addEventListener('click', () => {
         const nameInput = document.getElementById('newExName');
         const maxInput = document.getElementById('newExMax');
@@ -1386,9 +1524,7 @@
         if (e.key === 'Enter') document.getElementById('saveProgramBtn').click();
     });
 
-    // ============================================================
-    //  INIT
-    // ============================================================
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
     renderExercises();
     renderPrograms();
     renderStats();
@@ -1401,7 +1537,7 @@
         document.lastTouch = now;
     }, { passive: false });
 
-    console.log('🏋️ Круговая тренировка v3');
+    console.log('🏋️ Круговая тренировка (с радио) загружена');
 </script>
 </body>
 </html>
