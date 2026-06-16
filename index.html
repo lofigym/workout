@@ -5,1802 +5,354 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Круговая + Колода</title>
     <style>
-        /* ===== ГЛОБАЛЬНЫЕ ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: -apple-system, 'Helvetica Neue', 'Segoe UI', Roboto, sans-serif;
-            background: #1a1b17;
-            color: #e8e9e4;
-            padding: 12px;
-            min-height: 100vh;
-        }
-
-        .app {
-            max-width: 480px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: #2f312c;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-title {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #e8e9e4;
-            letter-spacing: -0.2px;
-        }
-
-        .card-title small {
-            font-weight: 400;
-            font-size: 13px;
-            color: #8e8e93;
-            margin-left: 6px;
-        }
-
-        /* ===== КНОПКИ ===== */
-        .btn {
-            background: #3a3b35;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 12px 20px;
-            font-weight: 600;
-            font-size: 15px;
-            color: #e8e9e4;
-            cursor: pointer;
-            transition: all 0.12s;
-            touch-action: manipulation;
-            font-family: inherit;
-            text-align: center;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-        }
-
-        .btn:active {
-            transform: scale(0.96);
-            opacity: 0.8;
-        }
-
-        .btn-primary {
-            background: #4c8b3c;
-            border-color: #3a6e2c;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #b5652e;
-            border-color: #8f4f24;
-            color: white;
-        }
-
-        .btn-warning {
-            background: #d4a03a;
-            border-color: #b8882e;
-            color: #1c1c1e;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border-color: rgba(255, 255, 255, 0.08);
-        }
-
-        .btn-sm {
-            padding: 8px 14px;
-            font-size: 13px;
-            width: auto;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .btn-group .btn {
-            flex: 1;
-            min-width: 70px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .text-muted {
-            color: #8e8e93;
-            font-size: 13px;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .mt-2 {
-            margin-top: 12px;
-        }
-        .mb-2 {
-            margin-bottom: 12px;
-        }
-        .flex {
-            display: flex;
-        }
-        .gap-2 {
-            gap: 8px;
-        }
-
-        /* ===== РАДИО ===== */
-        .radio-player {
-            background: #2f312c;
-            border-radius: 14px;
-            padding: 10px 14px;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            flex-wrap: wrap;
-        }
-
-        .radio-player .info {
-            flex: 1;
-            min-width: 100px;
-        }
-
-        .radio-player .info .title {
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .radio-player .info .title .dot {
-            display: inline-block;
-            width: 7px;
-            height: 7px;
-            background: #ff3b30;
-            border-radius: 50%;
-            animation: blink 1.2s infinite;
-        }
-
-        .radio-player .info .title .dot.paused {
-            animation: none;
-            background: #8e8e93;
-        }
-
-        @keyframes blink {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.2;
-            }
-        }
-
-        .radio-player .info .sub {
-            font-size: 11px;
-            color: #8e8e93;
-        }
-
-        .radio-player .controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .radio-player .controls .btn-radio {
-            background: #3a3b35;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 30px;
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #e8e9e4;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.15s;
-        }
-
-        .radio-player .controls .btn-radio.active {
-            background: #4c8b3c;
-            color: white;
-        }
-
-        .radio-player .controls .volume-slider {
-            width: 50px;
-            accent-color: #4c8b3c;
-            cursor: pointer;
-        }
-
-        /* ===== ТРЕНИРОВКА ===== */
-        .workout-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            margin-bottom: 12px;
-        }
-
-        .workout-header .total-time {
-            font-size: 17px;
-            font-weight: 600;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .workout-header .total-time small {
-            font-size: 12px;
-            font-weight: 400;
-            color: #8e8e93;
-        }
-
-        .workout-header .status-badge {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 14px;
-            border-radius: 30px;
-            background: #4c8b3c;
-            color: white;
-        }
-
-        .workout-header .status-badge.resting {
-            background: #d4a03a;
-        }
-
-        .workout-progress {
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .workout-progress .big-num {
-            font-size: 34px;
-            font-weight: 700;
-            line-height: 1.1;
-            letter-spacing: -1px;
-        }
-
-        .workout-progress .big-num span {
-            font-size: 16px;
-            font-weight: 400;
-            color: #8e8e93;
-        }
-
-        .progress-bar-bg {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            margin-top: 6px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4c8b3c, #7cb85c);
-            border-radius: 10px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-
-        .workout-exercise {
-            background: #1a1b17;
-            border-radius: 14px;
-            padding: 20px 16px;
-            text-align: center;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .workout-exercise .ex-name {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .workout-exercise .ex-detail {
-            font-size: 13px;
-            color: #8e8e93;
-        }
-
-        .workout-exercise .ex-target {
-            font-size: 48px;
-            font-weight: 800;
-            color: #4c8b3c;
-            margin: 4px 0 2px;
-            line-height: 1.1;
-        }
-
-        .workout-exercise .ex-label {
-            font-size: 13px;
-            color: #8e8e93;
-        }
-
-        .timer-display {
-            font-size: 56px;
-            font-weight: 300;
-            text-align: center;
-            padding: 8px 0;
-            letter-spacing: 2px;
-            font-variant-numeric: tabular-nums;
-            transition: color 0.3s;
-        }
-
-        .timer-display.resting {
-            color: #d4a03a;
-        }
-
-        .timer-display.resting-warning {
-            color: #ff3b30;
-            animation: pulse 0.8s infinite;
-        }
-
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.3;
-            }
-        }
-
-        /* ===== БАЗА УПРАЖНЕНИЙ (КРУГОВАЯ) ===== */
-        .exercise-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            gap: 8px;
-        }
-
-        .exercise-item:last-child {
-            border-bottom: none;
-        }
-
-        .exercise-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #4c8b3c;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .exercise-name {
-            font-size: 14px;
-            flex: 1;
-        }
-
-        .exercise-max {
-            font-size: 13px;
-            color: #4c8b3c;
-            font-weight: 700;
-            background: rgba(255, 255, 255, 0.06);
-            padding: 2px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-            min-width: 36px;
-            text-align: center;
-        }
-
-        .delete-ex {
-            background: none;
-            border: none;
-            color: #ff3b30;
-            font-size: 18px;
-            cursor: pointer;
-            opacity: 0.6;
-            padding: 0 4px;
-        }
-
-        .delete-ex:active {
-            opacity: 1;
-        }
-
-        /* ===== СПИСОК МАСТЕЙ (КОЛОДА) ===== */
-        .suit-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            gap: 12px;
-        }
-
-        .suit-item:last-child {
-            border-bottom: none;
-        }
-
-        .suit-icon {
-            font-size: 1.6rem;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .suit-exercise-name {
-            font-size: 14px;
-            flex: 1;
-            color: #e8e9e4;
-        }
-
-        .suit-edit-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(76, 139, 60, 0.15);
-            border: 1px solid rgba(76, 139, 60, 0.3);
-            border-radius: 30px;
-            padding: 4px 14px 4px 18px;
-            cursor: pointer;
-            transition: all 0.15s;
-            font-family: inherit;
-            font-size: 13px;
-            color: #4c8b3c;
-            font-weight: 600;
-            min-width: 80px;
-            justify-content: center;
-        }
-
-        .suit-edit-btn:active {
-            transform: scale(0.92);
-            background: rgba(76, 139, 60, 0.3);
-        }
-
-        .suit-edit-btn .pencil {
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        .suit-edit-btn.editing {
-            background: #1a1b17;
-            border-color: #4c8b3c;
-            padding: 4px 8px;
-        }
-
-        .suit-edit-btn input {
-            width: 80px;
-            border: none;
-            background: transparent;
-            font-size: 13px;
-            font-weight: 600;
-            color: #4c8b3c;
-            text-align: center;
-            outline: none;
-            padding: 4px 0;
-            font-family: inherit;
-        }
-
-        .suit-edit-btn .edit-text {
-            display: inline;
-        }
-
-        .suit-edit-btn .edit-text.hidden {
-            display: none;
-        }
-
-        /* ===== АДАПТАЦИЯ ===== */
-        @media (max-width: 380px) {
-            .suit-edit-btn input {
-                width: 60px;
-                font-size: 12px;
-            }
-            .suit-icon {
-                font-size: 1.3rem;
-                min-width: 32px;
-            }
-            .suit-edit-btn {
-                font-size: 12px;
-                padding: 3px 10px 3px 14px;
-                min-width: 60px;
-            }
-        }
-
-        .add-row {
-            display: flex;
-            gap: 6px;
-            margin-top: 10px;
-        }
-
-        .add-row input {
-            flex: 1;
-            padding: 10px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            background: #1a1b17;
-            color: #e8e9e4;
-            font-size: 14px;
-            outline: none;
-            min-width: 0;
-        }
-
-        .add-row input:focus {
-            border-color: #4c8b3c;
-        }
-
-        .add-row input[type="number"] {
-            flex: 0 0 60px;
-            text-align: center;
-        }
-
-        .add-row .btn {
-            flex: 0 0 44px;
-            padding: 10px 0;
-            font-size: 20px;
-            border-radius: 12px;
-            width: auto;
-        }
-
-        .select-all-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            margin-bottom: 6px;
-        }
-
-        .select-all-row input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #4c8b3c;
-            cursor: pointer;
-        }
-
-        .select-all-row label {
-            font-size: 13px;
-            color: #8e8e93;
-            cursor: pointer;
-        }
-
-        /* ===== ПРОГРАММЫ ===== */
-        .program-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .program-item:last-child {
-            border-bottom: none;
-        }
-
-        .program-item .p-name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .program-item .p-count {
-            font-size: 12px;
-            color: #8e8e93;
-        }
-
-        .program-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        .program-actions .btn {
-            width: auto;
-            padding: 4px 12px;
-            font-size: 12px;
-        }
-
-        /* ===== СТАТИСТИКА ===== */
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 6px;
-        }
-
-        .stat-item {
-            background: #1a1b17;
-            border-radius: 12px;
-            padding: 14px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .stat-item .num {
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .stat-item .label {
-            font-size: 12px;
-            color: #8e8e93;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }
-
-        .history-list {
-            margin-top: 10px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            font-size: 13px;
-        }
-
-        .history-item .date {
-            color: #8e8e93;
-        }
-
-        /* ===== ТОСТ ===== */
-        .toast-ios {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 999;
-            max-width: 90%;
-            text-align: center;
-            transition: opacity 0.3s;
-            font-family: inherit;
-            pointer-events: none;
-        }
-
-        /* ===== ВКЛАДКИ ===== */
-        .mode-tabs {
-            display: flex;
-            background: #2f312c;
-            border-radius: 14px;
-            padding: 4px;
-            margin-bottom: 16px;
-            gap: 4px;
-        }
-
-        .mode-tab {
-            flex: 1;
-            padding: 10px 0;
-            border: none;
-            background: transparent;
-            border-radius: 11px;
-            font-size: 13px;
-            font-weight: 700;
-            color: #8e8e93;
-            transition: all 0.2s;
-            cursor: pointer;
-            letter-spacing: 0.2px;
-            font-family: inherit;
-        }
-
-        .mode-tab.active {
-            background: #3a3b35;
-            color: #4c8b3c;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .mode-tab:active {
-            transform: scale(0.96);
-        }
-
-        .mode-content {
-            display: none;
-            animation: fadeUp 0.2s ease;
-        }
-
-        .mode-content.active {
-            display: block;
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ===== СКРОЛЛ ===== */
-        ::-webkit-scrollbar {
-            width: 3px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#1a1b17;color:#e8e9e4;padding:12px;min-height:100vh}
+        .app{max-width:480px;margin:0 auto}
+        .card{background:#2f312c;border-radius:16px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+        .card-title{font-size:17px;font-weight:700;margin-bottom:12px;letter-spacing:-0.2px}
+        .card-title small{font-weight:400;font-size:13px;color:#8e8e93;margin-left:6px}
+        .btn{background:#3a3b35;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 20px;font-weight:600;font-size:15px;color:#e8e9e4;cursor:pointer;transition:all 0.12s;touch-action:manipulation;font-family:inherit;text-align:center;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%}
+        .btn:active{transform:scale(0.96);opacity:0.8}
+        .btn-primary{background:#4c8b3c;border-color:#3a6e2c;color:#fff}
+        .btn-danger{background:#b5652e;border-color:#8f4f24;color:#fff}
+        .btn-warning{background:#d4a03a;border-color:#b8882e;color:#1c1c1e}
+        .btn-secondary{background:transparent;border-color:rgba(255,255,255,0.08)}
+        .btn-sm{padding:8px 14px;font-size:13px;width:auto}
+        .btn-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+        .btn-group .btn{flex:1;min-width:70px}
+        .hidden{display:none!important}
+        .text-muted{color:#8e8e93;font-size:13px}
+        .text-center{text-align:center}
+        .mt-2{margin-top:12px}
+        .mb-2{margin-bottom:12px}
+        .flex{display:flex}
+        .gap-2{gap:8px}
+        .radio-player{background:#2f312c;border-radius:14px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,0.04);flex-wrap:wrap}
+        .radio-player .info{flex:1;min-width:100px}
+        .radio-player .info .title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+        .radio-player .info .title .dot{display:inline-block;width:7px;height:7px;background:#ff3b30;border-radius:50%;animation:blink 1.2s infinite}
+        .radio-player .info .title .dot.paused{animation:none;background:#8e8e93}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+        .radio-player .info .sub{font-size:11px;color:#8e8e93}
+        .radio-player .controls{display:flex;align-items:center;gap:8px}
+        .radio-player .controls .btn-radio{background:#3a3b35;border:1px solid rgba(255,255,255,0.06);border-radius:30px;padding:6px 14px;font-size:12px;font-weight:600;color:#e8e9e4;cursor:pointer;font-family:inherit;transition:all 0.15s}
+        .radio-player .controls .btn-radio.active{background:#4c8b3c;color:#fff}
+        .radio-player .controls .volume-slider{width:50px;accent-color:#4c8b3c;cursor:pointer}
+        .workout-header{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:12px;margin-bottom:12px}
+        .workout-header .total-time{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+        .workout-header .total-time small{font-size:12px;font-weight:400;color:#8e8e93}
+        .workout-header .status-badge{font-size:12px;font-weight:600;padding:4px 14px;border-radius:30px;background:#4c8b3c;color:#fff}
+        .workout-header .status-badge.resting{background:#d4a03a}
+        .workout-progress{text-align:center;margin-bottom:12px}
+        .workout-progress .big-num{font-size:34px;font-weight:700;line-height:1.1;letter-spacing:-1px}
+        .workout-progress .big-num span{font-size:16px;font-weight:400;color:#8e8e93}
+        .progress-bar-bg{width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:10px;margin-top:6px;overflow:hidden}
+        .progress-bar-fill{height:100%;background:linear-gradient(90deg,#4c8b3c,#7cb85c);border-radius:10px;transition:width 0.3s ease;width:0%}
+        .workout-exercise{background:#1a1b17;border-radius:14px;padding:20px 16px;text-align:center;margin-bottom:12px;border:1px solid rgba(255,255,255,0.04)}
+        .workout-exercise .ex-name{font-size:22px;font-weight:700;margin-bottom:2px}
+        .workout-exercise .ex-detail{font-size:13px;color:#8e8e93}
+        .workout-exercise .ex-target{font-size:48px;font-weight:800;color:#4c8b3c;margin:4px 0 2px;line-height:1.1}
+        .workout-exercise .ex-label{font-size:13px;color:#8e8e93}
+        .timer-display{font-size:56px;font-weight:300;text-align:center;padding:8px 0;letter-spacing:2px;font-variant-numeric:tabular-nums;transition:color 0.3s}
+        .timer-display.resting{color:#d4a03a}
+        .timer-display.resting-warning{color:#ff3b30;animation:pulse 0.8s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+        .exercise-item{display:flex;align-items:center;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,0.04);gap:8px}
+        .exercise-item:last-child{border-bottom:none}
+        .exercise-item input[type=checkbox]{width:20px;height:20px;accent-color:#4c8b3c;cursor:pointer;flex-shrink:0}
+        .exercise-name{font-size:14px;flex:1}
+        .exercise-max{font-size:13px;color:#4c8b3c;font-weight:700;background:rgba(255,255,255,0.06);padding:2px 12px;border-radius:30px;cursor:pointer;min-width:36px;text-align:center}
+        .delete-ex{background:none;border:none;color:#ff3b30;font-size:18px;cursor:pointer;opacity:0.6;padding:0 4px}
+        .delete-ex:active{opacity:1}
+        .add-row{display:flex;gap:6px;margin-top:10px}
+        .add-row input{flex:1;padding:10px 12px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:#1a1b17;color:#e8e9e4;font-size:14px;outline:none;min-width:0}
+        .add-row input:focus{border-color:#4c8b3c}
+        .add-row input[type=number]{flex:0 0 60px;text-align:center}
+        .add-row .btn{flex:0 0 44px;padding:10px 0;font-size:20px;border-radius:12px;width:auto}
+        .select-all-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);margin-bottom:6px}
+        .select-all-row input[type=checkbox]{width:20px;height:20px;accent-color:#4c8b3c;cursor:pointer}
+        .select-all-row label{font-size:13px;color:#8e8e93;cursor:pointer}
+        .program-item{display:flex;justify-content:space-between;align-items:center;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,0.04)}
+        .program-item:last-child{border-bottom:none}
+        .program-item .p-name{font-weight:600;font-size:14px}
+        .program-item .p-count{font-size:12px;color:#8e8e93}
+        .program-actions{display:flex;gap:6px}
+        .program-actions .btn{width:auto;padding:4px 12px;font-size:12px}
+        .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+        .stat-item{background:#1a1b17;border-radius:12px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,0.04)}
+        .stat-item .num{font-size:28px;font-weight:700}
+        .stat-item .label{font-size:12px;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+        .history-list{margin-top:10px;max-height:200px;overflow-y:auto}
+        .history-item{display:flex;justify-content:space-between;padding:6px 4px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px}
+        .history-item .date{color:#8e8e93}
+        .toast-ios{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);color:#fff;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:500;z-index:999;max-width:90%;text-align:center;transition:opacity 0.3s;font-family:inherit;pointer-events:none}
+        .mode-tabs{display:flex;background:#2f312c;border-radius:14px;padding:4px;margin-bottom:16px;gap:4px}
+        .mode-tab{flex:1;padding:10px 0;border:none;background:transparent;border-radius:11px;font-size:13px;font-weight:700;color:#8e8e93;transition:all 0.2s;cursor:pointer;letter-spacing:0.2px;font-family:inherit}
+        .mode-tab.active{background:#3a3b35;color:#4c8b3c;box-shadow:0 1px 4px rgba(0,0,0,0.2)}
+        .mode-tab:active{transform:scale(0.96)}
+        .mode-content{display:none;animation:fadeUp 0.2s ease}
+        .mode-content.active{display:block}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+        ::-webkit-scrollbar{width:3px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:10px}
+        .playing-card{background:linear-gradient(145deg,#fffcf0 0%,#f5f0e0 100%);border-radius:16px;padding:20px 12px 24px;margin-bottom:16px;box-shadow:0 8px 16px rgba(0,0,0,0.3);text-align:center;position:relative;border:1px solid #e8dbb8;color:#2c2b26}
+        .card-corner{position:absolute;font-family:'Courier New',monospace;font-weight:bold;font-size:0.85rem;display:flex;flex-direction:column;align-items:center;line-height:1.2}
+        .corner-top-left{top:10px;left:12px}
+        .corner-bottom-right{bottom:10px;right:12px;transform:rotate(180deg)}
+        .card-rank-large{font-size:3.5rem;font-weight:800;font-family:'Courier New',monospace;letter-spacing:2px}
+        .big-suit{font-size:4rem;margin:4px 0}
+        .suit-red{color:#c33c2b}
+        .suit-black{color:#2c2b26}
+        .exercise-name-tag{font-size:1.2rem;font-weight:700;background:#2a2c26;display:inline-block;padding:4px 18px;border-radius:40px;margin-top:10px;color:#f7e05e}
+        .reps-badge-tag{font-size:0.9rem;background:rgba(0,0,0,0.75);border-radius:40px;padding:4px 16px;display:inline-block;margin-top:8px;color:#ffd966;font-weight:600}
+        .day-selector{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:6px}
+        .day-btn{background:rgba(255,255,255,0.06);padding:6px 14px;border-radius:30px;font-size:12px;white-space:nowrap;border:none;color:#e8e9e4;cursor:pointer;font-family:inherit}
+        .day-btn.active-day{background:#4c8b3c;color:#fff}
+        .day-btn:active{transform:scale(0.95)}
+        .stat-line{display:flex;justify-content:space-between;padding:6px 4px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px}
+        .total-day-reps{font-weight:bold;background:rgba(76,139,60,0.2);border-radius:40px;padding:10px;text-align:center;margin-bottom:10px}
     </style>
 </head>
 <body>
-
-    <div class="app" id="app">
-
-        <!-- РАДИО -->
-        <div class="radio-player">
-            <div class="info">
-                <div class="title"><span class="dot" id="radioDot"></span> Lofi Radio</div>
-                <div class="sub">🎧 beats to relax / study</div>
-            </div>
-            <div class="controls">
-                <button class="btn-radio active" id="radioToggleBtn">⏸</button>
-                <input type="range" class="volume-slider" id="radioVolume" min="0" max="1" step="0.05" value="0.5" />
-            </div>
+<div class="app" id="app">
+    <!-- РАДИО -->
+    <div class="radio-player">
+        <div class="info">
+            <div class="title"><span class="dot" id="radioDot"></span> Lofi Radio</div>
+            <div class="sub">🎧 beats to relax / study</div>
         </div>
-
-        <!-- ВКЛАДКИ -->
-        <div class="mode-tabs">
-            <button class="mode-tab active" data-mode="circuit">🔄 Круговая</button>
-            <button class="mode-tab" data-mode="prison">🃏 Колода</button>
+        <div class="controls">
+            <button class="btn-radio active" id="radioToggleBtn">⏸</button>
+            <input type="range" class="volume-slider" id="radioVolume" min="0" max="1" step="0.05" value="0.5" />
         </div>
-
-        <!-- ============================================================ -->
-        <!-- РЕЖИМ 1: КРУГОВАЯ -->
-        <!-- ============================================================ -->
-        <div id="mode-circuit" class="mode-content active">
-            <div class="card">
-                <div class="card-title">Круговая тренировка <small>чередование</small></div>
-                <div id="circuitSetup">
-                    <p class="text-muted mb-2">Выберите программу или отметьте упражнения в базе</p>
-                    <select id="programSelect" class="btn" style="background:#1a1b17; border:1px solid rgba(255,255,255,0.1); margin-bottom:10px; color:#e8e9e4; width:100%; padding:12px; border-radius:12px; font-size:14px;">
-                        <option value="">— Выбрать программу —</option>
-                    </select>
-                    <button class="btn btn-primary" id="circuitStartBtn">▶ Старт круговую</button>
-                    <div class="text-muted" style="font-size:12px; margin-top:6px; text-align:center;">Круг: подход 1 у всех → подход 2 → ... → подход 5</div>
-                </div>
-                <div id="circuitActive" class="hidden">
-                    <div class="workout-header">
-                        <div class="total-time"><span id="circuitTotalTime">00:00</span> <small>всего</small></div>
-                        <span class="status-badge" id="circuitStatus">▶ Активно</span>
-                    </div>
-                    <div class="workout-progress">
-                        <div class="big-num"><span id="circuitProgress">0</span> / <span id="circuitTotalSets">0</span></div>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" id="circuitProgressFill"></div></div>
-                    </div>
-                    <div class="workout-exercise">
-                        <div class="ex-name" id="circuitExName">—</div>
-                        <div class="ex-detail" id="circuitExDetail">подход 1 · макс: 10</div>
-                        <div class="ex-target" id="circuitExTarget">10</div>
-                        <div class="ex-label">повторов</div>
-                    </div>
-                    <div class="timer-display" id="circuitTimer">02:00</div>
-                    <div class="btn-group">
-                        <button class="btn btn-primary" id="circuitCompleteBtn">✅ Выполнил</button>
-                        <button class="btn btn-secondary" id="circuitSkipRestBtn">⏭ Пропустить</button>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-warning" id="circuitFinishEarlyBtn">🏁 Завершить досрочно</button>
-                        <button class="btn btn-secondary" id="circuitStopBtn">⏹ Стоп</button>
-                    </div>
-                </div>
-                <div id="circuitSummary" class="hidden">
-                    <div style="font-size:15px; margin-bottom:6px;">✅ Тренировка завершена!</div>
-                    <div id="circuitSummaryContent"></div>
-                    <div class="btn-group"><button class="btn btn-primary" id="circuitSaveBtn">💾 Сохранить</button></div>
-                    <button class="btn btn-secondary mt-2" id="circuitResetBtn">🔄 Новая</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">База упражнений <small>максимум</small></div>
-                <div class="select-all-row"><input type="checkbox" id="selectAllEx" /><label for="selectAllEx">Выбрать все</label></div>
-                <div id="circuitExerciseList"></div>
-                <div class="add-row">
-                    <input type="text" id="newExName" placeholder="Упражнение" />
-                    <input type="number" id="newExMax" placeholder="Макс" min="1" value="10" />
-                    <button class="btn btn-primary" id="addExBtn">+</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">Сохранить как программу</div>
-                <div class="flex gap-2">
-                    <input type="text" id="programNameInput" placeholder="Название" style="flex:1; padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); background:#1a1b17; color:#e8e9e4; font-size:14px; outline:none;" />
-                    <button class="btn btn-primary" id="saveProgramBtn" style="width:auto; padding:10px 18px;">💾</button>
-                </div>
-                <div id="circuitProgramsList" class="mt-2"></div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- РЕЖИМ 2: КОЛОДА -->
-        <!-- ============================================================ -->
-        <div id="mode-prison" class="mode-content">
-
-            <div id="prisonMain">
-                <div class="card" style="text-align:center; padding:24px 16px;">
-                    <div style="font-size:3.5rem; margin-bottom:8px;">🃟</div>
-                    <div style="font-size:1.6rem; font-weight:800; letter-spacing:-0.5px;">PRISON DECK</div>
-                    <p class="text-muted" style="margin:6px 0 16px;">4 масти — 4 упражнения<br>Вытягивай карту и делай!</p>
-                    <button class="btn btn-primary" id="prisonStartBtn">💪 НАЧАТЬ ТРЕНИРОВКУ</button>
-                    <button class="btn btn-secondary mt-2" id="prisonStatsBtn">📊 СТАТИСТИКА</button>
-                    <div class="text-muted" style="font-size:11px; margin-top:10px;">✔️ Каждая карта — подход. Завершил — следующая</div>
-                </div>
-                <div class="card">
-                    <div class="card-title">🏆 Кратко</div>
-                    <div id="prisonPreviewStats">
-                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>📅 Сегодня:</span><span>0 карт</span></div>
-                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>💪 Повторений:</span><span>0</span></div>
-                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>🏆 Всего:</span><span>0 повтор.</span></div>
-                    </div>
-                </div>
-
-                <!-- ===== НАСТРОЙКИ КОЛОДЫ — СПИСОК С КАРАНДАШОМ ===== -->
-                <div class="card">
-                    <div class="card-title">⚙️ Назначь упражнения <small>кликни по ✎</small></div>
-                    <div id="pSuitConfigContainer"></div>
-                </div>
-            </div>
-
-            <div id="prisonTrain" class="hidden">
-                <div class="playing-card" style="background:linear-gradient(145deg, #fffcf0 0%, #f5f0e0 100%); border-radius:16px; padding:20px 12px 24px; margin-bottom:16px; box-shadow:0 8px 16px rgba(0,0,0,0.3); text-align:center; position:relative; border:1px solid #e8dbb8; color:#2c2b26;">
-                    <div style="position:absolute; top:10px; left:12px; font-family:'Courier New',monospace; font-weight:bold; font-size:0.85rem; display:flex; flex-direction:column; align-items:center; line-height:1.2;">
-                        <span id="pCornerTLRank" style="font-size:1.1rem;">A</span>
-                        <span id="pCornerTLSuit" style="font-size:0.85rem;">♥️</span>
-                    </div>
-                    <div style="margin:28px 0 16px;">
-                        <div id="pCenterRank" style="font-size:3.5rem; font-weight:800; font-family:'Courier New',monospace; letter-spacing:2px;">A</div>
-                        <div id="pCenterSuit" style="font-size:4rem; margin:4px 0;">♥️</div>
-                        <div id="pExerciseLabel" style="font-size:1.2rem; font-weight:700; background:#2a2c26; display:inline-block; padding:4px 18px; border-radius:40px; margin-top:10px; color:#f7e05e;">Отжимания</div>
-                        <div id="pRepsLabel" style="font-size:0.9rem; background:rgba(0,0,0,0.75); border-radius:40px; padding:4px 16px; display:inline-block; margin-top:8px; color:#ffd966; font-weight:600;">повторов: 0</div>
-                    </div>
-                    <div style="position:absolute; bottom:10px; right:12px; font-family:'Courier New',monospace; font-weight:bold; font-size:0.85rem; display:flex; flex-direction:column; align-items:center; line-height:1.2; transform:rotate(180deg);">
-                        <span id="pCornerBRRank" style="font-size:1.1rem;">A</span>
-                        <span id="pCornerBRSuit" style="font-size:0.85rem;">♥️</span>
-                    </div>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.04); border-radius:12px; padding:10px 14px; margin-bottom:12px; font-weight:600; font-size:14px;">
-                    <span>📇 Сделано: <span id="pCompletedCards">0</span>/52</span>
-                    <span>⏱️ <span id="pSessionTime">0:00</span></span>
-                </div>
-
-                <button class="btn btn-primary" id="prisonCompleteBtn">✅ ЗАВЕРШИТЬ ПОДХОД</button>
-
-                <div class="btn-group">
-                    <button class="btn btn-secondary" id="prisonFinishBtn">🏁 Завершить</button>
-                    <button class="btn btn-secondary" id="prisonResetBtn">🔄 Сброс</button>
-                </div>
-                <div class="text-muted" style="font-size:11px; text-align:center; margin-top:10px;">🔁 Только завершённые подходы засчитываются</div>
-            </div>
-
-            <div id="prisonStats" class="hidden">
-                <div class="card">
-                    <div class="card-title">📅 Статистика по дням</div>
-                    <div class="day-selector" id="pDaySelector" style="display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; padding-bottom:6px;"></div>
-                    <div id="pDailyStatsContent"><div class="text-muted text-center" style="padding:16px;">Выберите день</div></div>
-                    <div class="btn-group">
-                        <button class="btn btn-danger btn-sm" id="pResetDayBtn" style="width:auto; padding:6px 14px;">🗑️ Сброс дня</button>
-                        <button class="btn btn-secondary btn-sm" id="pClearAllBtn" style="width:auto; padding:6px 14px;">⚠️ Всю историю</button>
-                    </div>
-                    <button class="btn btn-secondary mt-2" id="pBackFromStats">🏠 Назад</button>
-                </div>
-            </div>
-
-        </div>
-
     </div>
 
-    <script>
-        // ================================================================
-        // ВСПОМОГАТЕЛЬНЫЕ
-        // ================================================================
+    <!-- ВКЛАДКИ -->
+    <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="circuit">🔄 Круговая</button>
+        <button class="mode-tab" data-mode="prison">🃏 Колода</button>
+    </div>
 
-        function showToast(msg) {
-            const old = document.querySelector('.toast-ios');
-            if (old) old.remove();
-            const div = document.createElement('div');
-            div.className = 'toast-ios';
-            div.textContent = msg;
-            document.body.appendChild(div);
-            setTimeout(() => { div.style.opacity = '0';
-                setTimeout(() => div.remove(), 400); }, 2000);
-        }
+    <!-- КРУГОВАЯ -->
+    <div id="mode-circuit" class="mode-content active">
+        <div class="card">
+            <div class="card-title">Круговая тренировка <small>чередование</small></div>
+            <div id="circuitSetup">
+                <p class="text-muted mb-2">Выберите программу или отметьте упражнения в базе</p>
+                <select id="programSelect" class="btn" style="background:#1a1b17;border:1px solid rgba(255,255,255,0.1);margin-bottom:10px;color:#e8e9e4;width:100%;padding:12px;border-radius:12px;font-size:14px;">
+                    <option value="">— Выбрать программу —</option>
+                </select>
+                <button class="btn btn-primary" id="circuitStartBtn">▶ Старт круговую</button>
+                <div class="text-muted" style="font-size:12px;margin-top:6px;text-align:center;">Круг: подход 1 у всех → подход 2 → ... → подход 5</div>
+            </div>
+            <div id="circuitActive" class="hidden">
+                <div class="workout-header"><div class="total-time"><span id="circuitTotalTime">00:00</span> <small>всего</small></div><span class="status-badge" id="circuitStatus">▶ Активно</span></div>
+                <div class="workout-progress"><div class="big-num"><span id="circuitProgress">0</span> / <span id="circuitTotalSets">0</span></div><div class="progress-bar-bg"><div class="progress-bar-fill" id="circuitProgressFill"></div></div></div>
+                <div class="workout-exercise"><div class="ex-name" id="circuitExName">—</div><div class="ex-detail" id="circuitExDetail">подход 1 · макс: 10</div><div class="ex-target" id="circuitExTarget">10</div><div class="ex-label">повторов</div></div>
+                <div class="timer-display" id="circuitTimer">02:00</div>
+                <div class="btn-group"><button class="btn btn-primary" id="circuitCompleteBtn">✅ Выполнил</button><button class="btn btn-secondary" id="circuitSkipRestBtn">⏭ Пропустить</button></div>
+                <div class="btn-group"><button class="btn btn-warning" id="circuitFinishEarlyBtn">🏁 Завершить досрочно</button><button class="btn btn-secondary" id="circuitStopBtn">⏹ Стоп</button></div>
+            </div>
+            <div id="circuitSummary" class="hidden">
+                <div style="font-size:15px;margin-bottom:6px;">✅ Тренировка завершена!</div>
+                <div id="circuitSummaryContent"></div>
+                <div class="btn-group"><button class="btn btn-primary" id="circuitSaveBtn">💾 Сохранить</button></div>
+                <button class="btn btn-secondary mt-2" id="circuitResetBtn">🔄 Новая</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">База упражнений <small>максимум</small></div>
+            <div class="select-all-row"><input type="checkbox" id="selectAllEx" /><label for="selectAllEx">Выбрать все</label></div>
+            <div id="circuitExerciseList"></div>
+            <div class="add-row"><input type="text" id="newExName" placeholder="Упражнение" /><input type="number" id="newExMax" placeholder="Макс" min="1" value="10" /><button class="btn btn-primary" id="addExBtn">+</button></div>
+        </div>
+        <div class="card">
+            <div class="card-title">Сохранить как программу</div>
+            <div class="flex gap-2"><input type="text" id="programNameInput" placeholder="Название" style="flex:1;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:#1a1b17;color:#e8e9e4;font-size:14px;outline:none;" /><button class="btn btn-primary" id="saveProgramBtn" style="width:auto;padding:10px 18px;">💾</button></div>
+            <div id="circuitProgramsList" class="mt-2"></div>
+        </div>
+    </div>
 
-        function generateId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-
-        function formatTime(sec) { return `${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; }
-
-        function getTodayKey() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-
-        // ================================================================
-        // ЗВУК
-        // ================================================================
-
-        let audioCtx = null;
-
-        function playBeep(freq = 600, dur = 150, count = 1) {
-            try {
-                if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-                for (let i = 0; i < count; i++) {
-                    setTimeout(() => {
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        osc.frequency.value = freq;
-                        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur / 1000);
-                        osc.start(audioCtx.currentTime);
-                        osc.stop(audioCtx.currentTime + dur / 1000);
-                    }, i * 250);
-                }
-            } catch (e) {}
-        }
-
-        function vibrate(pattern = [100]) { try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {} }
-
-        // ================================================================
-        // РАДИО
-        // ================================================================
-
-        (function initRadio() {
-            const audio = new Audio('https://play.streamafrica.net/lofiradio');
-            audio.loop = true;
-            audio.volume = 0.5;
-            let isPlaying = false;
-            const btn = document.getElementById('radioToggleBtn');
-            const slider = document.getElementById('radioVolume');
-            const dot = document.getElementById('radioDot');
-            try { const vol = localStorage.getItem('radio_volume_v2'); if (vol) { audio.volume = parseFloat(vol);
-                    slider.value = parseFloat(vol); } } catch (e) {}
-
-            function toggle() {
-                if (isPlaying) {
-                    audio.pause();
-                    isPlaying = false;
-                    btn.textContent = '▶';
-                    btn.classList.remove('active');
-                    dot.className = 'dot paused';
-                    showToast('⏸ Радио на паузе');
-                } else {
-                    audio.play().then(() => {
-                        isPlaying = true;
-                        btn.textContent = '⏸';
-                        btn.classList.add('active');
-                        dot.className = 'dot';
-                        showToast('🎵 Lofi Radio включено');
-                    }).catch(() => showToast('⚠️ Не удалось запустить'));
-                }
-            }
-            slider.addEventListener('input', function() {
-                const vol = parseFloat(this.value);
-                audio.volume = vol;
-                localStorage.setItem('radio_volume_v2', vol.toString());
-            });
-            btn.addEventListener('click', toggle);
-        })();
-
-        // ================================================================
-        // КРУГОВАЯ
-        // ================================================================
-
-        const CIRCUIT_KEY = 'circuit_trainer_data_v3';
-
-        function getDefaultCircuitData() {
-            return {
-                exercises: [
-                    { id: 'ex1', name: 'Подтягивания', max: 10, checked: true },
-                    { id: 'ex2', name: 'Отжимания', max: 25, checked: true },
-                    { id: 'ex3', name: 'Приседания', max: 30, checked: true },
-                    { id: 'ex4', name: 'Бёрпи', max: 15, checked: true },
-                ],
-                programs: [],
-                history: [],
-                stats: { totalWorkouts: 0, totalReps: 0 }
-            };
-        }
-        let circuitData = getDefaultCircuitData();
-
-        function loadCircuitData() {
-            try {
-                const raw = localStorage.getItem(CIRCUIT_KEY);
-                if (raw) {
-                    const parsed = JSON.parse(raw);
-                    circuitData = parsed;
-                    if (circuitData.exercises) { circuitData.exercises = circuitData.exercises.map(e => ({ ...e,
-                            checked: e.checked !== undefined ? e.checked : true })); }
-                    if (!circuitData.stats) circuitData.stats = { totalWorkouts: 0, totalReps: 0 };
-                    if (!circuitData.history) circuitData.history = [];
-                    if (!circuitData.programs) circuitData.programs = [];
-                }
-            } catch (e) { circuitData = getDefaultCircuitData(); }
-            renderCircuitAll();
-        }
-
-        function saveCircuitData() { localStorage.setItem(CIRCUIT_KEY, JSON.stringify(circuitData)); }
-
-        function getPyramid(max) { return [max, Math.max(1, Math.round(max * 0.8)), Math.max(1, Math.round(max * 0.6)),
-                Math.max(1, Math.round(max * 0.5)), Math.max(1, Math.round(max * 0.5))
-            ]; }
-
-        function getSelectedCircuitEx() { return (circuitData.exercises || []).filter(e => e.checked && e.max > 0); }
-
-        let cState = {
-            active: false,
-            exercises: [],
-            currentExIndex: 0,
-            currentSetIndex: 0,
-            isResting: false,
-            timerSeconds: 120,
-            timerInterval: null,
-            completedSets: 0,
-            totalSets: 0,
-            workoutLog: [],
-            startTime: null,
-            restAlerted: false,
-            totalSeconds: 0,
-            totalInterval: null,
-            finishedEarly: false,
-            lastResult: null,
-        };
-
-        function renderCircuitExercises() {
-            const container = document.getElementById('circuitExerciseList');
-            if (!circuitData.exercises || circuitData.exercises.length === 0) {
-                container.innerHTML = '<div class="text-muted" style="padding:8px 0;">Добавьте упражнения</div>';
-                return;
-            }
-            container.innerHTML = circuitData.exercises.map((ex) => `
-                <div class="exercise-item">
-                    <input type="checkbox" class="circuit-ex-check" data-id="${ex.id}" ${ex.checked ? 'checked' : ''} />
-                    <span class="exercise-name">${ex.name}</span>
-                    <span class="exercise-max circuit-max-edit" data-id="${ex.id}">${ex.max}</span>
-                    <button class="delete-ex circuit-delete-ex" data-id="${ex.id}">×</button>
+    <!-- КОЛОДА -->
+    <div id="mode-prison" class="mode-content">
+        <div id="prisonMain">
+            <div class="card" style="text-align:center;padding:24px 16px;">
+                <div style="font-size:3.5rem;margin-bottom:8px;">🃟</div>
+                <div style="font-size:1.6rem;font-weight:800;letter-spacing:-0.5px;">PRISON DECK</div>
+                <p class="text-muted" style="margin:6px 0 16px;">4 масти — 4 упражнения<br>Вытягивай карту и делай!</p>
+                <button class="btn btn-primary" id="prisonStartBtn">💪 НАЧАТЬ ТРЕНИРОВКУ</button>
+                <button class="btn btn-secondary mt-2" id="prisonStatsBtn">📊 СТАТИСТИКА</button>
+                <div class="text-muted" style="font-size:11px;margin-top:10px;">✔️ Каждая карта — подход. Завершил — следующая</div>
+            </div>
+            <div class="card">
+                <div class="card-title">🏆 Кратко</div>
+                <div id="prisonPreviewStats">
+                    <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>📅 Сегодня:</span><span>0 карт</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>💪 Повторений:</span><span>0</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>🏆 Всего:</span><span>0 повтор.</span></div>
                 </div>
-            `).join('');
+            </div>
+        </div>
 
-            document.querySelectorAll('.circuit-ex-check').forEach(cb => {
-                cb.addEventListener('change', () => {
-                    const ex = circuitData.exercises.find(e => e.id === cb.dataset.id);
-                    if (ex) { ex.checked = cb.checked;
-                        saveCircuitData(); }
-                });
-            });
-            document.querySelectorAll('.circuit-max-edit').forEach(el => {
-                el.addEventListener('click', () => {
-                    const id = el.dataset.id;
-                    const ex = circuitData.exercises.find(e => e.id === id);
-                    if (!ex) return;
-                    const val = prompt('Новый максимум для ' + ex.name + ':', ex.max);
-                    if (val !== null) { const num = parseInt(val); if (num > 0) { ex.max = num;
-                            saveCircuitData();
-                            renderCircuitExercises();
-                            renderCircuitProgramSelect(); } }
-                });
-            });
-            document.querySelectorAll('.circuit-delete-ex').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    if (!confirm('Удалить?')) return;
-                    circuitData.exercises = circuitData.exercises.filter(e => e.id !== id);
-                    saveCircuitData();
-                    renderCircuitExercises();
-                    renderCircuitProgramSelect();
-                });
-            });
-            const allChecked = circuitData.exercises.every(e => e.checked);
-            document.getElementById('selectAllEx').checked = allChecked;
-        }
-
-        function renderCircuitPrograms() {
-            const container = document.getElementById('circuitProgramsList');
-            if (!circuitData.programs || circuitData.programs.length === 0) {
-                container.innerHTML = '<div class="text-muted" style="padding:8px 0;">Нет программ</div>';
-                return;
-            }
-            container.innerHTML = circuitData.programs.map((p, idx) => `
-                <div class="program-item">
-                    <div><span class="p-name">${p.name}</span> <span class="p-count">${p.exercises.length} упр.</span></div>
-                    <div class="program-actions">
-                        <button class="btn btn-primary circuit-load-prog" data-idx="${idx}" style="width:auto; padding:4px 12px; font-size:12px;">Загрузить</button>
-                        <button class="btn btn-danger circuit-del-prog" data-idx="${idx}" style="width:auto; padding:4px 12px; font-size:12px;">×</button>
-                    </div>
+        <div id="prisonTrain" class="hidden">
+            <div class="playing-card">
+                <div class="card-corner corner-top-left"><span id="pCornerTLRank" style="font-size:1.1rem;">A</span><span id="pCornerTLSuit" style="font-size:0.85rem;">♥️</span></div>
+                <div style="margin:28px 0 16px;">
+                    <div class="card-rank-large" id="pCenterRank">A</div>
+                    <div class="big-suit" id="pCenterSuit">♥️</div>
+                    <div class="exercise-name-tag" id="pExerciseLabel">Отжимания</div>
+                    <div class="reps-badge-tag" id="pRepsLabel">повторов: 0</div>
                 </div>
-            `).join('');
+                <div class="card-corner corner-bottom-right"><span id="pCornerBRRank" style="font-size:1.1rem;">A</span><span id="pCornerBRSuit" style="font-size:0.85rem;">♥️</span></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;background:rgba(255,255,255,0.04);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-weight:600;font-size:14px;">
+                <span>📇 Сделано: <span id="pCompletedCards">0</span>/52</span>
+                <span>⏱️ <span id="pSessionTime">0:00</span></span>
+            </div>
+            <button class="btn btn-primary" id="prisonCompleteBtn">✅ ЗАВЕРШИТЬ ПОДХОД</button>
+            <div class="btn-group"><button class="btn btn-secondary" id="prisonFinishBtn">🏁 Завершить</button><button class="btn btn-secondary" id="prisonResetBtn">🔄 Сброс</button></div>
+            <div class="text-muted" style="font-size:11px;text-align:center;margin-top:10px;">🔁 Только завершённые подходы засчитываются</div>
+        </div>
 
-            document.querySelectorAll('.circuit-load-prog').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const idx = parseInt(btn.dataset.idx);
-                    const prog = circuitData.programs[idx];
-                    if (prog) {
-                        circuitData.exercises = prog.exercises.map(e => ({ ...e, id: generateId(),
-                            checked: true }));
-                        saveCircuitData();
-                        renderCircuitExercises();
-                        renderCircuitProgramSelect();
-                        showToast('📂 Загружено: ' + prog.name);
-                    }
-                });
-            });
-            document.querySelectorAll('.circuit-del-prog').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const idx = parseInt(btn.dataset.idx);
-                    if (!confirm('Удалить программу?')) return;
-                    circuitData.programs.splice(idx, 1);
-                    saveCircuitData();
-                    renderCircuitPrograms();
-                    renderCircuitProgramSelect();
-                });
-            });
-        }
+        <div id="prisonStats" class="hidden">
+            <div class="card">
+                <div class="card-title">📅 Статистика по дням</div>
+                <div class="day-selector" id="pDaySelector"></div>
+                <div id="pDailyStatsContent"><div class="text-muted text-center" style="padding:16px;">Выберите день</div></div>
+                <div class="btn-group"><button class="btn btn-danger btn-sm" id="pResetDayBtn" style="width:auto;padding:6px 14px;">🗑️ Сброс дня</button><button class="btn btn-secondary btn-sm" id="pClearAllBtn" style="width:auto;padding:6px 14px;">⚠️ Всю историю</button></div>
+                <button class="btn btn-secondary mt-2" id="pBackFromStats">🏠 Назад</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        function renderCircuitProgramSelect() {
-            const sel = document.getElementById('programSelect');
-            sel.innerHTML = '<option value="">— Выбрать программу —</option>' +
-                (circuitData.programs || []).map((p, i) => `<option value="${i}">${p.name}</option>`).join('');
-        }
+<script>
+// ===== ВСПОМОГАТЕЛЬНЫЕ =====
+function showToast(m){const o=document.querySelector('.toast-ios');if(o)o.remove();const d=document.createElement('div');d.className='toast-ios';d.textContent=m;document.body.appendChild(d);setTimeout(()=>{d.style.opacity='0';setTimeout(()=>d.remove(),400)},2000)}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 
-        function renderCircuitAll() {
-            renderCircuitExercises();
-            renderCircuitPrograms();
-            renderCircuitProgramSelect();
-        }
+// ===== ЗВУК =====
+let actx=null;
+function beep(f=600,d=150,c=1){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();for(let i=0;i<c;i++){setTimeout(()=>{const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.frequency.value=f;g.gain.setValueAtTime(0.2,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,actx.currentTime+d/1000);o.start(actx.currentTime);o.stop(actx.currentTime+d/1000)},i*250)}}catch(e){}}
+function vib(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
 
-        // Логика круговой
-        function circuitStartWorkout() {
-            const selected = getSelectedCircuitEx();
-            if (selected.length === 0) { showToast('⚠️ Отметьте упражнения'); return; }
-            cState.exercises = selected.map(e => ({ id: e.id, name: e.name, max: e.max, sets: getPyramid(e.max) }));
-            cState.currentExIndex = 0;
-            cState.currentSetIndex = 0;
-            cState.isResting = false;
-            cState.completedSets = 0;
-            cState.totalSets = selected.length * 5;
-            cState.workoutLog = [];
-            cState.startTime = Date.now();
-            cState.restAlerted = false;
-            cState.totalSeconds = 0;
-            cState.finishedEarly = false;
-            if (cState.timerInterval) clearInterval(cState.timerInterval);
-            if (cState.totalInterval) clearInterval(cState.totalInterval);
-            document.getElementById('circuitSetup').classList.add('hidden');
-            document.getElementById('circuitActive').classList.remove('hidden');
-            document.getElementById('circuitSummary').classList.add('hidden');
-            cState.active = true;
-            circuitUpdateUI();
-            circuitStartTotalTimer();
-            showToast('🏋️ Начинаем!');
-        }
+// ===== РАДИО =====
+(function(){const a=new Audio('https://play.streamafrica.net/lofiradio');a.loop=true;a.volume=.5;let p=false;const b=document.getElementById('radioToggleBtn'),s=document.getElementById('radioVolume'),d=document.getElementById('radioDot');try{const v=localStorage.getItem('radio_volume_v2');if(v){a.volume=parseFloat(v);s.value=parseFloat(v)}}catch(e){}
+function t(){if(p){a.pause();p=false;b.textContent='▶';b.classList.remove('active');d.className='dot paused';showToast('⏸ Радио на паузе')}else{a.play().then(()=>{p=true;b.textContent='⏸';b.classList.add('active');d.className='dot';showToast('🎵 Lofi Radio включено')}).catch(()=>showToast('⚠️ Не удалось запустить'))}}
+s.addEventListener('input',function(){const v=parseFloat(this.value);a.volume=v;localStorage.setItem('radio_volume_v2',v.toString())});b.addEventListener('click',t)})();
 
-        function circuitStartTotalTimer() {
-            cState.totalInterval = setInterval(() => { cState.totalSeconds++;
-                circuitUpdateTotalTime(); }, 1000);
-        }
+// ===== КРУГОВАЯ =====
+const CKEY='circuit_trainer_data_v3';
+function defC(){return{exercises:[{id:'ex1',name:'Подтягивания',max:10,checked:true},{id:'ex2',name:'Отжимания',max:25,checked:true},{id:'ex3',name:'Приседания',max:30,checked:true},{id:'ex4',name:'Бёрпи',max:15,checked:true}],programs:[],history:[],stats:{totalWorkouts:0,totalReps:0}}}
+let cData=defC();
+function loadC(){try{const r=localStorage.getItem(CKEY);if(r){const p=JSON.parse(r);cData=p;if(cData.exercises)cData.exercises=cData.exercises.map(e=>({...e,checked:e.checked!==undefined?e.checked:true}));if(!cData.stats)cData.stats={totalWorkouts:0,totalReps:0};if(!cData.history)cData.history=[];if(!cData.programs)cData.programs=[]}}catch(e){cData=defC()}renderCAll()}
+function saveC(){localStorage.setItem(CKEY,JSON.stringify(cData))}
+function getPyr(m){return[m,Math.max(1,Math.round(m*.8)),Math.max(1,Math.round(m*.6)),Math.max(1,Math.round(m*.5)),Math.max(1,Math.round(m*.5))]}
+function selCEx(){return(cData.exercises||[]).filter(e=>e.checked&&e.max>0)}
+let cState={active:false,exercises:[],curEx:0,curSet:0,rest:false,timerSec:120,timerInt:null,done:0,total:0,log:[],start:null,alerted:false,totalSec:0,totalInt:null,early:false,last:null};
 
-        function circuitUpdateTotalTime() { const s = cState.totalSeconds;
-            document.getElementById('circuitTotalTime').textContent = formatTime(s); }
+function renderCEx(){const cont=document.getElementById('circuitExerciseList');if(!cData.exercises||!cData.exercises.length){cont.innerHTML='<div class="text-muted" style="padding:8px 0;">Добавьте упражнения</div>';return}
+cont.innerHTML=cData.exercises.map(ex=>`
+<div class="exercise-item">
+<input type="checkbox" class="circuit-ex-check" data-id="${ex.id}" ${ex.checked?'checked':''}>
+<span class="exercise-name">${ex.name}</span>
+<span class="exercise-max circuit-max-edit" data-id="${ex.id}">${ex.max}</span>
+<button class="delete-ex circuit-delete-ex" data-id="${ex.id}">×</button>
+</div>`).join('');
+document.querySelectorAll('.circuit-ex-check').forEach(cb=>cb.addEventListener('change',()=>{const e=cData.exercises.find(x=>x.id===cb.dataset.id);if(e){e.checked=cb.checked;saveC()}}));
+document.querySelectorAll('.circuit-max-edit').forEach(el=>el.addEventListener('click',()=>{const id=el.dataset.id,e=cData.exercises.find(x=>x.id===id);if(!e)return;const v=prompt('Новый максимум для '+e.name+':',e.max);if(v!==null){const n=parseInt(v);if(n>0){e.max=n;saveC();renderCEx();renderCProgSel()}}}));
+document.querySelectorAll('.circuit-delete-ex').forEach(btn=>btn.addEventListener('click',()=>{const id=btn.dataset.id;if(!confirm('Удалить?'))return;cData.exercises=cData.exercises.filter(x=>x.id!==id);saveC();renderCEx();renderCProgSel()}));
+document.getElementById('selectAllEx').checked=cData.exercises.every(e=>e.checked);
+}
+function renderCProgs(){const cont=document.getElementById('circuitProgramsList');if(!cData.programs||!cData.programs.length){cont.innerHTML='<div class="text-muted" style="padding:8px 0;">Нет программ</div>';return}
+cont.innerHTML=cData.programs.map((p,i)=>`
+<div class="program-item"><div><span class="p-name">${p.name}</span> <span class="p-count">${p.exercises.length} упр.</span></div><div class="program-actions"><button class="btn btn-primary circuit-load-prog" data-idx="${i}" style="width:auto;padding:4px 12px;font-size:12px;">Загрузить</button><button class="btn btn-danger circuit-del-prog" data-idx="${i}" style="width:auto;padding:4px 12px;font-size:12px;">×</button></div></div>`).join('');
+document.querySelectorAll('.circuit-load-prog').forEach(b=>b.addEventListener('click',()=>{const i=parseInt(b.dataset.idx),p=cData.programs[i];if(p){cData.exercises=p.exercises.map(e=>({...e,id:genId(),checked:true}));saveC();renderCEx();renderCProgSel();showToast('📂 Загружено: '+p.name)}}));
+document.querySelectorAll('.circuit-del-prog').forEach(b=>b.addEventListener('click',()=>{const i=parseInt(b.dataset.idx);if(!confirm('Удалить программу?'))return;cData.programs.splice(i,1);saveC();renderCProgs();renderCProgSel()}));
+}
+function renderCProgSel(){const sel=document.getElementById('programSelect');sel.innerHTML='<option value="">— Выбрать программу —</option>'+cData.programs.map((p,i)=>`<option value="${i}">${p.name}</option>`).join('')}
+function renderCAll(){renderCEx();renderCProgs();renderCProgSel()}
 
-        function circuitUpdateUI() {
-            const ex = cState.exercises[cState.currentExIndex];
-            const setIdx = cState.currentSetIndex;
-            const completed = cState.completedSets;
-            const total = cState.totalSets;
-            document.getElementById('circuitProgress').textContent = completed;
-            document.getElementById('circuitTotalSets').textContent = total;
-            document.getElementById('circuitProgressFill').style.width = total > 0 ? Math.min(100, (completed / total *
-                100)) + '%' : '0%';
-            const badge = document.getElementById('circuitStatus');
-            if (cState.isResting) { badge.textContent = '😴 Отдых';
-                badge.className = 'status-badge resting'; } else { badge.textContent = '▶ Активно';
-                badge.className = 'status-badge'; }
-            if (ex && !cState.isResting) {
-                document.getElementById('circuitExName').textContent = ex.name;
-                document.getElementById('circuitExDetail').textContent = `подход ${setIdx+1} из 5 · макс: ${ex.max}`;
-                document.getElementById('circuitExTarget').textContent = ex.sets[setIdx] || 0;
-            } else if (ex && cState.isResting) {
-                document.getElementById('circuitExName').textContent = '😴 Отдых';
-                document.getElementById('circuitExDetail').textContent = `Следующий: ${ex.name}`;
-                document.getElementById('circuitExTarget').textContent = ex.sets[setIdx] || 0;
-            }
-            const timerEl = document.getElementById('circuitTimer');
-            if (cState.isResting) {
-                const s = Math.max(0, cState.timerSeconds);
-                timerEl.textContent = formatTime(s);
-                timerEl.className = s <= 5 ? 'timer-display resting-warning' : 'timer-display resting';
-            } else { timerEl.textContent = '🏋️';
-                timerEl.className = 'timer-display'; }
-            document.getElementById('circuitCompleteBtn').disabled = cState.isResting || !cState.active;
-        }
+function cStart(){const sel=selCEx();if(!sel.length){showToast('⚠️ Отметьте упражнения');return}
+cState.exercises=sel.map(e=>({id:e.id,name:e.name,max:e.max,sets:getPyr(e.max)}));
+cState.curEx=0;cState.curSet=0;cState.rest=false;cState.done=0;cState.total=sel.length*5;cState.log=[];cState.start=Date.now();cState.alerted=false;cState.totalSec=0;cState.early=false;
+if(cState.timerInt)clearInterval(cState.timerInt);if(cState.totalInt)clearInterval(cState.totalInt);
+document.getElementById('circuitSetup').classList.add('hidden');document.getElementById('circuitActive').classList.remove('hidden');document.getElementById('circuitSummary').classList.add('hidden');
+cState.active=true;cUpdateUI();cState.totalInt=setInterval(()=>{cState.totalSec++;document.getElementById('circuitTotalTime').textContent=fmt(cState.totalSec)},1000);showToast('🏋️ Начинаем!')}
+function cUpdateUI(){const ex=cState.exercises[cState.curEx],si=cState.curSet,done=cState.done,total=cState.total;
+document.getElementById('circuitProgress').textContent=done;document.getElementById('circuitTotalSets').textContent=total;document.getElementById('circuitProgressFill').style.width=total>0?Math.min(100,done/total*100)+'%':'0%';
+const badge=document.getElementById('circuitStatus');if(cState.rest){badge.textContent='😴 Отдых';badge.className='status-badge resting'}else{badge.textContent='▶ Активно';badge.className='status-badge'}
+if(ex&&!cState.rest){document.getElementById('circuitExName').textContent=ex.name;document.getElementById('circuitExDetail').textContent='подход '+(si+1)+' из 5 · макс: '+ex.max;document.getElementById('circuitExTarget').textContent=ex.sets[si]||0}else if(ex&&cState.rest){document.getElementById('circuitExName').textContent='😴 Отдых';document.getElementById('circuitExDetail').textContent='Следующий: '+ex.name;document.getElementById('circuitExTarget').textContent=ex.sets[si]||0}
+const t=document.getElementById('circuitTimer');if(cState.rest){const s=Math.max(0,cState.timerSec);t.textContent=fmt(s);t.className=s<=5?'timer-display resting-warning':'timer-display resting'}else{t.textContent='🏋️';t.className='timer-display'}
+document.getElementById('circuitCompleteBtn').disabled=cState.rest||!cState.active}
+function cRestStart(){if(cState.timerInt)clearInterval(cState.timerInt);cState.rest=true;cState.timerSec=120;cState.alerted=false;cUpdateUI();cState.timerInt=setInterval(()=>{cState.timerSec--;cUpdateUI();if(cState.timerSec<=5&&!cState.alerted){cState.alerted=true;beep(600,200,1);vib(100)}if(cState.timerSec<=0){clearInterval(cState.timerInt);cState.timerInt=null;cState.rest=false;beep(880,300,3);vib([300,150,300,150,400]);cAdvance()}},1000)}
+function cAdvance(){const total=cState.exercises.length,ei=cState.curEx,si=cState.curSet;
+if(ei+1<total){cState.curEx++;cState.rest=false;cUpdateUI();showToast('➡️ '+cState.exercises[cState.curEx].name);return}
+if(si+1<5){cState.curEx=0;cState.curSet++;cState.rest=false;cUpdateUI();showToast('🔄 Круг '+(cState.curSet+1));return}
+cFinish(false)}
+function cComplete(){if(!cState.active||cState.rest)return;const ex=cState.exercises[cState.curEx],si=cState.curSet,reps=ex.sets[si]||0;cState.log.push({exName:ex.name,setNum:si+1,reps,max:ex.max});cState.done++;beep(600,150,1);vib(100);if(cState.done>=cState.total){cFinish(false);return}cRestStart();showToast('⏱ Отдых 2 минуты')}
+function cSkipRest(){if(!cState.rest)return;if(cState.timerInt)clearInterval(cState.timerInt);cState.rest=false;cState.alerted=false;cAdvance();showToast('⏭ Отдых пропущен')}
+function cFinish(early){cState.active=false;cState.early=early;if(cState.timerInt)clearInterval(cState.timerInt);if(cState.totalInt)clearInterval(cState.totalInt);const totalReps=cState.log.reduce((s,l)=>s+l.reps,0),dur=cState.totalSec,durStr=Math.floor(dur/60)+' мин '+dur%60+' сек';cState.last={totalReps,duration:durStr,durSec:dur,log:cState.log,early:early};document.getElementById('circuitActive').classList.add('hidden');const summary=document.getElementById('circuitSummary');summary.classList.remove('hidden');let html='';if(early)html+='<div style="color:#d4a03a;font-weight:600;">⏹ Досрочное завершение</div>';html+='<div style="font-size:14px;margin:4px 0;">✅ Подходов: '+cState.log.length+'</div><div style="font-size:24px;font-weight:700;color:#4c8b3c;">'+totalReps+' повторений</div><div class="text-muted" style="font-size:13px;">⏱ '+durStr+'</div><div style="margin-top:8px;max-height:120px;overflow-y:auto;text-align:left;font-size:12px;background:rgba(255,255,255,0.04);border-radius:8px;padding:6px 10px;">';cState.log.forEach(l=>{html+='<div>• '+l.exName+' — '+l.setNum+'/5: '+l.reps+' повт.</div>'});html+='</div>';document.getElementById('circuitSummaryContent').innerHTML=html;document.getElementById('circuitSaveBtn').dataset.reps=totalReps;document.getElementById('circuitSaveBtn').dataset.log=JSON.stringify(cState.log);document.getElementById('circuitSaveBtn').disabled=false;document.getElementById('circuitSaveBtn').textContent='💾 Сохранить';if(!early){beep(880,400,2);vib([300,200,300])}showToast(early?'⏹ Остановлено':'🏁 Тренировка завершена!')}
+function cSave(){const btn=document.getElementById('circuitSaveBtn'),reps=parseInt(btn.dataset.reps)||0,log=JSON.parse(btn.dataset.log||'[]');cData.history.push({date:Date.now(),reps,name:cState.early?'Досрочно':'Круговая',details:log,early:cState.early});cData.stats.totalWorkouts=(cData.stats.totalWorkouts||0)+1;cData.stats.totalReps=(cData.stats.totalReps||0)+reps;saveC();btn.disabled=true;btn.textContent='✅ Сохранено';showToast('💾 Сохранено!')}
+function cReset(){cState.active=false;if(cState.timerInt)clearInterval(cState.timerInt);if(cState.totalInt)clearInterval(cState.totalInt);document.getElementById('circuitActive').classList.add('hidden');document.getElementById('circuitSummary').classList.add('hidden');document.getElementById('circuitSetup').classList.remove('hidden');document.getElementById('circuitSaveBtn').disabled=false;document.getElementById('circuitSaveBtn').textContent='💾 Сохранить';document.getElementById('circuitTotalTime').textContent='00:00';showToast('🔄 Сброшено')}
 
-        function circuitStartRest() {
-            if (cState.timerInterval) clearInterval(cState.timerInterval);
-            cState.isResting = true;
-            cState.timerSeconds = 120;
-            cState.restAlerted = false;
-            circuitUpdateUI();
-            cState.timerInterval = setInterval(() => {
-                cState.timerSeconds--;
-                circuitUpdateUI();
-                if (cState.timerSeconds <= 5 && !cState.restAlerted) {
-                    cState.restAlerted = true;
-                    playBeep(600, 200, 1);
-                    vibrate(100);
-                }
-                if (cState.timerSeconds <= 0) {
-                    clearInterval(cState.timerInterval);
-                    cState.timerInterval = null;
-                    cState.isResting = false;
-                    playBeep(880, 300, 3);
-                    vibrate([300, 150, 300, 150, 400]);
-                    circuitAdvance();
-                }
-            }, 1000);
-        }
+document.getElementById('circuitStartBtn').addEventListener('click',()=>{const sel=document.getElementById('programSelect');if(sel.value!==''){const idx=parseInt(sel.value),p=cData.programs[idx];if(p){cData.exercises=p.exercises.map(e=>({...e,id:genId(),checked:true}));saveC();renderCEx();renderCProgSel();showToast('📂 Загружено: '+p.name)}}cStart()});
+document.getElementById('circuitCompleteBtn').addEventListener('click',cComplete);
+document.getElementById('circuitSkipRestBtn').addEventListener('click',cSkipRest);
+document.getElementById('circuitFinishEarlyBtn').addEventListener('click',()=>{if(!cState.active)return;if(confirm('Завершить досрочно?'))cFinish(true)});
+document.getElementById('circuitStopBtn').addEventListener('click',()=>{if(!confirm('Остановить?'))return;cReset()});
+document.getElementById('circuitSaveBtn').addEventListener('click',cSave);
+document.getElementById('circuitResetBtn').addEventListener('click',cReset);
+document.getElementById('addExBtn').addEventListener('click',()=>{const n=document.getElementById('newExName'),m=document.getElementById('newExMax'),name=n.value.trim(),max=parseInt(m.value)||10;if(!name){showToast('Введите название');return}if(max<1){showToast('Максимум ≥ 1');return}cData.exercises.push({id:genId(),name,max,checked:true});saveC();renderCEx();renderCProgSel();n.value='';m.value='10';showToast('➕ '+name)});
+document.getElementById('saveProgramBtn').addEventListener('click',()=>{const n=document.getElementById('programNameInput'),name=n.value.trim();if(!name){showToast('Введите название');return}const selected=selCEx();if(!selected.length){showToast('Отметьте упражнения');return}cData.programs.push({id:genId(),name,exercises:selected.map(e=>({name:e.name,max:e.max}))});saveC();renderCProgs();renderCProgSel();n.value='';showToast('💾 Программа "'+name+'" сохранена')});
+document.getElementById('selectAllEx').addEventListener('change',e=>{cData.exercises.forEach(x=>x.checked=e.target.checked);saveC();renderCEx()});
 
-        function circuitAdvance() {
-            const totalEx = cState.exercises.length;
-            const exIdx = cState.currentExIndex;
-            const setIdx = cState.currentSetIndex;
-            if (exIdx + 1 < totalEx) {
-                cState.currentExIndex++;
-                cState.isResting = false;
-                circuitUpdateUI();
-                showToast(`➡️ ${cState.exercises[cState.currentExIndex].name}`);
-                return;
-            }
-            if (setIdx + 1 < 5) {
-                cState.currentExIndex = 0;
-                cState.currentSetIndex++;
-                cState.isResting = false;
-                circuitUpdateUI();
-                showToast(`🔄 Круг ${cState.currentSetIndex+1}`);
-                return;
-            }
-            circuitFinish(false);
-        }
+// ===== КОЛОДА =====
+const PKEY='prisonDeckData_v3';
+const SUITS=['♥️','♠️','♦️','♣️'], RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const EX_MAP={'♥️':'Отжимания','♠️':'Подтягивания','♦️':'Приседания','♣️':'Скручивания'};
+let pData={dailyStats:{}};
+function loadP(){try{const r=localStorage.getItem(PKEY);if(r){const p=JSON.parse(r);pData=p;if(!pData.dailyStats)pData.dailyStats={}}}catch(e){pData={dailyStats:{}}}const t=today();if(!pData.dailyStats[t])pData.dailyStats[t]={totalReps:0,exercises:{},sets:{},completedCards:0};saveP();renderPAll()}
+function saveP(){localStorage.setItem(PKEY,JSON.stringify(pData))}
+let pState={deck:[],card:null,done:0,active:false,reps:0,sec:0,int:null,start:null},pDay=null;
 
-        function circuitCompleteSet() {
-            if (!cState.active || cState.isResting) return;
-            const ex = cState.exercises[cState.currentExIndex];
-            const setIdx = cState.currentSetIndex;
-            const reps = ex.sets[setIdx] || 0;
-            cState.workoutLog.push({ exName: ex.name, setNum: setIdx + 1, reps, max: ex.max });
-            cState.completedSets++;
-            playBeep(600, 150, 1);
-            vibrate(100);
-            if (cState.completedSets >= cState.totalSets) { circuitFinish(false); return; }
-            circuitStartRest();
-            showToast('⏱ Отдых 2 минуты');
-        }
+function buildDeck(){const c=[];for(const s of SUITS)for(const r of RANKS){let v=10;if(r==='A')v=11;else if(['J','Q','K'].includes(r))v=10;else v=parseInt(r,10);c.push({suit:s,rank:r,value:v})}return c}
+function shuffle(d){for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
+function getEx(s){return EX_MAP[s]||s}
+function addDay(ex,reps){if(!pState.active)return;const t=today();if(!pData.dailyStats[t])pData.dailyStats[t]={totalReps:0,exercises:{},sets:{},completedCards:0};const day=pData.dailyStats[t];day.totalReps=(day.totalReps||0)+reps;day.completedCards=(day.completedCards||0)+1;if(!day.exercises[ex])day.exercises[ex]=0;day.exercises[ex]+=reps;if(!day.sets[ex])day.sets[ex]=0;day.sets[ex]++;saveP();pUpdatePreview()}
 
-        function circuitSkipRest() {
-            if (!cState.isResting) return;
-            if (cState.timerInterval) clearInterval(cState.timerInterval);
-            cState.isResting = false;
-            cState.restAlerted = false;
-            circuitAdvance();
-            showToast('⏭ Отдых пропущен');
-        }
+function pUpdateUI(){const c=pState.card;if(!c)return;const suit=c.suit,rank=c.rank,ex=getEx(suit),isRed=suit==='♥️'||suit==='♦️',cl=isRed?'suit-red':'suit-black';
+document.getElementById('pCornerTLRank').textContent=rank;document.getElementById('pCornerTLSuit').textContent=suit;document.getElementById('pCenterRank').textContent=rank;document.getElementById('pCenterSuit').textContent=suit;document.getElementById('pCornerBRRank').textContent=rank;document.getElementById('pCornerBRSuit').textContent=suit;
+document.querySelectorAll('#pCornerTLSuit,#pCenterSuit,#pCornerBRSuit,#pCornerTLRank,#pCenterRank,#pCornerBRRank').forEach(el=>{el.classList.remove('suit-red','suit-black');el.classList.add(cl)});
+document.getElementById('pExerciseLabel').textContent=ex;document.getElementById('pRepsLabel').textContent='повторов: '+c.value;document.getElementById('pCompletedCards').textContent=pState.done}
+function pUpdatePreview(){const t=today(),data=pData.dailyStats[t]||{totalReps:0,completedCards:0};const total=Object.values(pData.dailyStats).reduce((acc,d)=>acc+(d.totalReps||0),0);document.getElementById('prisonPreviewStats').innerHTML='<div style="display:flex;justify-content:space-between;padding:4px 0;"><span>📅 Сегодня:</span><span>'+(data.completedCards||0)+' карт</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;"><span>💪 Повторений:</span><span>'+(data.totalReps||0)+'</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;"><span>🏆 Всего:</span><span>'+total+' повтор.</span></div>'}
 
-        function circuitFinish(early) {
-            cState.active = false;
-            cState.finishedEarly = early || false;
-            if (cState.timerInterval) clearInterval(cState.timerInterval);
-            if (cState.totalInterval) clearInterval(cState.totalInterval);
-            const totalReps = cState.workoutLog.reduce((s, l) => s + l.reps, 0);
-            const duration = cState.totalSeconds;
-            const durStr = `${Math.floor(duration/60)} мин ${duration%60} сек`;
-            cState.lastResult = { totalReps, duration: durStr, durationSeconds: duration, log: cState.workoutLog,
-                early: early || false };
-            document.getElementById('circuitActive').classList.add('hidden');
-            const summary = document.getElementById('circuitSummary');
-            summary.classList.remove('hidden');
-            let html = '';
-            if (early) html += `<div style="color:#d4a03a; font-weight:600;">⏹ Досрочное завершение</div>`;
-            html += `<div style="font-size:14px; margin:4px 0;">✅ Подходов: ${cState.workoutLog.length}</div>`;
-            html += `<div style="font-size:24px; font-weight:700; color:#4c8b3c;">${totalReps} повторений</div>`;
-            html += `<div class="text-muted" style="font-size:13px;">⏱ ${durStr}</div>`;
-            html +=
-                `<div style="margin-top:8px; max-height:120px; overflow-y:auto; text-align:left; font-size:12px; background:rgba(255,255,255,0.04); border-radius:8px; padding:6px 10px;">`;
-            cState.workoutLog.forEach(l => { html += `<div>• ${l.exName} — ${l.setNum}/5: ${l.reps} повт.</div>`; });
-            html += `</div>`;
-            document.getElementById('circuitSummaryContent').innerHTML = html;
-            document.getElementById('circuitSaveBtn').dataset.reps = totalReps;
-            document.getElementById('circuitSaveBtn').dataset.log = JSON.stringify(cState.workoutLog);
-            document.getElementById('circuitSaveBtn').disabled = false;
-            document.getElementById('circuitSaveBtn').textContent = '💾 Сохранить';
-            if (!early) { playBeep(880, 400, 2);
-                vibrate([300, 200, 300]); }
-            showToast(early ? '⏹ Остановлено' : '🏁 Тренировка завершена!');
-        }
+function pStart(){const d=shuffle(buildDeck());pState.deck=d;pState.done=0;pState.active=true;pState.reps=0;pState.sec=0;pState.start=Date.now();if(pState.int)clearInterval(pState.int);pState.int=setInterval(()=>{if(pState.active&&pState.start){pState.sec=Math.floor((Date.now()-pState.start)/1000);document.getElementById('pSessionTime').textContent=fmt(pState.sec)}},1000);if(pState.deck.length){pState.card=pState.deck.pop();pUpdateUI()}document.getElementById('prisonMain').classList.add('hidden');document.getElementById('prisonTrain').classList.remove('hidden');document.getElementById('prisonStats').classList.add('hidden');showToast('🃏 Колода перетасована!')}
+function pComplete(){if(!pState.active||!pState.card){showToast('⚠️ Нет активной карты');return}const suit=pState.card.suit,ex=getEx(suit),reps=pState.card.value;addDay(ex,reps);pState.reps+=reps;pState.done++;if(!pState.deck.length){showToast('🎉 ПОЗДРАВЛЯЮ! Вся колода выполнена!');pFinish();return}pState.card=pState.deck.pop();pUpdateUI();document.getElementById('pCompletedCards').textContent=pState.done;beep(600,150,1);vib(100)}
+function pFinish(){pState.active=false;if(pState.int)clearInterval(pState.int);const r=pState.reps,t=fmt(pState.sec);showToast('🏁 Тренировка завершена! '+r+' повторений за '+t);document.getElementById('prisonTrain').classList.add('hidden');document.getElementById('prisonMain').classList.remove('hidden');pUpdatePreview()}
+function pReset(){if(!confirm('Сбросить текущую тренировку?'))return;pState.active=false;if(pState.int)clearInterval(pState.int);document.getElementById('prisonTrain').classList.add('hidden');document.getElementById('prisonMain').classList.remove('hidden');showToast('🔄 Сброшено')}
 
-        function circuitSaveResult() {
-            const btn = document.getElementById('circuitSaveBtn');
-            const reps = parseInt(btn.dataset.reps) || 0;
-            const log = JSON.parse(btn.dataset.log || '[]');
-            circuitData.history.push({ date: Date.now(), reps: reps, name: cState.finishedEarly ? 'Досрочно' :
-                    'Круговая', details: log, early: cState.finishedEarly });
-            circuitData.stats.totalWorkouts = (circuitData.stats.totalWorkouts || 0) + 1;
-            circuitData.stats.totalReps = (circuitData.stats.totalReps || 0) + reps;
-            saveCircuitData();
-            btn.disabled = true;
-            btn.textContent = '✅ Сохранено';
-            showToast('💾 Сохранено!');
-        }
+function pRenderDaySelector(){const cont=document.getElementById('pDaySelector');const days=Object.keys(pData.dailyStats||{}).sort().reverse();cont.innerHTML='';if(!days.length){cont.innerHTML='<div class="text-muted">Нет данных</div>';return}days.forEach(d=>{const b=document.createElement('button');b.className='day-btn';if(pDay===d)b.classList.add('active-day');b.textContent=d;b.addEventListener('click',()=>{pDay=d;pRenderDaySelector();pRenderDayStats(d)});cont.appendChild(b)});if(!pDay&&days.length)pDay=days[0];if(pDay)pRenderDayStats(pDay)}
+function pRenderDayStats(d){const data=pData.dailyStats[d],cont=document.getElementById('pDailyStatsContent');if(!data){cont.innerHTML='<div class="text-muted text-center" style="padding:16px;">Нет данных</div>';return}let exHtml='';for(const [ex,reps] of Object.entries(data.exercises||{})){const sets=data.sets?.[ex]||0;exHtml+='<div class="stat-line"><span>💪 '+ex+'</span><span>'+reps+' повт. ('+sets+' сетов)</span></div>'}cont.innerHTML='<div class="total-day-reps">📇 Карт: '+(data.completedCards||0)+' / 52</div><div class="total-day-reps" style="background:rgba(76,139,60,0.2);">🔥 Повторений: '+(data.totalReps||0)+'</div>'+exHtml}
+function pRenderAll(){pUpdatePreview();pRenderDaySelector()}
 
-        function circuitReset() {
-            cState.active = false;
-            if (cState.timerInterval) clearInterval(cState.timerInterval);
-            if (cState.totalInterval) clearInterval(cState.totalInterval);
-            document.getElementById('circuitActive').classList.add('hidden');
-            document.getElementById('circuitSummary').classList.add('hidden');
-            document.getElementById('circuitSetup').classList.remove('hidden');
-            document.getElementById('circuitSaveBtn').disabled = false;
-            document.getElementById('circuitSaveBtn').textContent = '💾 Сохранить';
-            document.getElementById('circuitTotalTime').textContent = '00:00';
-            showToast('🔄 Сброшено');
-        }
+document.getElementById('prisonStartBtn').addEventListener('click',pStart);
+document.getElementById('prisonStatsBtn').addEventListener('click',()=>{document.getElementById('prisonMain').classList.add('hidden');document.getElementById('prisonTrain').classList.add('hidden');document.getElementById('prisonStats').classList.remove('hidden');pRenderDaySelector()});
+document.getElementById('prisonCompleteBtn').addEventListener('click',pComplete);
+document.getElementById('prisonFinishBtn').addEventListener('click',pFinish);
+document.getElementById('prisonResetBtn').addEventListener('click',pReset);
+document.getElementById('pBackFromStats').addEventListener('click',()=>{document.getElementById('prisonStats').classList.add('hidden');document.getElementById('prisonMain').classList.remove('hidden');pUpdatePreview()});
+document.getElementById('pResetDayBtn').addEventListener('click',()=>{if(!pDay){showToast('Выберите день');return}if(!confirm('Сбросить '+pDay+'?'))return;delete pData.dailyStats[pDay];saveP();pRenderDaySelector();pUpdatePreview();showToast('🗑️ День сброшен')});
+document.getElementById('pClearAllBtn').addEventListener('click',()=>{if(!confirm('Очистить ВСЮ историю?'))return;pData.dailyStats={};const t=today();pData.dailyStats[t]={totalReps:0,exercises:{},sets:{},completedCards:0};saveP();pRenderDaySelector();pUpdatePreview();showToast('⚠️ Вся история очищена')});
 
-        document.getElementById('circuitStartBtn').addEventListener('click', () => {
-            const sel = document.getElementById('programSelect');
-            if (sel.value !== '') {
-                const idx = parseInt(sel.value);
-                const prog = circuitData.programs[idx];
-                if (prog) {
-                    circuitData.exercises = prog.exercises.map(e => ({ ...e, id: generateId(), checked: true }));
-                    saveCircuitData();
-                    renderCircuitExercises();
-                    renderCircuitProgramSelect();
-                    showToast('📂 Загружено: ' + prog.name);
-                }
-            }
-            circuitStartWorkout();
-        });
-        document.getElementById('circuitCompleteBtn').addEventListener('click', circuitCompleteSet);
-        document.getElementById('circuitSkipRestBtn').addEventListener('click', circuitSkipRest);
-        document.getElementById('circuitFinishEarlyBtn').addEventListener('click', () => {
-            if (!cState.active) return;
-            if (confirm('Завершить досрочно?')) circuitFinish(true);
-        });
-        document.getElementById('circuitStopBtn').addEventListener('click', () => {
-            if (!confirm('Остановить?')) return;
-            circuitReset();
-        });
-        document.getElementById('circuitSaveBtn').addEventListener('click', circuitSaveResult);
-        document.getElementById('circuitResetBtn').addEventListener('click', circuitReset);
+// ===== НАВИГАЦИЯ =====
+document.querySelectorAll('.mode-tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');document.querySelectorAll('.mode-content').forEach(c=>c.classList.remove('active'));document.getElementById('mode-'+tab.dataset.mode).classList.add('active')}));
 
-        document.getElementById('addExBtn').addEventListener('click', () => {
-            const nameInput = document.getElementById('newExName');
-            const maxInput = document.getElementById('newExMax');
-            const name = nameInput.value.trim();
-            const max = parseInt(maxInput.value) || 10;
-            if (!name) { showToast('Введите название'); return; }
-            if (max < 1) { showToast('Максимум ≥ 1'); return; }
-            circuitData.exercises.push({ id: generateId(), name, max, checked: true });
-            saveCircuitData();
-            renderCircuitExercises();
-            renderCircuitProgramSelect();
-            nameInput.value = '';
-            maxInput.value = '10';
-            showToast('➕ ' + name);
-        });
-
-        document.getElementById('saveProgramBtn').addEventListener('click', () => {
-            const nameInput = document.getElementById('programNameInput');
-            const name = nameInput.value.trim();
-            if (!name) { showToast('Введите название'); return; }
-            const selected = getSelectedCircuitEx();
-            if (selected.length === 0) { showToast('Отметьте упражнения'); return; }
-            circuitData.programs.push({ id: generateId(), name, exercises: selected.map(e => ({ name: e.name,
-                    max: e.max })) });
-            saveCircuitData();
-            renderCircuitPrograms();
-            renderCircuitProgramSelect();
-            nameInput.value = '';
-            showToast('💾 Программа "' + name + '" сохранена');
-        });
-
-        document.getElementById('selectAllEx').addEventListener('change', (e) => {
-            circuitData.exercises.forEach(ex => ex.checked = e.target.checked);
-            saveCircuitData();
-            renderCircuitExercises();
-        });
-
-        // ================================================================
-        // КОЛОДА
-        // ================================================================
-
-        const PRISON_KEY = 'prisonDeckData_v3';
-        const DEFAULT_EXERCISES = { "♥️": "Отжимания", "♠️": "Подтягивания", "♦️": "Приседания", "♣️": "Скручивания" };
-        const SUITS = ['♥️', '♠️', '♦️', '♣️'];
-        const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-
-        let prisonData = { dailyStats: {}, customExercises: { ...DEFAULT_EXERCISES } };
-
-        function loadPrisonData() {
-            try {
-                const raw = localStorage.getItem(PRISON_KEY);
-                if (raw) {
-                    const parsed = JSON.parse(raw);
-                    prisonData = parsed;
-                    if (!prisonData.customExercises) prisonData.customExercises = { ...DEFAULT_EXERCISES };
-                    if (!prisonData.dailyStats) prisonData.dailyStats = {};
-                }
-            } catch (e) { prisonData = { dailyStats: {}, customExercises: { ...DEFAULT_EXERCISES } }; }
-            const today = getTodayKey();
-            if (!prisonData.dailyStats[today]) { prisonData.dailyStats[today] = { totalReps: 0, exercises: {},
-                    sets: {}, completedCards: 0 }; }
-            savePrisonData();
-            renderPrisonAll();
-        }
-
-        function savePrisonData() { localStorage.setItem(PRISON_KEY, JSON.stringify(prisonData)); }
-
-        let pState = { deck: [], currentCard: null, completedCards: 0, isActive: false, sessionReps: 0,
-            sessionSeconds: 0, sessionInterval: null, startTime: null };
-        let pActiveDay = null;
-
-        function buildPrisonDeck() {
-            const cards = [];
-            for (const suit of SUITS) {
-                for (const rank of RANKS) {
-                    let val = 10;
-                    if (rank === 'A') val = 11;
-                    else if (['J', 'Q', 'K'].includes(rank)) val = 10;
-                    else val = parseInt(rank, 10);
-                    cards.push({ suit, rank, value: val });
-                }
-            }
-            return cards;
-        }
-
-        function shufflePrison(deck) { for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (
-                    i + 1));
-                [deck[i], deck[j]] = [deck[j], deck[i]]; } return deck; }
-
-        function getPrisonExercise(suit) { return prisonData.customExercises[suit] || suit; }
-
-        function prisonAddToDay(exercise, reps) {
-            if (!pState.isActive) return;
-            const today = getTodayKey();
-            if (!prisonData.dailyStats[today]) { prisonData.dailyStats[today] = { totalReps: 0, exercises: {},
-                    sets: {}, completedCards: 0 }; }
-            const day = prisonData.dailyStats[today];
-            day.totalReps = (day.totalReps || 0) + reps;
-            day.completedCards = (day.completedCards || 0) + 1;
-            if (!day.exercises[exercise]) day.exercises[exercise] = 0;
-            day.exercises[exercise] += reps;
-            if (!day.sets[exercise]) day.sets[exercise] = 0;
-            day.sets[exercise] += 1;
-            savePrisonData();
-            prisonUpdatePreview();
-        }
-
-        // ===== НАСТРОЙКИ КОЛОДЫ — СПИСОК С КАРАНДАШОМ =====
-
-        function renderPrisonSuitConfig() {
-            const container = document.getElementById('pSuitConfigContainer');
-            container.innerHTML = '';
-
-            for (const suit of SUITS) {
-                const currentExercise = prisonData.customExercises[suit] || suit;
-
-                const item = document.createElement('div');
-                item.className = 'suit-item';
-
-                // Иконка масти
-                const icon = document.createElement('span');
-                icon.className = 'suit-icon';
-                icon.textContent = suit;
-
-                // Название упражнения (отображается всегда)
-                const nameSpan = document.createElement('span');
-                nameSpan.className = 'suit-exercise-name';
-                nameSpan.textContent = currentExercise;
-
-                // Кнопка редактирования с карандашом
-                const editBtn = document.createElement('button');
-                editBtn.className = 'suit-edit-btn';
-                editBtn.dataset.suit = suit;
-
-                // Текст внутри кнопки (показывает текущее название)
-                const textSpan = document.createElement('span');
-                textSpan.className = 'edit-text';
-                textSpan.textContent = currentExercise;
-
-                // Иконка карандаша
-                const pencilSpan = document.createElement('span');
-                pencilSpan.className = 'pencil';
-                pencilSpan.textContent = '✎';
-
-                editBtn.appendChild(textSpan);
-                editBtn.appendChild(pencilSpan);
-
-                // Клик по кнопке — редактирование
-                editBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-
-                    // Если уже редактируем — ничего не делаем
-                    if (editBtn.querySelector('input')) return;
-
-                    const currentVal = prisonData.customExercises[suit] || suit;
-
-                    // Скрываем текст и карандаш
-                    textSpan.classList.add('hidden');
-                    pencilSpan.style.display = 'none';
-
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.value = currentVal;
-                    input.maxLength = 30;
-                    input.spellcheck = false;
-
-                    editBtn.classList.add('editing');
-                    editBtn.appendChild(input);
-
-                    input.focus();
-                    input.select();
-
-                    const finishEdit = () => {
-                        const newVal = input.value.trim() || suit;
-                        if (newVal !== currentVal) {
-                            prisonData.customExercises[suit] = newVal;
-                            savePrisonData();
-                            renderPrisonSuitConfig();
-                            if (pState.currentCard && pState.currentCard.suit === suit && pState.isActive) {
-                                prisonUpdateCardUI();
-                            }
-                            showToast(`✅ ${suit} → ${newVal}`);
-                        } else {
-                            // Возвращаем как было
-                            textSpan.classList.remove('hidden');
-                            pencilSpan.style.display = 'inline';
-                            editBtn.classList.remove('editing');
-                            if (input.parentNode) input.remove();
-                        }
-                    };
-
-                    const cancelEdit = () => {
-                        textSpan.classList.remove('hidden');
-                        pencilSpan.style.display = 'inline';
-                        editBtn.classList.remove('editing');
-                        if (input.parentNode) input.remove();
-                    };
-
-                    input.addEventListener('blur', finishEdit);
-                    input.addEventListener('keydown', (ev) => {
-                        if (ev.key === 'Enter') { input.blur();
-                            ev.preventDefault(); }
-                        if (ev.key === 'Escape') { cancelEdit();
-                            ev.preventDefault(); }
-                    });
-                });
-
-                item.appendChild(icon);
-                item.appendChild(nameSpan);
-                item.appendChild(editBtn);
-                container.appendChild(item);
-            }
-        }
-
-        // Prison UI
-        function prisonUpdateCardUI() {
-            const card = pState.currentCard;
-            if (!card) return;
-            const suit = card.suit;
-            const rank = card.rank;
-            const exercise = getPrisonExercise(suit);
-            const isRed = suit === '♥️' || suit === '♦️';
-            const colorClass = isRed ? 'suit-red' : 'suit-black';
-            document.getElementById('pCornerTLRank').textContent = rank;
-            document.getElementById('pCornerTLSuit').textContent = suit;
-            document.getElementById('pCenterRank').textContent = rank;
-            document.getElementById('pCenterSuit').textContent = suit;
-            document.getElementById('pCornerBRRank').textContent = rank;
-            document.getElementById('pCornerBRSuit').textContent = suit;
-            const els = document.querySelectorAll(
-                '#pCornerTLSuit, #pCenterSuit, #pCornerBRSuit, #pCornerTLRank, #pCenterRank, #pCornerBRRank');
-            els.forEach(el => { el.classList.remove('suit-red', 'suit-black');
-                el.classList.add(colorClass); });
-            document.getElementById('pExerciseLabel').textContent = exercise;
-            document.getElementById('pRepsLabel').textContent = `повторов: ${card.value}`;
-            document.getElementById('pCompletedCards').textContent = pState.completedCards;
-        }
-
-        function prisonUpdatePreview() {
-            const today = getTodayKey();
-            const data = prisonData.dailyStats[today] || { totalReps: 0, completedCards: 0 };
-            const totalAll = Object.values(prisonData.dailyStats).reduce((acc, d) => acc + (d.totalReps || 0), 0);
-            document.getElementById('prisonPreviewStats').innerHTML = `
-                <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>📅 Сегодня:</span><span>${data.completedCards || 0} карт</span></div>
-                <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>💪 Повторений:</span><span>${data.totalReps || 0}</span></div>
-                <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>🏆 Всего:</span><span>${totalAll} повтор.</span></div>
-            `;
-        }
-
-        function prisonStartWorkout() {
-            const freshDeck = shufflePrison(buildPrisonDeck());
-            pState.deck = [...freshDeck];
-            pState.completedCards = 0;
-            pState.isActive = true;
-            pState.sessionReps = 0;
-            pState.sessionSeconds = 0;
-            pState.startTime = Date.now();
-            if (pState.sessionInterval) clearInterval(pState.sessionInterval);
-            pState.sessionInterval = setInterval(() => {
-                if (pState.isActive && pState.startTime) {
-                    pState.sessionSeconds = Math.floor((Date.now() - pState.startTime) / 1000);
-                    document.getElementById('pSessionTime').textContent = formatTime(pState.sessionSeconds);
-                }
-            }, 1000);
-            if (pState.deck.length > 0) {
-                pState.currentCard = pState.deck.pop();
-                prisonUpdateCardUI();
-            }
-            document.getElementById('prisonMain').classList.add('hidden');
-            document.getElementById('prisonTrain').classList.remove('hidden');
-            document.getElementById('prisonStats').classList.add('hidden');
-            showToast('🃏 Колода перетасована!');
-        }
-
-        function prisonCompleteCard() {
-            if (!pState.isActive || !pState.currentCard) {
-                showToast('⚠️ Нет активной карты');
-                return;
-            }
-            const suit = pState.currentCard.suit;
-            const exercise = getPrisonExercise(suit);
-            const reps = pState.currentCard.value;
-            prisonAddToDay(exercise, reps);
-            pState.sessionReps += reps;
-            pState.completedCards++;
-            if (pState.deck.length === 0) {
-                showToast('🎉 ПОЗДРАВЛЯЮ! Вся колода выполнена!');
-                prisonFinishWorkout();
-                return;
-            }
-            pState.currentCard = pState.deck.pop();
-            prisonUpdateCardUI();
-            document.getElementById('pCompletedCards').textContent = pState.completedCards;
-            playBeep(600, 150, 1);
-            vibrate(100);
-        }
-
-        function prisonFinishWorkout() {
-            pState.isActive = false;
-            if (pState.sessionInterval) clearInterval(pState.sessionInterval);
-            const totalReps = pState.sessionReps;
-            const time = formatTime(pState.sessionSeconds);
-            showToast(`🏁 Тренировка завершена! ${totalReps} повторений за ${time}`);
-            document.getElementById('prisonTrain').classList.add('hidden');
-            document.getElementById('prisonMain').classList.remove('hidden');
-            prisonUpdatePreview();
-        }
-
-        function prisonResetSession() {
-            if (!confirm('Сбросить текущую тренировку?')) return;
-            pState.isActive = false;
-            if (pState.sessionInterval) clearInterval(pState.sessionInterval);
-            document.getElementById('prisonTrain').classList.add('hidden');
-            document.getElementById('prisonMain').classList.remove('hidden');
-            showToast('🔄 Сброшено');
-        }
-
-        // Prison stats
-        function prisonRenderDaySelector() {
-            const container = document.getElementById('pDaySelector');
-            const days = Object.keys(prisonData.dailyStats || {}).sort().reverse();
-            container.innerHTML = '';
-            if (!days.length) { container.innerHTML = '<div class="text-muted">Нет данных</div>'; return; }
-            days.forEach(day => {
-                const btn = document.createElement('button');
-                btn.className = 'day-btn';
-                btn.style.cssText =
-                    `background:${pActiveDay===day?'#4c8b3c':'rgba(255,255,255,0.06)'}; padding:6px 14px; border-radius:30px; font-size:12px; white-space:nowrap; border:none; color:#e8e9e4; cursor:pointer; font-family:inherit;`;
-                if (pActiveDay === day) btn.style.background = '#4c8b3c';
-                btn.textContent = day;
-                btn.addEventListener('click', () => { pActiveDay = day;
-                    prisonRenderDaySelector();
-                    prisonRenderDayStats(day); });
-                container.appendChild(btn);
-            });
-            if (!pActiveDay && days.length) pActiveDay = days[0];
-            if (pActiveDay) prisonRenderDayStats(pActiveDay);
-        }
-
-        function prisonRenderDayStats(day) {
-            const data = prisonData.dailyStats[day];
-            const container = document.getElementById('pDailyStatsContent');
-            if (!data) { container.innerHTML = '<div class="text-muted text-center" style="padding:16px;">Нет данных</div>'; return; }
-            let exHtml = '';
-            for (const [ex, reps] of Object.entries(data.exercises || {})) {
-                const sets = data.sets?.[ex] || 0;
-                exHtml +=
-                    `<div style="display:flex; justify-content:space-between; padding:6px 4px; border-bottom:1px solid rgba(255,255,255,0.04); font-size:13px;"><span>💪 ${ex}</span><span>${reps} повт. (${sets} сетов)</span></div>`;
-            }
-            container.innerHTML = `
-                <div style="font-weight:bold; background:rgba(76,139,60,0.2); border-radius:40px; padding:10px; text-align:center; margin-bottom:10px;">📇 Карт: ${data.completedCards || 0} / 52</div>
-                <div style="font-weight:bold; background:rgba(76,139,60,0.2); border-radius:40px; padding:10px; text-align:center; margin-bottom:10px;">🔥 Повторений: ${data.totalReps || 0}</div>
-                ${exHtml || '<div class="text-muted" style="padding:8px;">Нет упражнений</div>'}
-            `;
-        }
-
-        function prisonRenderAll() {
-            renderPrisonSuitConfig();
-            prisonUpdatePreview();
-            prisonRenderDaySelector();
-        }
-
-        // Prison события
-        document.getElementById('prisonStartBtn').addEventListener('click', prisonStartWorkout);
-        document.getElementById('prisonStatsBtn').addEventListener('click', () => {
-            document.getElementById('prisonMain').classList.add('hidden');
-            document.getElementById('prisonTrain').classList.add('hidden');
-            document.getElementById('prisonStats').classList.remove('hidden');
-            prisonRenderDaySelector();
-        });
-        document.getElementById('prisonCompleteBtn').addEventListener('click', prisonCompleteCard);
-        document.getElementById('prisonFinishBtn').addEventListener('click', prisonFinishWorkout);
-        document.getElementById('prisonResetBtn').addEventListener('click', prisonResetSession);
-        document.getElementById('pBackFromStats').addEventListener('click', () => {
-            document.getElementById('prisonStats').classList.add('hidden');
-            document.getElementById('prisonMain').classList.remove('hidden');
-            prisonUpdatePreview();
-        });
-        document.getElementById('pResetDayBtn').addEventListener('click', () => {
-            if (!pActiveDay) { showToast('Выберите день'); return; }
-            if (!confirm(`Сбросить ${pActiveDay}?`)) return;
-            delete prisonData.dailyStats[pActiveDay];
-            savePrisonData();
-            prisonRenderDaySelector();
-            prisonUpdatePreview();
-            showToast('🗑️ День сброшен');
-        });
-        document.getElementById('pClearAllBtn').addEventListener('click', () => {
-            if (!confirm('Очистить ВСЮ историю?')) return;
-            prisonData.dailyStats = {};
-            const today = getTodayKey();
-            prisonData.dailyStats[today] = { totalReps: 0, exercises: {}, sets: {}, completedCards: 0 };
-            savePrisonData();
-            prisonRenderDaySelector();
-            prisonUpdatePreview();
-            showToast('⚠️ Вся история очищена');
-        });
-
-        // ================================================================
-        // НАВИГАЦИЯ
-        // ================================================================
-
-        document.querySelectorAll('.mode-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                document.querySelectorAll('.mode-content').forEach(c => c.classList.remove('active'));
-                document.getElementById('mode-' + tab.dataset.mode).classList.add('active');
-            });
-        });
-
-        // ================================================================
-        // ЗАПУСК
-        // ================================================================
-
-        loadCircuitData();
-        loadPrisonData();
-        console.log('🏋️ Приложение загружено');
-    </script>
+// ===== ЗАПУСК =====
+loadC();loadP();console.log('🏋️ Приложение загружено');
+</script>
 </body>
 </html>
