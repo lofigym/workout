@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Круговые тренировки</title>
+    
+    <!-- Подключаем Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
     <style>
         /* ===== БАЗОВЫЕ СТИЛИ ===== */
         * {
@@ -15,11 +19,11 @@
 
         body {
             font-family: -apple-system, 'Helvetica Neue', 'Segoe UI', Roboto, sans-serif;
-            background: #f0f2f5;
-            color: #1c1c1e;
+            background: var(--tg-theme-bg-color, #f0f2f5);
+            color: var(--tg-theme-text-color, #1c1c1e);
             padding: 0 0 80px 0;
             min-height: 100vh;
-            background: linear-gradient(180deg, #f7f8fa 0%, #e8eaed 100%);
+            background: var(--tg-theme-bg-color, #f0f2f5);
         }
 
         .container {
@@ -31,7 +35,7 @@
         /* ===== ВКЛАДКИ ===== */
         .tabs {
             display: flex;
-            background: #d1d3d8;
+            background: var(--tg-theme-secondary-bg-color, #d1d3d8);
             border-radius: 14px;
             padding: 4px;
             margin-bottom: 18px;
@@ -51,15 +55,15 @@
             border-radius: 11px;
             font-size: 14px;
             font-weight: 600;
-            color: #3a3a3c;
+            color: var(--tg-theme-hint-color, #3a3a3c);
             transition: all 0.2s;
             cursor: pointer;
             letter-spacing: 0.3px;
         }
 
         .tab-btn.active {
-            background: linear-gradient(180deg, #ffffff 0%, #f5f6fa 100%);
-            color: #007aff;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-button-color, #007aff);
             box-shadow: 0 1px 4px rgba(0,0,0,0.1);
             text-shadow: 0 1px 0 rgba(255,255,255,0.8);
         }
@@ -80,7 +84,7 @@
 
         /* ===== КАРТОЧКИ ===== */
         .card {
-            background: rgba(255,255,255,0.92);
+            background: var(--tg-theme-secondary-bg-color, rgba(255,255,255,0.92));
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             border-radius: 16px;
@@ -93,7 +97,7 @@
         .card-title {
             font-size: 17px;
             font-weight: 700;
-            color: #1c1c1e;
+            color: var(--tg-theme-text-color, #1c1c1e);
             margin-bottom: 12px;
             letter-spacing: -0.2px;
         }
@@ -101,13 +105,13 @@
         .card-title small {
             font-weight: 400;
             font-size: 13px;
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
             margin-left: 6px;
         }
 
         /* ===== РАДИО-ПЛЕЕР ===== */
         .radio-player {
-            background: rgba(255,255,255,0.92);
+            background: var(--tg-theme-secondary-bg-color, rgba(255,255,255,0.92));
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             border-radius: 16px;
@@ -129,7 +133,7 @@
         .radio-player .radio-info .title {
             font-size: 14px;
             font-weight: 600;
-            color: #1c1c1e;
+            color: var(--tg-theme-text-color, #1c1c1e);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -145,7 +149,7 @@
         }
         .radio-player .radio-info .title .live-dot.paused {
             animation: none;
-            background: #8e8e93;
+            background: var(--tg-theme-hint-color, #8e8e93);
         }
 
         @keyframes blink {
@@ -155,7 +159,7 @@
 
         .radio-player .radio-info .sub {
             font-size: 12px;
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
             margin-top: 2px;
         }
 
@@ -166,13 +170,13 @@
         }
 
         .radio-player .radio-controls .btn-radio {
-            background: linear-gradient(180deg, #ffffff 0%, #f0f2f5 100%);
-            border: 1px solid #d1d5db;
+            background: var(--tg-theme-secondary-bg-color, #ffffff);
+            border: 1px solid var(--tg-theme-hint-color, #d1d5db);
             border-radius: 30px;
             padding: 8px 16px;
             font-size: 13px;
             font-weight: 600;
-            color: #1c1c1e;
+            color: var(--tg-theme-text-color, #1c1c1e);
             cursor: pointer;
             transition: all 0.15s;
             touch-action: manipulation;
@@ -186,14 +190,14 @@
         }
 
         .radio-player .radio-controls .btn-radio.active {
-            background: linear-gradient(180deg, #007aff 0%, #0066d9 100%);
-            border-color: #0066d9;
-            color: white;
+            background: var(--tg-theme-button-color, #007aff);
+            border-color: var(--tg-theme-button-color, #0066d9);
+            color: var(--tg-theme-button-text-color, white);
         }
 
         .radio-player .radio-controls .volume-slider {
             width: 60px;
-            accent-color: #007aff;
+            accent-color: var(--tg-theme-button-color, #007aff);
             cursor: pointer;
         }
 
@@ -216,7 +220,7 @@
             display: flex;
             align-items: center;
             padding: 10px 4px;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid var(--tg-theme-hint-color, #e9ecef);
             gap: 10px;
         }
         .exercise-item:last-child {
@@ -225,7 +229,7 @@
         .exercise-item input[type="checkbox"] {
             width: 22px;
             height: 22px;
-            accent-color: #007aff;
+            accent-color: var(--tg-theme-button-color, #007aff);
             cursor: pointer;
             flex-shrink: 0;
         }
@@ -233,12 +237,13 @@
             font-size: 16px;
             font-weight: 500;
             flex: 1;
+            color: var(--tg-theme-text-color, #1c1c1e);
         }
         .exercise-max {
             font-size: 15px;
-            color: #007aff;
+            color: var(--tg-theme-button-color, #007aff);
             font-weight: 700;
-            background: #e9f2ff;
+            background: var(--tg-theme-secondary-bg-color, #e9f2ff);
             padding: 4px 14px;
             border-radius: 30px;
             cursor: pointer;
@@ -250,11 +255,10 @@
         }
         .exercise-max:active {
             transform: scale(0.92);
-            background: #d4e2ff;
         }
         .exercise-max.editing {
-            border-color: #007aff;
-            background: white;
+            border-color: var(--tg-theme-button-color, #007aff);
+            background: var(--tg-theme-bg-color, white);
             padding: 4px 8px;
             min-width: 50px;
         }
@@ -264,7 +268,7 @@
             background: transparent;
             font-size: 15px;
             font-weight: 700;
-            color: #007aff;
+            color: var(--tg-theme-button-color, #007aff);
             text-align: center;
             outline: none;
             padding: 0;
@@ -291,15 +295,16 @@
         .add-row input {
             flex: 1;
             padding: 12px 14px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--tg-theme-hint-color, #d1d5db);
             border-radius: 12px;
             font-size: 15px;
-            background: white;
+            background: var(--tg-theme-bg-color, white);
             outline: none;
             transition: 0.2s;
+            color: var(--tg-theme-text-color, #1c1c1e);
         }
         .add-row input:focus {
-            border-color: #007aff;
+            border-color: var(--tg-theme-button-color, #007aff);
             box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
         }
         .add-row input[type="number"] {
@@ -312,31 +317,31 @@
             align-items: center;
             gap: 10px;
             padding: 8px 4px;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid var(--tg-theme-hint-color, #e9ecef);
             margin-bottom: 4px;
         }
         .select-all-row input[type="checkbox"] {
             width: 22px;
             height: 22px;
-            accent-color: #007aff;
+            accent-color: var(--tg-theme-button-color, #007aff);
             cursor: pointer;
         }
         .select-all-row label {
             font-size: 14px;
             font-weight: 500;
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
             cursor: pointer;
         }
 
         /* ===== КНОПКИ ===== */
         .btn {
-            background: linear-gradient(180deg, #ffffff 0%, #f0f2f5 100%);
-            border: 1px solid #d1d5db;
+            background: var(--tg-theme-secondary-bg-color, #ffffff);
+            border: 1px solid var(--tg-theme-hint-color, #d1d5db);
             border-radius: 12px;
             padding: 10px 18px;
             font-weight: 600;
             font-size: 15px;
-            color: #1c1c1e;
+            color: var(--tg-theme-text-color, #1c1c1e);
             cursor: pointer;
             transition: all 0.15s;
             box-shadow: 0 1px 2px rgba(0,0,0,0.04);
@@ -344,31 +349,30 @@
         }
         .btn:active {
             transform: scale(0.95);
-            background: #e5e7eb;
         }
         .btn-primary {
-            background: linear-gradient(180deg, #007aff 0%, #0066d9 100%);
-            border-color: #0066d9;
-            color: white;
+            background: var(--tg-theme-button-color, #007aff);
+            border-color: var(--tg-theme-button-color, #0066d9);
+            color: var(--tg-theme-button-text-color, white);
             text-shadow: 0 1px 0 rgba(0,0,0,0.1);
         }
         .btn-primary:active {
-            background: #0055b3;
+            opacity: 0.8;
         }
         .btn-success {
-            background: linear-gradient(180deg, #34c759 0%, #28a745 100%);
+            background: #34c759;
             border-color: #28a745;
             color: white;
             text-shadow: 0 1px 0 rgba(0,0,0,0.1);
         }
         .btn-danger {
-            background: linear-gradient(180deg, #ff3b30 0%, #dc3545 100%);
+            background: #ff3b30;
             border-color: #dc3545;
             color: white;
             text-shadow: 0 1px 0 rgba(0,0,0,0.1);
         }
         .btn-warning {
-            background: linear-gradient(180deg, #ff9500 0%, #e68a00 100%);
+            background: #ff9500;
             border-color: #e68a00;
             color: white;
             text-shadow: 0 1px 0 rgba(0,0,0,0.1);
@@ -390,7 +394,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 8px 12px;
-            background: rgba(255,255,255,0.6);
+            background: var(--tg-theme-secondary-bg-color, rgba(255,255,255,0.6));
             border-radius: 14px;
             margin-bottom: 12px;
         }
@@ -398,12 +402,12 @@
             font-size: 18px;
             font-weight: 600;
             font-variant-numeric: tabular-nums;
-            color: #1c1c1e;
+            color: var(--tg-theme-text-color, #1c1c1e);
         }
         .workout-header .total-time small {
             font-size: 13px;
             font-weight: 400;
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
         }
         .workout-header .status-badge {
             font-size: 13px;
@@ -423,39 +427,39 @@
         }
         .workout-progress .round {
             font-size: 14px;
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
             font-weight: 500;
         }
         .workout-progress .big-num {
             font-size: 38px;
             font-weight: 700;
-            color: #1c1c1e;
+            color: var(--tg-theme-text-color, #1c1c1e);
             line-height: 1.1;
             letter-spacing: -1px;
         }
         .workout-progress .big-num span {
             font-size: 18px;
             font-weight: 400;
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
         }
         .progress-bar-bg {
             width: 100%;
             height: 6px;
-            background: #e9ecef;
+            background: var(--tg-theme-hint-color, #e9ecef);
             border-radius: 10px;
             margin-top: 8px;
             overflow: hidden;
         }
         .progress-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, #007aff, #34c759);
+            background: linear-gradient(90deg, var(--tg-theme-button-color, #007aff), #34c759);
             border-radius: 10px;
             transition: width 0.3s ease;
             width: 0%;
         }
 
         .workout-exercise {
-            background: white;
+            background: var(--tg-theme-bg-color, white);
             border-radius: 16px;
             padding: 24px 20px;
             text-align: center;
@@ -466,21 +470,22 @@
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 2px;
+            color: var(--tg-theme-text-color, #1c1c1e);
         }
         .workout-exercise .ex-detail {
             font-size: 14px;
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
         }
         .workout-exercise .ex-target {
             font-size: 56px;
             font-weight: 800;
-            color: #007aff;
+            color: var(--tg-theme-button-color, #007aff);
             margin: 4px 0 2px;
             line-height: 1.1;
         }
         .workout-exercise .ex-label {
             font-size: 14px;
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
         }
 
         .timer-display {
@@ -490,7 +495,7 @@
             padding: 12px 0;
             letter-spacing: 2px;
             font-variant-numeric: tabular-nums;
-            color: #1c1c1e;
+            color: var(--tg-theme-text-color, #1c1c1e);
             transition: color 0.3s;
         }
         .timer-display.resting {
@@ -522,7 +527,7 @@
 
         /* ===== ПРОГРАММЫ И СТАТИСТИКА ===== */
         .program-item {
-            background: white;
+            background: var(--tg-theme-bg-color, white);
             border-radius: 14px;
             padding: 14px 16px;
             margin-bottom: 10px;
@@ -534,10 +539,11 @@
         .program-item .p-name {
             font-weight: 600;
             font-size: 16px;
+            color: var(--tg-theme-text-color, #1c1c1e);
         }
         .program-item .p-count {
             font-size: 13px;
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
         }
         .program-actions {
             display: flex;
@@ -556,7 +562,7 @@
             margin-top: 6px;
         }
         .stat-item {
-            background: white;
+            background: var(--tg-theme-bg-color, white);
             border-radius: 14px;
             padding: 14px;
             text-align: center;
@@ -564,11 +570,11 @@
         .stat-item .num {
             font-size: 28px;
             font-weight: 700;
-            color: #1c1c1e;
+            color: var(--tg-theme-text-color, #1c1c1e);
         }
         .stat-item .label {
             font-size: 12px;
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-top: 2px;
@@ -583,11 +589,12 @@
             display: flex;
             justify-content: space-between;
             padding: 8px 4px;
-            border-bottom: 1px solid #f0f2f5;
+            border-bottom: 1px solid var(--tg-theme-hint-color, #f0f2f5);
             font-size: 14px;
+            color: var(--tg-theme-text-color, #1c1c1e);
         }
         .history-item .date {
-            color: #8e8e93;
+            color: var(--tg-theme-hint-color, #8e8e93);
         }
 
         .hidden {
@@ -599,11 +606,11 @@
         .gap-2 { gap: 8px; }
         .flex { display: flex; }
         .text-center { text-align: center; }
-        .text-muted { color: #8e8e93; font-size: 14px; }
+        .text-muted { color: var(--tg-theme-hint-color, #8e8e93); font-size: 14px; }
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #c4c4c6; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--tg-theme-hint-color, #c4c4c6); border-radius: 10px; }
 
         .toast-ios {
             position: fixed;
@@ -630,7 +637,7 @@
 <body>
 <div class="container" id="app">
 
-    <!-- ===== РАДИО-ПЛЕЕР (НОВЫЙ, НА <AUDIO>) ===== -->
+    <!-- ===== РАДИО-ПЛЕЕР ===== -->
     <div class="radio-player" id="radioPlayer">
         <div class="radio-info">
             <div class="title">
@@ -659,7 +666,7 @@
             <div class="card-title">Круговая тренировка <small>чередование</small></div>
             <div id="workoutSetup">
                 <p class="text-muted mb-2">Выберите программу или отметьте упражнения в базе</p>
-                <select id="programSelect" class="btn" style="width:100%; padding:12px; border-radius:12px; background:white; font-size:15px; margin-bottom:10px;">
+                <select id="programSelect" class="btn" style="width:100%; padding:12px; border-radius:12px; background:var(--tg-theme-bg-color, white); font-size:15px; margin-bottom:10px; color:var(--tg-theme-text-color, #1c1c1e);">
                     <option value="">— Выбрать программу —</option>
                 </select>
                 <button class="btn btn-primary btn-block" id="startWorkoutBtn">▶ Старт круговую</button>
@@ -690,13 +697,16 @@
                     <button class="btn btn-danger" id="stopWorkoutBtn">⏹ Стоп</button>
                     <button class="btn btn-warning" id="finishEarlyBtn">🏁 Завершить досрочно</button>
                 </div>
-                <button class="btn btn-block mt-2" id="skipRestBtn" style="background:#f0f2f5;">⏭ Пропустить отдых</button>
+                <button class="btn btn-block mt-2" id="skipRestBtn" style="background:var(--tg-theme-secondary-bg-color, #f0f2f5);">⏭ Пропустить отдых</button>
             </div>
         </div>
         <div class="card" id="workoutSummary" style="display:none;">
             <div class="card-title">✅ Тренировка завершена!</div>
             <div id="summaryContent"></div>
-            <button class="btn btn-primary btn-block mt-2" id="saveWorkoutBtn">💾 Сохранить результат</button>
+            <div class="btn-group" style="margin-top:12px;">
+                <button class="btn btn-primary btn-block" id="saveWorkoutBtn">💾 Сохранить результат</button>
+                <button class="btn btn-warning btn-block" id="shareStoryBtn">📤 В Stories</button>
+            </div>
             <button class="btn btn-block mt-2" id="resetWorkoutBtn">🔄 Новая тренировка</button>
         </div>
     </div>
@@ -719,7 +729,7 @@
         <div class="card">
             <div class="card-title">Сохранить как программу</div>
             <div class="flex" style="gap:8px;">
-                <input type="text" id="programNameInput" placeholder="Название программы" style="flex:1; padding:12px 14px; border:1px solid #d1d5db; border-radius:12px; font-size:15px;" />
+                <input type="text" id="programNameInput" placeholder="Название программы" style="flex:1; padding:12px 14px; border:1px solid var(--tg-theme-hint-color, #d1d5db); border-radius:12px; font-size:15px; background:var(--tg-theme-bg-color, white); color:var(--tg-theme-text-color, #1c1c1e);" />
                 <button class="btn btn-primary" id="saveProgramBtn">💾</button>
             </div>
         </div>
@@ -755,17 +765,126 @@
 
 <script>
     // ================================================================
-    //  1. РАДИО-ПЛЕЕР (НА ОСНОВЕ <AUDIO>)
+    // 0. ИНИЦИАЛИЗАЦИЯ TELEGRAM WEB APP
     // ================================================================
+    
+    // Проверяем, запущено ли приложение в Telegram
+    function isTelegramApp() {
+        return window.Telegram && window.Telegram.WebApp;
+    }
+
+    // Получаем объект Telegram WebApp (или заглушку для браузера)
+    function getTelegramApp() {
+        if (isTelegramApp()) {
+            return window.Telegram.WebApp;
+        }
+        // Заглушка для обычного браузера
+        return {
+            ready: () => {},
+            sendData: () => {},
+            MainButton: { 
+                show: () => {}, 
+                hide: () => {}, 
+                setText: () => {}, 
+                onClick: () => {},
+                disable: () => {},
+                enable: () => {},
+                setParams: () => {}
+            },
+            CloudStorage: { 
+                setItem: () => Promise.resolve(), 
+                getItem: () => Promise.resolve(null),
+                getItems: () => Promise.resolve(null),
+                removeItem: () => Promise.resolve()
+            },
+            shareToStory: () => {},
+            HapticFeedback: { 
+                impactOccurred: () => {}, 
+                notificationOccurred: () => {},
+                selectionChanged: () => {}
+            },
+            showAlert: () => {},
+            showConfirm: () => {},
+            openPopup: () => {},
+            openLink: () => {},
+            close: () => {}
+        };
+    }
+
+    // Инициализируем Telegram App
+    const tg = getTelegramApp();
+    
+    // Если мы в Telegram — сообщаем, что приложение готово
+    if (isTelegramApp()) {
+        tg.ready();
+        console.log('📱 Telegram Mini App инициализирован');
+    } else {
+        console.log('🌐 Веб-версия (без Telegram)');
+    }
+
+    // ================================================================
+    // 1. УНИВЕРСАЛЬНОЕ ХРАНИЛИЩЕ (облако Telegram + localStorage)
+    // ================================================================
+
+    // Сохранение данных: пробуем облако, если не вышло — локально
+    async function saveToCloud(key, data) {
+        try {
+            if (isTelegramApp()) {
+                await tg.CloudStorage.setItem(key, JSON.stringify(data));
+                console.log(`☁️ Данные сохранены в облако: ${key}`);
+                return true;
+            }
+        } catch (e) {
+            console.warn(`⚠️ Ошибка сохранения в облако (${key}):`, e);
+        }
+        // fallback — локальное сохранение
+        try {
+            localStorage.setItem(key, JSON.stringify(data));
+            console.log(`💾 Данные сохранены локально: ${key}`);
+            return true;
+        } catch (e) {
+            console.warn(`⚠️ Ошибка локального сохранения (${key}):`, e);
+            return false;
+        }
+    }
+
+    // Загрузка данных: сначала облако, потом localStorage
+    async function loadFromCloud(key) {
+        try {
+            if (isTelegramApp()) {
+                const data = await tg.CloudStorage.getItem(key);
+                if (data !== null && data !== undefined) {
+                    console.log(`☁️ Данные загружены из облака: ${key}`);
+                    return JSON.parse(data);
+                }
+            }
+        } catch (e) {
+            console.warn(`⚠️ Ошибка загрузки из облака (${key}):`, e);
+        }
+        // fallback — локальное хранилище
+        try {
+            const data = localStorage.getItem(key);
+            if (data) {
+                console.log(`💾 Данные загружены локально: ${key}`);
+                return JSON.parse(data);
+            }
+        } catch (e) {
+            console.warn(`⚠️ Ошибка локальной загрузки (${key}):`, e);
+        }
+        return null;
+    }
+
+    // ================================================================
+    // 2. РАДИО-ПЛЕЕР
+    // ================================================================
+    
     (function initRadio() {
         const STREAM_URL = 'https://play.streamafrica.net/lofiradio';
-
         const audio = new Audio(STREAM_URL);
         audio.loop = true;
         audio.volume = 0.6;
 
         let isPlaying = false;
-
         const toggleBtn = document.getElementById('radioToggleBtn');
         const volumeSlider = document.getElementById('radioVolume');
         const liveDot = document.getElementById('radioLiveDot');
@@ -789,7 +908,6 @@
                 liveDot.className = 'live-dot paused';
                 showToast('⏸ Радио на паузе');
             } else {
-                // Пробуем запустить
                 audio.play().then(() => {
                     isPlaying = true;
                     toggleBtn.textContent = '⏸ Пауза';
@@ -803,7 +921,6 @@
             }
         }
 
-        // Громкость
         volumeSlider.addEventListener('input', function() {
             const vol = parseFloat(this.value);
             audio.volume = vol;
@@ -812,7 +929,6 @@
             } catch (e) {}
         });
 
-        // Обработка ошибок воспроизведения
         audio.addEventListener('error', (e) => {
             showToast('⚠️ Ошибка радио, попробуйте перезагрузить');
             console.warn('Audio error:', e);
@@ -822,26 +938,17 @@
             liveDot.className = 'live-dot paused';
         });
 
-        // Когда стрим загружается успешно
-        audio.addEventListener('loadeddata', () => {
-            console.log('🎵 Радио поток загружен');
-        });
-
-        // Попытка авто-запуска (может быть заблокирована браузером)
-        // Поэтому просто создаём кнопку для ручного запуска
-
         toggleBtn.addEventListener('click', toggleRadio);
 
-        // Сохраняем состояние при выгрузке страницы
         window.addEventListener('beforeunload', () => {
             audio.pause();
         });
 
-        console.log('🎵 Радио-плеер (Audio) инициализирован. Ссылка:', STREAM_URL);
+        console.log('🎵 Радио-плеер инициализирован');
     })();
 
     // ================================================================
-    //  2. ОСНОВНОЙ КОД ПРИЛОЖЕНИЯ (ДАННЫЕ, ТРЕНИРОВКИ, БАЗА)
+    // 3. ОСНОВНОЙ КОД ПРИЛОЖЕНИЯ
     // ================================================================
 
     const STORAGE_KEY = 'circuit_trainer_data';
@@ -860,25 +967,33 @@
         };
     }
 
-    let data = loadData();
+    let data = getDefaultData();
+    let dataLoaded = false;
 
-    function loadData() {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (raw) {
-                const parsed = JSON.parse(raw);
-                if (!parsed.stats) parsed.stats = { totalWorkouts: 0, totalReps: 0 };
-                if (!parsed.history) parsed.history = [];
-                if (!parsed.programs) parsed.programs = [];
-                parsed.exercises = parsed.exercises.map(e => ({ ...e, checked: e.checked !== undefined ? e.checked : true }));
-                return parsed;
+    // Загрузка данных при старте
+    async function loadAllData() {
+        const loaded = await loadFromCloud(STORAGE_KEY);
+        if (loaded) {
+            data = loaded;
+            // Миграция: добавляем checked для старых данных
+            if (data.exercises) {
+                data.exercises = data.exercises.map(e => ({ ...e, checked: e.checked !== undefined ? e.checked : true }));
             }
-        } catch (e) {}
-        return getDefaultData();
+            if (!data.stats) data.stats = { totalWorkouts: 0, totalReps: 0 };
+            if (!data.history) data.history = [];
+            if (!data.programs) data.programs = [];
+        } else {
+            // Если данных нет — создаём по умолчанию
+            data = getDefaultData();
+        }
+        dataLoaded = true;
+        saveData(); // сохраняем, чтобы синхронизировать
+        renderAll();
+        console.log('📊 Данные загружены');
     }
 
     function saveData() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        saveToCloud(STORAGE_KEY, data);
     }
 
     function generateId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
@@ -909,10 +1024,18 @@
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
 
-    // ===== РЕНДЕР БАЗЫ =====
+    // ===== РЕНДЕР =====
+    function renderAll() {
+        renderExercises();
+        renderPrograms();
+        renderStats();
+        renderHistory();
+        updateProgramSelect();
+    }
+
     function renderExercises() {
         const container = document.getElementById('exerciseList');
-        if (data.exercises.length === 0) {
+        if (!data.exercises || data.exercises.length === 0) {
             container.innerHTML = '<div class="text-muted" style="padding:12px 0;">Добавьте упражнения</div>';
             return;
         }
@@ -998,7 +1121,7 @@
     function renderPrograms() {
         const container = document.getElementById('programsList');
         const msg = document.getElementById('noProgramsMsg');
-        if (data.programs.length === 0) {
+        if (!data.programs || data.programs.length === 0) {
             container.innerHTML = '';
             msg.style.display = 'block';
             return;
@@ -1047,7 +1170,7 @@
     function renderHistory() {
         const container = document.getElementById('historyList');
         const msg = document.getElementById('noHistoryMsg');
-        if (data.history.length === 0) {
+        if (!data.history || data.history.length === 0) {
             container.innerHTML = '';
             msg.style.display = 'block';
             return;
@@ -1070,7 +1193,7 @@
     function updateProgramSelect() {
         const sel = document.getElementById('programSelect');
         sel.innerHTML = '<option value="">— Выбрать программу —</option>' +
-            data.programs.map((p, i) => `<option value="${i}">${p.name}</option>`).join('');
+            (data.programs || []).map((p, i) => `<option value="${i}">${p.name}</option>`).join('');
     }
 
     // ===== ТРЕНИРОВКА =====
@@ -1085,7 +1208,7 @@
     }
 
     function getSelectedExercises() {
-        return data.exercises.filter(e => e.checked && e.max > 0);
+        return (data.exercises || []).filter(e => e.checked && e.max > 0);
     }
 
     let workoutState = {
@@ -1104,6 +1227,7 @@
         totalSeconds: 0,
         totalInterval: null,
         finishedEarly: false,
+        lastResult: null,
     };
 
     // ===== АУДИО-СИГНАЛЫ =====
@@ -1140,8 +1264,13 @@
     function notifySetComplete() {
         playBeep(600, 150, 1);
         vibrate(100);
+        // Haptic в Telegram
+        if (isTelegramApp()) {
+            try { tg.HapticFeedback.impactOccurred('light'); } catch (e) {}
+        }
     }
 
+    // ===== УПРАВЛЕНИЕ ТРЕНИРОВКОЙ =====
     function startWorkout() {
         const selected = getSelectedExercises();
         if (selected.length === 0) {
@@ -1355,6 +1484,15 @@
 
         const totalReps = workoutState.workoutLog.reduce((sum, log) => sum + log.reps, 0);
         const duration = workoutState.totalSeconds;
+        const durationStr = `${Math.floor(duration/60)} мин ${duration%60} сек`;
+
+        workoutState.lastResult = {
+            totalReps: totalReps,
+            duration: durationStr,
+            durationSeconds: duration,
+            log: workoutState.workoutLog,
+            early: early
+        };
 
         document.getElementById('workoutActive').classList.add('hidden');
         const summary = document.getElementById('workoutSummary');
@@ -1365,9 +1503,9 @@
             html += `<div style="color:#ff9500; font-weight:600; margin-bottom:8px;">⏹ Досрочное завершение</div>`;
         }
         html += `<div style="font-size:15px; margin-bottom:8px;">✅ Выполнено подходов: ${workoutState.workoutLog.length}</div>`;
-        html += `<div style="font-size:28px; font-weight:700; color:#007aff; margin:6px 0;">${totalReps} повторений</div>`;
-        html += `<div class="text-muted" style="font-size:13px;">⏱ ${Math.floor(duration/60)} мин ${duration%60} сек</div>`;
-        html += `<div style="margin-top:10px; max-height:140px; overflow-y:auto; text-align:left; font-size:13px; background:#f8f9fa; border-radius:8px; padding:8px 12px;">`;
+        html += `<div style="font-size:28px; font-weight:700; color:var(--tg-theme-button-color, #007aff); margin:6px 0;">${totalReps} повторений</div>`;
+        html += `<div class="text-muted" style="font-size:13px;">⏱ ${durationStr}</div>`;
+        html += `<div style="margin-top:10px; max-height:140px; overflow-y:auto; text-align:left; font-size:13px; background:var(--tg-theme-secondary-bg-color, #f8f9fa); border-radius:8px; padding:8px 12px;">`;
         if (workoutState.workoutLog.length === 0) {
             html += `<div class="text-muted">Нет выполненных подходов</div>`;
         } else {
@@ -1382,6 +1520,9 @@
         document.getElementById('saveWorkoutBtn').dataset.log = JSON.stringify(workoutState.workoutLog);
         document.getElementById('saveWorkoutBtn').disabled = false;
         document.getElementById('saveWorkoutBtn').textContent = '💾 Сохранить результат';
+        
+        // Показываем кнопку шеринга
+        document.getElementById('shareStoryBtn').style.display = 'block';
 
         if (!early) {
             playBeep(880, 400, 2);
@@ -1396,28 +1537,92 @@
         finishWorkout(true);
     }
 
-    function saveWorkoutResult() {
+    // ===== СОХРАНЕНИЕ РЕЗУЛЬТАТА =====
+    async function saveWorkoutResult() {
         const btn = document.getElementById('saveWorkoutBtn');
         const reps = parseInt(btn.dataset.reps) || 0;
         const log = JSON.parse(btn.dataset.log || '[]');
 
-        data.history.push({
+        const entry = {
             date: Date.now(),
             reps: reps,
             name: workoutState.finishedEarly ? 'Досрочно' : 'Круговая',
             details: log,
             early: workoutState.finishedEarly
-        });
+        };
+
+        data.history.push(entry);
         data.stats.totalWorkouts = (data.stats.totalWorkouts || 0) + 1;
         data.stats.totalReps = (data.stats.totalReps || 0) + reps;
-        saveData();
+        
+        await saveData();
         renderStats();
         renderHistory();
+        
         btn.disabled = true;
         btn.textContent = '✅ Сохранено';
-        showToast('💾 Результат сохранён!');
+        
+        // Haptic
+        if (isTelegramApp()) {
+            try { tg.HapticFeedback.notificationOccurred('success'); } catch (e) {}
+        }
+        
+        showToast('💾 Результат сохранён' + (isTelegramApp() ? ' в облако!' : '!'));
     }
 
+    // ===== ШЕРИНГ В STORIES =====
+    function shareToStory() {
+        const result = workoutState.lastResult;
+        if (!result) {
+            showToast('⚠️ Нет результата для публикации');
+            return;
+        }
+
+        const text = `🏋️ Тренировка завершена!\n` +
+                     `📊 Повторений: ${result.totalReps}\n` +
+                     `⏱ Время: ${result.duration}\n` +
+                     `🔥 #тренировка #спорт #lofi`;
+
+        // Если мы в Telegram и есть поддержка shareToStory
+        if (isTelegramApp() && tg.shareToStory) {
+            try {
+                tg.shareToStory(text);
+                showToast('📤 Результат отправлен в Stories!');
+                return;
+            } catch (e) {
+                console.warn('Ошибка shareToStory:', e);
+            }
+        }
+
+        // fallback: копируем в буфер
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('📋 Результат скопирован! Вставьте в Stories.');
+            }).catch(() => {
+                fallbackCopy(text);
+            });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showToast('📋 Результат скопирован! Вставьте в Stories.');
+        } catch (e) {
+            showToast('⚠️ Не удалось скопировать. Скопируйте вручную.');
+        }
+        textarea.remove();
+    }
+
+    // ===== СБРОС =====
     function resetWorkout() {
         workoutState.active = false;
         if (workoutState.timerInterval) {
@@ -1433,6 +1638,7 @@
         document.getElementById('workoutSetup').classList.remove('hidden');
         document.getElementById('saveWorkoutBtn').disabled = false;
         document.getElementById('saveWorkoutBtn').textContent = '💾 Сохранить результат';
+        document.getElementById('shareStoryBtn').style.display = 'block';
         document.getElementById('totalTimeDisplay').textContent = '00:00';
         showToast('🔄 Сброшено');
     }
@@ -1498,13 +1704,14 @@
     document.getElementById('stopWorkoutBtn').addEventListener('click', stopWorkout);
     document.getElementById('finishEarlyBtn').addEventListener('click', finishEarly);
     document.getElementById('saveWorkoutBtn').addEventListener('click', saveWorkoutResult);
+    document.getElementById('shareStoryBtn').addEventListener('click', shareToStory);
     document.getElementById('resetWorkoutBtn').addEventListener('click', resetWorkout);
 
-    document.getElementById('clearStatsBtn').addEventListener('click', () => {
+    document.getElementById('clearStatsBtn').addEventListener('click', async () => {
         if (!confirm('Удалить всю статистику?')) return;
         data.history = [];
         data.stats = { totalWorkouts: 0, totalReps: 0 };
-        saveData();
+        await saveData();
         renderStats();
         renderHistory();
         showToast('🗑 Очищено');
@@ -1524,12 +1731,8 @@
         if (e.key === 'Enter') document.getElementById('saveProgramBtn').click();
     });
 
-    // ===== ИНИЦИАЛИЗАЦИЯ =====
-    renderExercises();
-    renderPrograms();
-    renderStats();
-    renderHistory();
-    updateProgramSelect();
+    // ===== ЗАПУСК =====
+    loadAllData();
 
     document.addEventListener('touchend', (e) => {
         const now = Date.now();
@@ -1537,7 +1740,7 @@
         document.lastTouch = now;
     }, { passive: false });
 
-    console.log('🏋️ Круговая тренировка (с радио) загружена');
+    console.log('🏋️ Круговая тренировка (Telegram Mini App) загружена');
 </script>
 </body>
 </html>
