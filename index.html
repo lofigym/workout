@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Круговые тренировки</title>
-    
-    <!-- Подключаем Telegram Web App SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
+    <title>Круговая тренировка</title>
     <style>
-        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -19,419 +15,219 @@
 
         body {
             font-family: -apple-system, 'Helvetica Neue', 'Segoe UI', Roboto, sans-serif;
-            background: var(--tg-theme-bg-color, #f0f2f5);
-            color: var(--tg-theme-text-color, #1c1c1e);
-            padding: 0 0 80px 0;
+            background: #1a1b17;
+            color: #e8e9e4;
+            padding: 12px;
             min-height: 100vh;
-            background: var(--tg-theme-bg-color, #f0f2f5);
         }
 
-        .container {
+        .app {
             max-width: 480px;
             margin: 0 auto;
-            padding: 16px 14px;
-        }
-
-        /* ===== ВКЛАДКИ ===== */
-        .tabs {
-            display: flex;
-            background: var(--tg-theme-secondary-bg-color, #d1d3d8);
-            border-radius: 14px;
-            padding: 4px;
-            margin-bottom: 18px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05);
-            gap: 4px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            backdrop-filter: blur(10px);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 10px 0;
-            border: none;
-            background: transparent;
-            border-radius: 11px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--tg-theme-hint-color, #3a3a3c);
-            transition: all 0.2s;
-            cursor: pointer;
-            letter-spacing: 0.3px;
-        }
-
-        .tab-btn.active {
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-button-color, #007aff);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-            text-shadow: 0 1px 0 rgba(255,255,255,0.8);
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeUp 0.25s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(8px); }
-            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* ===== КАРТОЧКИ ===== */
         .card {
-            background: var(--tg-theme-secondary-bg-color, rgba(255,255,255,0.92));
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background: #2f312c;
             border-radius: 16px;
-            padding: 18px 16px;
+            padding: 16px;
             margin-bottom: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-            border: 1px solid rgba(255,255,255,0.6);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .card-title {
             font-size: 17px;
             font-weight: 700;
-            color: var(--tg-theme-text-color, #1c1c1e);
             margin-bottom: 12px;
+            color: #e8e9e4;
             letter-spacing: -0.2px;
         }
 
         .card-title small {
             font-weight: 400;
             font-size: 13px;
-            color: var(--tg-theme-hint-color, #8e8e93);
+            color: #8e8e93;
             margin-left: 6px;
+        }
+
+        /* ===== КНОПКИ ===== */
+        .btn {
+            background: #3a3b35;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #e8e9e4;
+            cursor: pointer;
+            transition: all 0.12s;
+            touch-action: manipulation;
+            font-family: inherit;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+            opacity: 0.8;
+        }
+
+        .btn-primary {
+            background: #4c8b3c;
+            border-color: #3a6e2c;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #b5652e;
+            border-color: #8f4f24;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #d4a03a;
+            border-color: #b8882e;
+            color: #1c1c1e;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 13px;
+            width: auto;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+            min-width: 70px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .text-muted {
+            color: #8e8e93;
+            font-size: 13px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-2 {
+            margin-top: 12px;
+        }
+        .mb-2 {
+            margin-bottom: 12px;
+        }
+
+        .flex {
+            display: flex;
+        }
+        .gap-2 {
+            gap: 8px;
         }
 
         /* ===== РАДИО-ПЛЕЕР ===== */
         .radio-player {
-            background: var(--tg-theme-secondary-bg-color, rgba(255,255,255,0.92));
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            border-radius: 16px;
-            padding: 12px 16px;
+            background: #2f312c;
+            border-radius: 14px;
+            padding: 10px 14px;
             margin-bottom: 14px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            border: 1px solid rgba(255,255,255,0.6);
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
             flex-wrap: wrap;
         }
 
-        .radio-player .radio-info {
+        .radio-player .info {
             flex: 1;
-            min-width: 120px;
+            min-width: 100px;
         }
 
-        .radio-player .radio-info .title {
-            font-size: 14px;
+        .radio-player .info .title {
+            font-size: 13px;
             font-weight: 600;
-            color: var(--tg-theme-text-color, #1c1c1e);
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .radio-player .radio-info .title .live-dot {
+        .radio-player .info .title .dot {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             background: #ff3b30;
             border-radius: 50%;
             animation: blink 1.2s infinite;
         }
-        .radio-player .radio-info .title .live-dot.paused {
+
+        .radio-player .info .title .dot.paused {
             animation: none;
-            background: var(--tg-theme-hint-color, #8e8e93);
+            background: #8e8e93;
         }
 
         @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.2;
+            }
         }
 
-        .radio-player .radio-info .sub {
-            font-size: 12px;
-            color: var(--tg-theme-hint-color, #8e8e93);
-            margin-top: 2px;
+        .radio-player .info .sub {
+            font-size: 11px;
+            color: #8e8e93;
         }
 
-        .radio-player .radio-controls {
+        .radio-player .controls {
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .radio-player .radio-controls .btn-radio {
-            background: var(--tg-theme-secondary-bg-color, #ffffff);
-            border: 1px solid var(--tg-theme-hint-color, #d1d5db);
+        .radio-player .controls .btn-radio {
+            background: #3a3b35;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 30px;
-            padding: 8px 16px;
-            font-size: 13px;
+            padding: 6px 14px;
+            font-size: 12px;
             font-weight: 600;
-            color: var(--tg-theme-text-color, #1c1c1e);
+            color: #e8e9e4;
             cursor: pointer;
+            font-family: inherit;
             transition: all 0.15s;
-            touch-action: manipulation;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
-        .radio-player .radio-controls .btn-radio:active {
-            transform: scale(0.94);
+        .radio-player .controls .btn-radio.active {
+            background: #4c8b3c;
+            color: white;
         }
 
-        .radio-player .radio-controls .btn-radio.active {
-            background: var(--tg-theme-button-color, #007aff);
-            border-color: var(--tg-theme-button-color, #0066d9);
-            color: var(--tg-theme-button-text-color, white);
-        }
-
-        .radio-player .radio-controls .volume-slider {
-            width: 60px;
-            accent-color: var(--tg-theme-button-color, #007aff);
-            cursor: pointer;
-        }
-
-        @media (max-width: 400px) {
-            .radio-player {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            .radio-player .radio-controls {
-                justify-content: space-between;
-            }
-            .radio-player .radio-controls .volume-slider {
-                width: 80px;
-            }
-        }
-
-        /* ===== УПРАЖНЕНИЯ ===== */
-        .exercise-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 4px;
-            border-bottom: 1px solid var(--tg-theme-hint-color, #e9ecef);
-            gap: 10px;
-        }
-        .exercise-item:last-child {
-            border-bottom: none;
-        }
-        .exercise-item input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
-            accent-color: var(--tg-theme-button-color, #007aff);
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        .exercise-name {
-            font-size: 16px;
-            font-weight: 500;
-            flex: 1;
-            color: var(--tg-theme-text-color, #1c1c1e);
-        }
-        .exercise-max {
-            font-size: 15px;
-            color: var(--tg-theme-button-color, #007aff);
-            font-weight: 700;
-            background: var(--tg-theme-secondary-bg-color, #e9f2ff);
-            padding: 4px 14px;
-            border-radius: 30px;
-            cursor: pointer;
-            min-width: 40px;
-            text-align: center;
-            user-select: none;
-            transition: all 0.15s;
-            border: 2px solid transparent;
-        }
-        .exercise-max:active {
-            transform: scale(0.92);
-        }
-        .exercise-max.editing {
-            border-color: var(--tg-theme-button-color, #007aff);
-            background: var(--tg-theme-bg-color, white);
-            padding: 4px 8px;
-            min-width: 50px;
-        }
-        .exercise-max input {
+        .radio-player .controls .volume-slider {
             width: 50px;
-            border: none;
-            background: transparent;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--tg-theme-button-color, #007aff);
-            text-align: center;
-            outline: none;
-            padding: 0;
-        }
-        .delete-ex {
-            background: none;
-            border: none;
-            color: #ff3b30;
-            font-size: 20px;
+            accent-color: #4c8b3c;
             cursor: pointer;
-            padding: 0 6px;
-            font-weight: 300;
-            opacity: 0.6;
-        }
-        .delete-ex:active {
-            opacity: 1;
-        }
-
-        /* ===== КОМПАКТНЫЙ БЛОК ДОБАВЛЕНИЯ ===== */
-        .add-row-compact {
-            display: flex;
-            gap: 6px;
-            margin-top: 10px;
-            align-items: center;
-            flex-wrap: nowrap;
-        }
-
-        .compact-input {
-            flex: 1;
-            padding: 10px 12px;
-            border: 1px solid var(--tg-theme-hint-color, #d1d5db);
-            border-radius: 10px;
-            font-size: 14px;
-            background: var(--tg-theme-bg-color, white);
-            outline: none;
-            transition: 0.2s;
-            color: var(--tg-theme-text-color, #1c1c1e);
-            min-width: 0;
-        }
-
-        .compact-input:focus {
-            border-color: var(--tg-theme-button-color, #007aff);
-            box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
-        }
-
-        .compact-number {
-            flex: 0 0 60px;
-            text-align: center;
-            padding: 10px 4px;
-        }
-
-        .compact-btn {
-            flex: 0 0 44px;
-            padding: 10px 0;
-            font-size: 20px;
-            font-weight: 700;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--tg-theme-button-color, #007aff);
-            border-color: var(--tg-theme-button-color, #0066d9);
-            color: var(--tg-theme-button-text-color, white);
-            border: none;
-            cursor: pointer;
-            transition: all 0.15s;
-            touch-action: manipulation;
-        }
-
-        .compact-btn:active {
-            transform: scale(0.92);
-            opacity: 0.8;
-        }
-
-        @media (max-width: 380px) {
-            .compact-input {
-                font-size: 13px;
-                padding: 8px 10px;
-            }
-            .compact-number {
-                flex: 0 0 50px;
-            }
-            .compact-btn {
-                flex: 0 0 38px;
-                font-size: 18px;
-                padding: 8px 0;
-            }
-        }
-
-        .select-all-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 4px;
-            border-bottom: 1px solid var(--tg-theme-hint-color, #e9ecef);
-            margin-bottom: 4px;
-        }
-        .select-all-row input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
-            accent-color: var(--tg-theme-button-color, #007aff);
-            cursor: pointer;
-        }
-        .select-all-row label {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--tg-theme-hint-color, #8e8e93);
-            cursor: pointer;
-        }
-
-        /* ===== КНОПКИ ===== */
-        .btn {
-            background: var(--tg-theme-secondary-bg-color, #ffffff);
-            border: 1px solid var(--tg-theme-hint-color, #d1d5db);
-            border-radius: 12px;
-            padding: 10px 18px;
-            font-weight: 600;
-            font-size: 15px;
-            color: var(--tg-theme-text-color, #1c1c1e);
-            cursor: pointer;
-            transition: all 0.15s;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-            touch-action: manipulation;
-        }
-        .btn:active {
-            transform: scale(0.95);
-        }
-        .btn-primary {
-            background: var(--tg-theme-button-color, #007aff);
-            border-color: var(--tg-theme-button-color, #0066d9);
-            color: var(--tg-theme-button-text-color, white);
-            text-shadow: 0 1px 0 rgba(0,0,0,0.1);
-        }
-        .btn-primary:active {
-            opacity: 0.8;
-        }
-        .btn-success {
-            background: #34c759;
-            border-color: #28a745;
-            color: white;
-            text-shadow: 0 1px 0 rgba(0,0,0,0.1);
-        }
-        .btn-danger {
-            background: #ff3b30;
-            border-color: #dc3545;
-            color: white;
-            text-shadow: 0 1px 0 rgba(0,0,0,0.1);
-        }
-        .btn-warning {
-            background: #ff9500;
-            border-color: #e68a00;
-            color: white;
-            text-shadow: 0 1px 0 rgba(0,0,0,0.1);
-        }
-        .btn-block {
-            width: 100%;
-            padding: 14px;
-            font-size: 17px;
-            border-radius: 14px;
-        }
-        .btn:disabled {
-            opacity: 0.5;
-            transform: none;
         }
 
         /* ===== ТРЕНИРОВКА ===== */
@@ -440,187 +236,300 @@
             justify-content: space-between;
             align-items: center;
             padding: 8px 12px;
-            background: var(--tg-theme-secondary-bg-color, rgba(255,255,255,0.6));
-            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
             margin-bottom: 12px;
         }
+
         .workout-header .total-time {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
             font-variant-numeric: tabular-nums;
-            color: var(--tg-theme-text-color, #1c1c1e);
         }
+
         .workout-header .total-time small {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 400;
-            color: var(--tg-theme-hint-color, #8e8e93);
+            color: #8e8e93;
         }
+
         .workout-header .status-badge {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             padding: 4px 14px;
             border-radius: 30px;
-            background: #34c759;
+            background: #4c8b3c;
             color: white;
         }
+
         .workout-header .status-badge.resting {
-            background: #ff9500;
+            background: #d4a03a;
         }
 
         .workout-progress {
             text-align: center;
             margin-bottom: 12px;
         }
-        .workout-progress .round {
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #8e8e93);
-            font-weight: 500;
-        }
+
         .workout-progress .big-num {
-            font-size: 38px;
+            font-size: 34px;
             font-weight: 700;
-            color: var(--tg-theme-text-color, #1c1c1e);
             line-height: 1.1;
             letter-spacing: -1px;
         }
+
         .workout-progress .big-num span {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 400;
-            color: var(--tg-theme-hint-color, #8e8e93);
+            color: #8e8e93;
         }
+
         .progress-bar-bg {
             width: 100%;
-            height: 6px;
-            background: var(--tg-theme-hint-color, #e9ecef);
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            margin-top: 8px;
+            margin-top: 6px;
             overflow: hidden;
         }
+
         .progress-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--tg-theme-button-color, #007aff), #34c759);
+            background: linear-gradient(90deg, #4c8b3c, #7cb85c);
             border-radius: 10px;
             transition: width 0.3s ease;
             width: 0%;
         }
 
         .workout-exercise {
-            background: var(--tg-theme-bg-color, white);
-            border-radius: 16px;
-            padding: 24px 20px;
+            background: #1a1b17;
+            border-radius: 14px;
+            padding: 20px 16px;
             text-align: center;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
+
         .workout-exercise .ex-name {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             margin-bottom: 2px;
-            color: var(--tg-theme-text-color, #1c1c1e);
         }
+
         .workout-exercise .ex-detail {
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #8e8e93);
+            font-size: 13px;
+            color: #8e8e93;
         }
+
         .workout-exercise .ex-target {
-            font-size: 56px;
+            font-size: 48px;
             font-weight: 800;
-            color: var(--tg-theme-button-color, #007aff);
+            color: #4c8b3c;
             margin: 4px 0 2px;
             line-height: 1.1;
         }
+
         .workout-exercise .ex-label {
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #8e8e93);
+            font-size: 13px;
+            color: #8e8e93;
         }
 
         .timer-display {
-            font-size: 64px;
+            font-size: 56px;
             font-weight: 300;
             text-align: center;
-            padding: 12px 0;
+            padding: 8px 0;
             letter-spacing: 2px;
             font-variant-numeric: tabular-nums;
-            color: var(--tg-theme-text-color, #1c1c1e);
             transition: color 0.3s;
         }
+
         .timer-display.resting {
-            color: #ff9500;
+            color: #d4a03a;
         }
+
         .timer-display.resting-warning {
             color: #ff3b30;
             animation: pulse 0.8s infinite;
         }
+
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
         }
 
-        .btn-group {
+        /* ===== БАЗА УПРАЖНЕНИЙ ===== */
+        .exercise-item {
             display: flex;
-            gap: 10px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-        .btn-group .btn {
-            flex: 1;
-            min-width: 80px;
-            text-align: center;
-            padding: 14px 10px;
-            font-size: 16px;
+            align-items: center;
+            padding: 8px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            gap: 8px;
         }
 
-        /* ===== ПРОГРАММЫ И СТАТИСТИКА ===== */
+        .exercise-item:last-child {
+            border-bottom: none;
+        }
+
+        .exercise-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #4c8b3c;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .exercise-name {
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .exercise-max {
+            font-size: 13px;
+            color: #4c8b3c;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .delete-ex {
+            background: none;
+            border: none;
+            color: #ff3b30;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.6;
+            padding: 0 4px;
+        }
+
+        .delete-ex:active {
+            opacity: 1;
+        }
+
+        .add-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .add-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            background: #1a1b17;
+            color: #e8e9e4;
+            font-size: 14px;
+            outline: none;
+            min-width: 0;
+        }
+
+        .add-row input:focus {
+            border-color: #4c8b3c;
+        }
+
+        .add-row input[type="number"] {
+            flex: 0 0 60px;
+            text-align: center;
+        }
+
+        .add-row .btn {
+            flex: 0 0 44px;
+            padding: 10px 0;
+            font-size: 20px;
+            border-radius: 12px;
+            width: auto;
+        }
+
+        .select-all-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            margin-bottom: 6px;
+        }
+
+        .select-all-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #4c8b3c;
+            cursor: pointer;
+        }
+
+        .select-all-row label {
+            font-size: 13px;
+            color: #8e8e93;
+            cursor: pointer;
+        }
+
+        /* ===== ПРОГРАММЫ ===== */
         .program-item {
-            background: var(--tg-theme-bg-color, white);
-            border-radius: 14px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            padding: 8px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
+
+        .program-item:last-child {
+            border-bottom: none;
+        }
+
         .program-item .p-name {
             font-weight: 600;
-            font-size: 16px;
-            color: var(--tg-theme-text-color, #1c1c1e);
+            font-size: 14px;
         }
+
         .program-item .p-count {
-            font-size: 13px;
-            color: var(--tg-theme-hint-color, #8e8e93);
+            font-size: 12px;
+            color: #8e8e93;
         }
+
         .program-actions {
             display: flex;
             gap: 6px;
         }
+
         .program-actions .btn {
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 8px;
+            width: auto;
+            padding: 4px 12px;
+            font-size: 12px;
         }
 
+        /* ===== СТАТИСТИКА ===== */
         .stat-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 6px;
         }
+
         .stat-item {
-            background: var(--tg-theme-bg-color, white);
-            border-radius: 14px;
+            background: #1a1b17;
+            border-radius: 12px;
             padding: 14px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
+
         .stat-item .num {
             font-size: 28px;
             font-weight: 700;
-            color: var(--tg-theme-text-color, #1c1c1e);
         }
+
         .stat-item .label {
             font-size: 12px;
-            color: var(--tg-theme-hint-color, #8e8e93);
+            color: #8e8e93;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-top: 2px;
@@ -628,1011 +537,1256 @@
 
         .history-list {
             margin-top: 10px;
-            max-height: 240px;
+            max-height: 200px;
             overflow-y: auto;
         }
+
         .history-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 4px;
-            border-bottom: 1px solid var(--tg-theme-hint-color, #f0f2f5);
-            font-size: 14px;
-            color: var(--tg-theme-text-color, #1c1c1e);
+            padding: 6px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 13px;
         }
+
         .history-item .date {
-            color: var(--tg-theme-hint-color, #8e8e93);
+            color: #8e8e93;
         }
 
-        .hidden {
-            display: none !important;
-        }
-        .mt-2 { margin-top: 12px; }
-        .mt-3 { margin-top: 18px; }
-        .mb-2 { margin-bottom: 12px; }
-        .gap-2 { gap: 8px; }
-        .flex { display: flex; }
-        .text-center { text-align: center; }
-        .text-muted { color: var(--tg-theme-hint-color, #8e8e93); font-size: 14px; }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--tg-theme-hint-color, #c4c4c6); border-radius: 10px; }
-
+        /* ===== ТОСТ ===== */
         .toast-ios {
             position: fixed;
-            bottom: 100px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.78);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(8px);
             color: white;
             padding: 12px 24px;
             border-radius: 30px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
             z-index: 999;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
             max-width: 90%;
             text-align: center;
             transition: opacity 0.3s;
-            font-family: -apple-system, sans-serif;
+            font-family: inherit;
             pointer-events: none;
+        }
+
+        /* ===== ВКЛАДКИ ===== */
+        .mode-tabs {
+            display: flex;
+            background: #2f312c;
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 16px;
+            gap: 4px;
+        }
+
+        .mode-tab {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            background: transparent;
+            border-radius: 11px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #8e8e93;
+            transition: all 0.2s;
+            cursor: pointer;
+            letter-spacing: 0.2px;
+            font-family: inherit;
+        }
+
+        .mode-tab.active {
+            background: #3a3b35;
+            color: #4c8b3c;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .mode-tab:active {
+            transform: scale(0.96);
+        }
+
+        .mode-content {
+            display: none;
+            animation: fadeUp 0.2s ease;
+        }
+
+        .mode-content.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== СКРОЛЛ ===== */
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-<div class="container" id="app">
 
-    <!-- ===== РАДИО-ПЛЕЕР ===== -->
-    <div class="radio-player" id="radioPlayer">
-        <div class="radio-info">
-            <div class="title">
-                <span class="live-dot" id="radioLiveDot"></span>
-                Lofi Radio
+    <div class="app" id="app">
+
+        <!-- ===== РАДИО-ПЛЕЕР ===== -->
+        <div class="radio-player">
+            <div class="info">
+                <div class="title"><span class="dot" id="radioDot"></span> Lofi Radio</div>
+                <div class="sub">🎧 beats to relax / study</div>
             </div>
-            <div class="sub">🎧 beats to relax / study</div>
+            <div class="controls">
+                <button class="btn-radio active" id="radioToggleBtn">⏸</button>
+                <input type="range" class="volume-slider" id="radioVolume" min="0" max="1" step="0.05" value="0.5" />
+            </div>
         </div>
-        <div class="radio-controls">
-            <button class="btn-radio active" id="radioToggleBtn">⏸ Пауза</button>
-            <input type="range" class="volume-slider" id="radioVolume" min="0" max="1" step="0.05" value="0.6" />
+
+        <!-- ===== ВКЛАДКИ ===== -->
+        <div class="mode-tabs">
+            <button class="mode-tab active" data-mode="circuit">🔄 Круговая</button>
+            <button class="mode-tab" data-mode="prison">🃏 Колода</button>
         </div>
-    </div>
 
-    <!-- ===== ВКЛАДКИ ===== -->
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="tab-workout">🏋️ Тренировка</button>
-        <button class="tab-btn" data-tab="tab-exercises">📋 База</button>
-        <button class="tab-btn" data-tab="tab-programs">💾 Программы</button>
-        <button class="tab-btn" data-tab="tab-stats">📊 Статистика</button>
-    </div>
+        <!-- ============================================================ -->
+        <!-- РЕЖИМ 1: КРУГОВАЯ ТРЕНИРОВКА -->
+        <!-- ============================================================ -->
+        <div id="mode-circuit" class="mode-content active">
 
-    <!-- ===== ТРЕНИРОВКА ===== -->
-    <div id="tab-workout" class="tab-content active">
-        <div class="card">
-            <div class="card-title">Круговая тренировка <small>чередование</small></div>
-            <div id="workoutSetup">
-                <p class="text-muted mb-2">Выберите программу или отметьте упражнения в базе</p>
-                <select id="programSelect" class="btn" style="width:100%; padding:12px; border-radius:12px; background:var(--tg-theme-bg-color, white); font-size:15px; margin-bottom:10px; color:var(--tg-theme-text-color, #1c1c1e);">
-                    <option value="">— Выбрать программу —</option>
-                </select>
-                <button class="btn btn-primary btn-block" id="startWorkoutBtn">▶ Старт круговую</button>
-                <div class="text-muted" style="font-size:13px; margin-top:8px; text-align:center;">
-                    Круг: подход 1 у всех упражнений → подход 2 → ... → подход 5
+            <div class="card">
+                <div class="card-title">Круговая тренировка <small>чередование</small></div>
+
+                <div id="circuitSetup">
+                    <p class="text-muted mb-2">Выберите программу или отметьте упражнения в базе</p>
+                    <select id="programSelect" class="btn" style="background:#1a1b17; border:1px solid rgba(255,255,255,0.1); margin-bottom:10px; color:#e8e9e4; width:100%; padding:12px; border-radius:12px; font-size:14px;">
+                        <option value="">— Выбрать программу —</option>
+                    </select>
+                    <button class="btn btn-primary" id="circuitStartBtn">▶ Старт круговую</button>
+                    <div class="text-muted" style="font-size:12px; margin-top:6px; text-align:center;">
+                        Круг: подход 1 у всех → подход 2 → ... → подход 5
+                    </div>
+                </div>
+
+                <div id="circuitActive" class="hidden">
+                    <div class="workout-header">
+                        <div class="total-time"><span id="circuitTotalTime">00:00</span> <small>всего</small></div>
+                        <span class="status-badge" id="circuitStatus">▶ Активно</span>
+                    </div>
+                    <div class="workout-progress">
+                        <div class="big-num"><span id="circuitProgress">0</span> / <span id="circuitTotalSets">0</span></div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" id="circuitProgressFill"></div></div>
+                    </div>
+                    <div class="workout-exercise">
+                        <div class="ex-name" id="circuitExName">—</div>
+                        <div class="ex-detail" id="circuitExDetail">подход 1 · макс: 10</div>
+                        <div class="ex-target" id="circuitExTarget">10</div>
+                        <div class="ex-label">повторов</div>
+                    </div>
+                    <div class="timer-display" id="circuitTimer">02:00</div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="circuitCompleteBtn">✅ Выполнил</button>
+                        <button class="btn btn-secondary" id="circuitSkipRestBtn">⏭ Пропустить</button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-warning" id="circuitFinishEarlyBtn">🏁 Завершить досрочно</button>
+                        <button class="btn btn-secondary" id="circuitStopBtn">⏹ Стоп</button>
+                    </div>
+                </div>
+
+                <div id="circuitSummary" class="hidden">
+                    <div style="font-size:15px; margin-bottom:6px;">✅ Тренировка завершена!</div>
+                    <div id="circuitSummaryContent"></div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="circuitSaveBtn">💾 Сохранить</button>
+                    </div>
+                    <button class="btn btn-secondary mt-2" id="circuitResetBtn">🔄 Новая</button>
                 </div>
             </div>
 
-            <div id="workoutActive" class="hidden">
-                <div class="workout-header">
-                    <div class="total-time"><span id="totalTimeDisplay">00:00</span> <small>всего</small></div>
-                    <span class="status-badge" id="statusBadge">▶ Активно</span>
+            <!-- База упражнений -->
+            <div class="card">
+                <div class="card-title">База упражнений <small>максимум</small></div>
+                <div class="select-all-row">
+                    <input type="checkbox" id="selectAllEx" />
+                    <label for="selectAllEx">Выбрать все</label>
                 </div>
-                <div class="workout-progress">
-                    <div class="round">Круг <span id="currentRound">1</span> / 5</div>
-                    <div class="big-num"><span id="progressFraction">0</span> / <span id="totalSetsNum">0</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+                <div id="circuitExerciseList"></div>
+                <div class="add-row">
+                    <input type="text" id="newExName" placeholder="Упражнение" />
+                    <input type="number" id="newExMax" placeholder="Макс" min="1" value="10" />
+                    <button class="btn btn-primary" id="addExBtn">+</button>
                 </div>
-                <div class="workout-exercise">
-                    <div class="ex-name" id="currentExName">—</div>
-                    <div class="ex-detail" id="currentExDetail">подход 1 · макс: 10</div>
-                    <div class="ex-target" id="currentExTarget">10</div>
-                    <div class="ex-label">повторов</div>
+            </div>
+
+            <!-- Сохранение программы -->
+            <div class="card">
+                <div class="card-title">Сохранить как программу</div>
+                <div class="flex gap-2">
+                    <input type="text" id="programNameInput" placeholder="Название" style="flex:1; padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); background:#1a1b17; color:#e8e9e4; font-size:14px; outline:none;" />
+                    <button class="btn btn-primary" id="saveProgramBtn" style="width:auto; padding:10px 18px;">💾</button>
                 </div>
-                <div class="timer-display" id="timerDisplay">02:00</div>
+                <div id="circuitProgramsList" class="mt-2"></div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- РЕЖИМ 2: ТЮРЕМНАЯ КОЛОДА -->
+        <!-- ============================================================ -->
+        <div id="mode-prison" class="mode-content">
+
+            <!-- Главный экран -->
+            <div id="prisonMain">
+                <div class="card" style="text-align:center; padding:24px 16px;">
+                    <div style="font-size:3.5rem; margin-bottom:8px;">🃟</div>
+                    <div style="font-size:1.6rem; font-weight:800; letter-spacing:-0.5px;">PRISON DECK</div>
+                    <p class="text-muted" style="margin:6px 0 16px;">4 масти — 4 упражнения<br>Вытягивай карту и делай!</p>
+                    <button class="btn btn-primary" id="prisonStartBtn">💪 НАЧАТЬ ТРЕНИРОВКУ</button>
+                    <button class="btn btn-secondary mt-2" id="prisonStatsBtn">📊 СТАТИСТИКА</button>
+                    <div class="text-muted" style="font-size:11px; margin-top:10px;">✔️ Каждая карта — подход. Завершил — следующая</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🏆 Кратко</div>
+                    <div id="prisonPreviewStats">
+                        <div class="stat-line" style="display:flex; justify-content:space-between; padding:4px 0;"><span>📅 Сегодня:</span><span>0 карт</span></div>
+                        <div class="stat-line" style="display:flex; justify-content:space-between; padding:4px 0;"><span>💪 Повторений:</span><span>0</span></div>
+                        <div class="stat-line" style="display:flex; justify-content:space-between; padding:4px 0;"><span>🏆 Всего:</span><span>0 повтор.</span></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">⚙️ Назначь упражнения</div>
+                    <div id="pSuitConfigContainer"></div>
+                </div>
+            </div>
+
+            <!-- Тренировка -->
+            <div id="prisonTrain" class="hidden">
+                <div class="playing-card" style="background:linear-gradient(145deg, #fffcf0 0%, #f5f0e0 100%); border-radius:16px; padding:20px 12px 24px; margin-bottom:16px; box-shadow:0 8px 16px rgba(0,0,0,0.3); text-align:center; position:relative; border:1px solid #e8dbb8; color:#2c2b26;">
+                    <div style="position:absolute; top:10px; left:12px; font-family:'Courier New',monospace; font-weight:bold; font-size:0.85rem; display:flex; flex-direction:column; align-items:center; line-height:1.2;">
+                        <span id="pCornerTLRank" style="font-size:1.1rem;">A</span>
+                        <span id="pCornerTLSuit" style="font-size:0.85rem;">♥️</span>
+                    </div>
+                    <div style="margin:28px 0 16px;">
+                        <div id="pCenterRank" style="font-size:3.5rem; font-weight:800; font-family:'Courier New',monospace; letter-spacing:2px;">A</div>
+                        <div id="pCenterSuit" style="font-size:4rem; margin:4px 0;">♥️</div>
+                        <div id="pExerciseLabel" style="font-size:1.2rem; font-weight:700; background:#2a2c26; display:inline-block; padding:4px 18px; border-radius:40px; margin-top:10px; color:#f7e05e;">Отжимания</div>
+                        <div id="pRepsLabel" style="font-size:0.9rem; background:rgba(0,0,0,0.75); border-radius:40px; padding:4px 16px; display:inline-block; margin-top:8px; color:#ffd966; font-weight:600;">повторов: 0</div>
+                    </div>
+                    <div style="position:absolute; bottom:10px; right:12px; font-family:'Courier New',monospace; font-weight:bold; font-size:0.85rem; display:flex; flex-direction:column; align-items:center; line-height:1.2; transform:rotate(180deg);">
+                        <span id="pCornerBRRank" style="font-size:1.1rem;">A</span>
+                        <span id="pCornerBRSuit" style="font-size:0.85rem;">♥️</span>
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.04); border-radius:12px; padding:10px 14px; margin-bottom:12px; font-weight:600; font-size:14px;">
+                    <span>📇 Сделано: <span id="pCompletedCards">0</span>/52</span>
+                    <span>⏱️ <span id="pSessionTime">0:00</span></span>
+                </div>
+
+                <button class="btn btn-primary" id="prisonCompleteBtn">✅ ЗАВЕРШИТЬ ПОДХОД</button>
+
                 <div class="btn-group">
-                    <button class="btn btn-success" id="completeSetBtn">✅ Выполнил</button>
-                    <button class="btn btn-danger" id="stopWorkoutBtn">⏹ Стоп</button>
-                    <button class="btn btn-warning" id="finishEarlyBtn">🏁 Завершить досрочно</button>
+                    <button class="btn btn-secondary" id="prisonFinishBtn">🏁 Завершить</button>
+                    <button class="btn btn-secondary" id="prisonResetBtn">🔄 Сброс</button>
                 </div>
-                <button class="btn btn-block mt-2" id="skipRestBtn" style="background:var(--tg-theme-secondary-bg-color, #f0f2f5);">⏭ Пропустить отдых</button>
+                <div class="text-muted" style="font-size:11px; text-align:center; margin-top:10px;">🔁 Только завершённые подходы засчитываются</div>
             </div>
-        </div>
-        <div class="card" id="workoutSummary" style="display:none;">
-            <div class="card-title">✅ Тренировка завершена!</div>
-            <div id="summaryContent"></div>
-            <div class="btn-group" style="margin-top:12px;">
-                <button class="btn btn-primary btn-block" id="saveWorkoutBtn">💾 Сохранить результат</button>
-                <button class="btn btn-warning btn-block" id="shareStoryBtn">📤 В Stories</button>
+
+            <!-- Статистика -->
+            <div id="prisonStats" class="hidden">
+                <div class="card">
+                    <div class="card-title">📅 Статистика по дням</div>
+                    <div class="day-selector" id="pDaySelector" style="display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; padding-bottom:6px;"></div>
+                    <div id="pDailyStatsContent">
+                        <div class="text-muted text-center" style="padding:16px;">Выберите день</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-danger btn-sm" id="pResetDayBtn" style="width:auto; padding:6px 14px;">🗑️ Сброс дня</button>
+                        <button class="btn btn-secondary btn-sm" id="pClearAllBtn" style="width:auto; padding:6px 14px;">⚠️ Всю историю</button>
+                    </div>
+                    <button class="btn btn-secondary mt-2" id="pBackFromStats">🏠 Назад</button>
+                </div>
             </div>
-            <button class="btn btn-block mt-2" id="resetWorkoutBtn">🔄 Новая тренировка</button>
+
         </div>
+
     </div>
 
-    <!-- ===== БАЗА ===== -->
-    <div id="tab-exercises" class="tab-content">
-        <div class="card">
-            <div class="card-title">Упражнения <small>максимум повторений</small></div>
-            <div class="select-all-row">
-                <input type="checkbox" id="selectAllEx" />
-                <label for="selectAllEx">Выбрать все для тренировки</label>
-            </div>
-            <div id="exerciseList"></div>
-            
-            <!-- КОМПАКТНЫЙ БЛОК ДОБАВЛЕНИЯ -->
-            <div class="add-row-compact">
-                <input type="text" id="newExName" placeholder="Упражнение" class="compact-input" />
-                <input type="number" id="newExMax" placeholder="Макс" min="1" value="10" class="compact-input compact-number" />
-                <button class="compact-btn" id="addExBtn">+</button>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-title">Сохранить как программу</div>
-            <div class="flex" style="gap:8px;">
-                <input type="text" id="programNameInput" placeholder="Название программы" style="flex:1; padding:12px 14px; border:1px solid var(--tg-theme-hint-color, #d1d5db); border-radius:12px; font-size:15px; background:var(--tg-theme-bg-color, white); color:var(--tg-theme-text-color, #1c1c1e);" />
-                <button class="btn btn-primary" id="saveProgramBtn">💾</button>
-            </div>
-        </div>
-    </div>
+    <script>
+        // ================================================================
+        // 0. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        // ================================================================
 
-    <!-- ===== ПРОГРАММЫ ===== -->
-    <div id="tab-programs" class="tab-content">
-        <div class="card">
-            <div class="card-title">Сохранённые программы</div>
-            <div id="programsList"></div>
-            <div class="text-muted" style="text-align:center; margin-top:10px; font-size:13px;" id="noProgramsMsg">Нет сохранённых программ</div>
-        </div>
-    </div>
-
-    <!-- ===== СТАТИСТИКА ===== -->
-    <div id="tab-stats" class="tab-content">
-        <div class="card">
-            <div class="card-title">📈 Статистика</div>
-            <div class="stat-grid">
-                <div class="stat-item"><div class="num" id="statTotalWorkouts">0</div><div class="label">Тренировок</div></div>
-                <div class="stat-item"><div class="num" id="statTotalReps">0</div><div class="label">Всего повторений</div></div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-title">📋 История</div>
-            <div class="history-list" id="historyList"></div>
-            <div class="text-muted text-center" style="margin-top:8px; font-size:13px;" id="noHistoryMsg">Нет записей</div>
-        </div>
-        <button class="btn btn-danger btn-block mt-2" id="clearStatsBtn">🗑 Очистить статистику</button>
-    </div>
-
-</div>
-
-<script>
-    // ================================================================
-    // 0. ИНИЦИАЛИЗАЦИЯ TELEGRAM WEB APP
-    // ================================================================
-    
-    function isTelegramApp() {
-        return window.Telegram && window.Telegram.WebApp;
-    }
-
-    function getTelegramApp() {
-        if (isTelegramApp()) {
-            return window.Telegram.WebApp;
+        function showToast(msg) {
+            const old = document.querySelector('.toast-ios');
+            if (old) old.remove();
+            const div = document.createElement('div');
+            div.className = 'toast-ios';
+            div.textContent = msg;
+            document.body.appendChild(div);
+            setTimeout(() => {
+                div.style.opacity = '0';
+                setTimeout(() => div.remove(), 400);
+            }, 2000);
         }
-        return {
-            ready: () => {},
-            sendData: () => {},
-            MainButton: { show: () => {}, hide: () => {}, setText: () => {}, onClick: () => {}, disable: () => {}, enable: () => {}, setParams: () => {} },
-            CloudStorage: { setItem: () => Promise.resolve(), getItem: () => Promise.resolve(null), getItems: () => Promise.resolve(null), removeItem: () => Promise.resolve() },
-            shareToStory: () => {},
-            HapticFeedback: { impactOccurred: () => {}, notificationOccurred: () => {}, selectionChanged: () => {} },
-            showAlert: () => {},
-            showConfirm: () => {},
-            openPopup: () => {},
-            openLink: () => {},
-            close: () => {}
-        };
-    }
 
-    const tg = getTelegramApp();
-    if (isTelegramApp()) {
-        tg.ready();
-        console.log('📱 Telegram Mini App инициализирован');
-    } else {
-        console.log('🌐 Веб-версия (без Telegram)');
-    }
+        function generateId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 
-    // ================================================================
-    // 1. УНИВЕРСАЛЬНОЕ ХРАНИЛИЩЕ
-    // ================================================================
+        function formatTime(sec) {
+            return `${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`;
+        }
 
-    async function saveToCloud(key, data) {
-        try {
-            if (isTelegramApp()) {
-                await tg.CloudStorage.setItem(key, JSON.stringify(data));
-                console.log(`☁️ Сохранено в облако: ${key}`);
-                return true;
-            }
-        } catch (e) { console.warn(`⚠️ Ошибка облака (${key}):`, e); }
-        try {
-            localStorage.setItem(key, JSON.stringify(data));
-            console.log(`💾 Сохранено локально: ${key}`);
-            return true;
-        } catch (e) { return false; }
-    }
+        function getTodayKey() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
 
-    async function loadFromCloud(key) {
-        try {
-            if (isTelegramApp()) {
-                const data = await tg.CloudStorage.getItem(key);
-                if (data !== null && data !== undefined) {
-                    console.log(`☁️ Загружено из облака: ${key}`);
-                    return JSON.parse(data);
+        // ================================================================
+        // 1. ЗВУК + ВИБРАЦИЯ
+        // ================================================================
+
+        let audioCtx = null;
+
+        function playBeep(freq = 600, dur = 150, count = 1) {
+            try {
+                if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                for (let i = 0; i < count; i++) {
+                    setTimeout(() => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.frequency.value = freq;
+                        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur / 1000);
+                        osc.start(audioCtx.currentTime);
+                        osc.stop(audioCtx.currentTime + dur / 1000);
+                    }, i * 250);
+                }
+            } catch (e) { /* тихо */ }
+        }
+
+        function vibrate(pattern = [100]) {
+            try {
+                if (navigator.vibrate) navigator.vibrate(pattern);
+            } catch (e) { /* тихо */ }
+        }
+
+        // ================================================================
+        // 2. РАДИО-ПЛЕЕР
+        // ================================================================
+
+        (function initRadio() {
+            const audio = new Audio('https://play.streamafrica.net/lofiradio');
+            audio.loop = true;
+            audio.volume = 0.5;
+
+            let isPlaying = false;
+            const btn = document.getElementById('radioToggleBtn');
+            const slider = document.getElementById('radioVolume');
+            const dot = document.getElementById('radioDot');
+
+            try {
+                const vol = localStorage.getItem('radio_volume_v2');
+                if (vol) { audio.volume = parseFloat(vol);
+                    slider.value = parseFloat(vol); }
+            } catch (e) {}
+
+            function toggle() {
+                if (isPlaying) {
+                    audio.pause();
+                    isPlaying = false;
+                    btn.textContent = '▶';
+                    btn.classList.remove('active');
+                    dot.className = 'dot paused';
+                    showToast('⏸ Радио на паузе');
+                } else {
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        btn.textContent = '⏸';
+                        btn.classList.add('active');
+                        dot.className = 'dot';
+                        showToast('🎵 Lofi Radio включено');
+                    }).catch(() => showToast('⚠️ Не удалось запустить'));
                 }
             }
-        } catch (e) { console.warn(`⚠️ Ошибка загрузки из облака (${key}):`, e); }
-        try {
-            const data = localStorage.getItem(key);
-            if (data) {
-                console.log(`💾 Загружено локально: ${key}`);
-                return JSON.parse(data);
-            }
-        } catch (e) {}
-        return null;
-    }
 
-    // ================================================================
-    // 2. РАДИО-ПЛЕЕР
-    // ================================================================
-    
-    (function initRadio() {
-        const STREAM_URL = 'https://play.streamafrica.net/lofiradio';
-        const audio = new Audio(STREAM_URL);
-        audio.loop = true;
-        audio.volume = 0.6;
-
-        let isPlaying = false;
-        const toggleBtn = document.getElementById('radioToggleBtn');
-        const volumeSlider = document.getElementById('radioVolume');
-        const liveDot = document.getElementById('radioLiveDot');
-
-        try {
-            const savedVol = localStorage.getItem('radio_volume');
-            if (savedVol !== null) {
-                const vol = parseFloat(savedVol);
+            slider.addEventListener('input', function() {
+                const vol = parseFloat(this.value);
                 audio.volume = vol;
-                volumeSlider.value = vol;
-            }
-        } catch (e) {}
-
-        function toggleRadio() {
-            if (isPlaying) {
-                audio.pause();
-                isPlaying = false;
-                toggleBtn.textContent = '▶ Вкл';
-                toggleBtn.classList.remove('active');
-                liveDot.className = 'live-dot paused';
-                showToast('⏸ Радио на паузе');
-            } else {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    toggleBtn.textContent = '⏸ Пауза';
-                    toggleBtn.classList.add('active');
-                    liveDot.className = 'live-dot';
-                    showToast('🎵 Lofi Radio включено');
-                }).catch(err => {
-                    showToast('⚠️ Не удалось запустить радио: ' + err.message);
-                });
-            }
-        }
-
-        volumeSlider.addEventListener('input', function() {
-            const vol = parseFloat(this.value);
-            audio.volume = vol;
-            try { localStorage.setItem('radio_volume', vol.toString()); } catch (e) {}
-        });
-
-        toggleBtn.addEventListener('click', toggleRadio);
-        console.log('🎵 Радио-плеер инициализирован');
-    })();
-
-    // ================================================================
-    // 3. ОСНОВНОЙ КОД
-    // ================================================================
-
-    const STORAGE_KEY = 'circuit_trainer_data';
-
-    function getDefaultData() {
-        return {
-            exercises: [
-                { id: 'ex1', name: 'Подтягивания', max: 10, checked: true },
-                { id: 'ex2', name: 'Отжимания', max: 25, checked: true },
-                { id: 'ex3', name: 'Приседания', max: 30, checked: true },
-                { id: 'ex4', name: 'Бёрпи', max: 15, checked: true },
-            ],
-            programs: [],
-            history: [],
-            stats: { totalWorkouts: 0, totalReps: 0 }
-        };
-    }
-
-    let data = getDefaultData();
-    let dataLoaded = false;
-
-    async function loadAllData() {
-        const loaded = await loadFromCloud(STORAGE_KEY);
-        if (loaded) {
-            data = loaded;
-            data.exercises = data.exercises.map(e => ({ ...e, checked: e.checked !== undefined ? e.checked : true }));
-            if (!data.stats) data.stats = { totalWorkouts: 0, totalReps: 0 };
-            if (!data.history) data.history = [];
-            if (!data.programs) data.programs = [];
-        } else {
-            data = getDefaultData();
-        }
-        dataLoaded = true;
-        saveData();
-        renderAll();
-        console.log('📊 Данные загружены');
-    }
-
-    function saveData() {
-        saveToCloud(STORAGE_KEY, data);
-    }
-
-    function generateId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-
-    function showToast(msg) {
-        const old = document.querySelector('.toast-ios');
-        if (old) old.remove();
-        const div = document.createElement('div');
-        div.className = 'toast-ios';
-        div.textContent = msg;
-        document.body.appendChild(div);
-        setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 400); }, 2200);
-    }
-
-    function switchTab(tabId) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
-        if (tabId === 'tab-stats') { renderStats(); renderHistory(); }
-        if (tabId === 'tab-programs') renderPrograms();
-        if (tabId === 'tab-exercises') renderExercises();
-    }
-
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-    });
-
-    function renderAll() {
-        renderExercises();
-        renderPrograms();
-        renderStats();
-        renderHistory();
-        updateProgramSelect();
-    }
-
-    function renderExercises() {
-        const container = document.getElementById('exerciseList');
-        if (!data.exercises || data.exercises.length === 0) {
-            container.innerHTML = '<div class="text-muted" style="padding:12px 0;">Добавьте упражнения</div>';
-            return;
-        }
-        container.innerHTML = data.exercises.map((ex, idx) => `
-            <div class="exercise-item">
-                <input type="checkbox" class="ex-check" data-id="${ex.id}" ${ex.checked ? 'checked' : ''} />
-                <span class="exercise-name">${ex.name}</span>
-                <span class="exercise-max" data-id="${ex.id}" data-idx="${idx}">
-                    <span class="ex-max-text">${ex.max}</span>
-                </span>
-                <button class="delete-ex" data-id="${ex.id}">×</button>
-            </div>
-        `).join('');
-
-        document.querySelectorAll('.ex-check').forEach(cb => {
-            cb.addEventListener('change', () => {
-                const ex = data.exercises.find(e => e.id === cb.dataset.id);
-                if (ex) { ex.checked = cb.checked; saveData(); }
+                localStorage.setItem('radio_volume_v2', vol.toString());
             });
-        });
 
-        document.querySelectorAll('.exercise-max').forEach(el => {
-            el.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const id = el.dataset.id;
-                const ex = data.exercises.find(e => e.id === id);
-                if (!ex) return;
-                if (el.querySelector('input')) return;
+            btn.addEventListener('click', toggle);
+        })();
 
-                const currentMax = ex.max;
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.min = '1';
-                input.value = currentMax;
-                input.style.width = '50px';
+        // ================================================================
+        // 3. РЕЖИМ 1: КРУГОВАЯ ТРЕНИРОВКА
+        // ================================================================
 
-                const textSpan = el.querySelector('.ex-max-text');
-                textSpan.style.display = 'none';
-                el.appendChild(input);
-                el.classList.add('editing');
+        const CIRCUIT_KEY = 'circuit_trainer_data_v3';
 
-                input.focus();
-                input.select();
+        function getDefaultCircuitData() {
+            return {
+                exercises: [
+                    { id: 'ex1', name: 'Подтягивания', max: 10, checked: true },
+                    { id: 'ex2', name: 'Отжимания', max: 25, checked: true },
+                    { id: 'ex3', name: 'Приседания', max: 30, checked: true },
+                    { id: 'ex4', name: 'Бёрпи', max: 15, checked: true },
+                ],
+                programs: [],
+                history: [],
+                stats: { totalWorkouts: 0, totalReps: 0 }
+            };
+        }
 
-                const finishEdit = () => {
-                    const val = parseInt(input.value);
-                    if (val > 0 && val !== currentMax) {
-                        ex.max = val;
-                        saveData();
-                        renderExercises();
-                        updateProgramSelect();
-                        showToast('✅ ' + ex.name + ': ' + val);
-                    } else {
-                        textSpan.style.display = 'inline';
-                        input.remove();
-                        el.classList.remove('editing');
+        let circuitData = getDefaultCircuitData();
+
+        function loadCircuitData() {
+            try {
+                const raw = localStorage.getItem(CIRCUIT_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    circuitData = parsed;
+                    if (circuitData.exercises) {
+                        circuitData.exercises = circuitData.exercises.map(e => ({ ...e,
+                            checked: e.checked !== undefined ? e.checked : true
+                        }));
                     }
-                };
+                    if (!circuitData.stats) circuitData.stats = { totalWorkouts: 0, totalReps: 0 };
+                    if (!circuitData.history) circuitData.history = [];
+                    if (!circuitData.programs) circuitData.programs = [];
+                }
+            } catch (e) { circuitData = getDefaultCircuitData(); }
+            renderCircuitAll();
+        }
 
-                input.addEventListener('blur', finishEdit);
-                input.addEventListener('keydown', (ev) => {
-                    if (ev.key === 'Enter') { input.blur(); }
-                    if (ev.key === 'Escape') { input.value = currentMax; input.blur(); }
+        function saveCircuitData() {
+            localStorage.setItem(CIRCUIT_KEY, JSON.stringify(circuitData));
+        }
+
+        function getPyramid(max) {
+            return [
+                max,
+                Math.max(1, Math.round(max * 0.8)),
+                Math.max(1, Math.round(max * 0.6)),
+                Math.max(1, Math.round(max * 0.5)),
+                Math.max(1, Math.round(max * 0.5))
+            ];
+        }
+
+        function getSelectedCircuitEx() {
+            return (circuitData.exercises || []).filter(e => e.checked && e.max > 0);
+        }
+
+        // Circuit state
+        let cState = {
+            active: false,
+            exercises: [],
+            currentExIndex: 0,
+            currentSetIndex: 0,
+            isResting: false,
+            timerSeconds: 120,
+            timerInterval: null,
+            completedSets: 0,
+            totalSets: 0,
+            workoutLog: [],
+            startTime: null,
+            restAlerted: false,
+            totalSeconds: 0,
+            totalInterval: null,
+            finishedEarly: false,
+            lastResult: null,
+        };
+
+        // Circuit render
+        function renderCircuitExercises() {
+            const container = document.getElementById('circuitExerciseList');
+            if (!circuitData.exercises || circuitData.exercises.length === 0) {
+                container.innerHTML = '<div class="text-muted" style="padding:8px 0;">Добавьте упражнения</div>';
+                return;
+            }
+            container.innerHTML = circuitData.exercises.map((ex) => `
+                <div class="exercise-item">
+                    <input type="checkbox" class="circuit-ex-check" data-id="${ex.id}" ${ex.checked ? 'checked' : ''} />
+                    <span class="exercise-name">${ex.name}</span>
+                    <span class="exercise-max circuit-max-edit" data-id="${ex.id}">${ex.max}</span>
+                    <button class="delete-ex circuit-delete-ex" data-id="${ex.id}">×</button>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.circuit-ex-check').forEach(cb => {
+                cb.addEventListener('change', () => {
+                    const ex = circuitData.exercises.find(e => e.id === cb.dataset.id);
+                    if (ex) { ex.checked = cb.checked;
+                        saveCircuitData(); }
                 });
             });
-        });
 
-        document.querySelectorAll('.delete-ex').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.dataset.id;
-                if (!confirm('Удалить упражнение?')) return;
-                data.exercises = data.exercises.filter(e => e.id !== id);
-                saveData();
-                renderExercises();
-                updateProgramSelect();
+            document.querySelectorAll('.circuit-max-edit').forEach(el => {
+                el.addEventListener('click', () => {
+                    const id = el.dataset.id;
+                    const ex = circuitData.exercises.find(e => e.id === id);
+                    if (!ex) return;
+                    const val = prompt('Новый максимум для ' + ex.name + ':', ex.max);
+                    if (val !== null) {
+                        const num = parseInt(val);
+                        if (num > 0) { ex.max = num;
+                            saveCircuitData();
+                            renderCircuitExercises();
+                            renderCircuitProgramSelect(); }
+                    }
+                });
             });
-        });
 
-        const allChecked = data.exercises.every(e => e.checked);
-        document.getElementById('selectAllEx').checked = allChecked;
-    }
+            document.querySelectorAll('.circuit-delete-ex').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    if (!confirm('Удалить?')) return;
+                    circuitData.exercises = circuitData.exercises.filter(e => e.id !== id);
+                    saveCircuitData();
+                    renderCircuitExercises();
+                    renderCircuitProgramSelect();
+                });
+            });
 
-    function renderPrograms() {
-        const container = document.getElementById('programsList');
-        const msg = document.getElementById('noProgramsMsg');
-        if (!data.programs || data.programs.length === 0) {
-            container.innerHTML = '';
-            msg.style.display = 'block';
-            return;
+            const allChecked = circuitData.exercises.every(e => e.checked);
+            document.getElementById('selectAllEx').checked = allChecked;
         }
-        msg.style.display = 'none';
-        container.innerHTML = data.programs.map((p, idx) => `
-            <div class="program-item">
-                <div>
-                    <div class="p-name">${p.name}</div>
-                    <div class="p-count">${p.exercises.length} упражнений</div>
-                </div>
-                <div class="program-actions">
-                    <button class="btn btn-primary load-program" data-idx="${idx}">Загрузить</button>
-                    <button class="btn btn-danger delete-program" data-idx="${idx}">×</button>
-                </div>
-            </div>
-        `).join('');
 
-        document.querySelectorAll('.load-program').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const idx = parseInt(btn.dataset.idx);
-                const prog = data.programs[idx];
+        function renderCircuitPrograms() {
+            const container = document.getElementById('circuitProgramsList');
+            if (!circuitData.programs || circuitData.programs.length === 0) {
+                container.innerHTML = '<div class="text-muted" style="padding:8px 0;">Нет программ</div>';
+                return;
+            }
+            container.innerHTML = circuitData.programs.map((p, idx) => `
+                <div class="program-item">
+                    <div>
+                        <span class="p-name">${p.name}</span>
+                        <span class="p-count">${p.exercises.length} упр.</span>
+                    </div>
+                    <div class="program-actions">
+                        <button class="btn btn-primary circuit-load-prog" data-idx="${idx}" style="width:auto; padding:4px 12px; font-size:12px;">Загрузить</button>
+                        <button class="btn btn-danger circuit-del-prog" data-idx="${idx}" style="width:auto; padding:4px 12px; font-size:12px;">×</button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.circuit-load-prog').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.idx);
+                    const prog = circuitData.programs[idx];
+                    if (prog) {
+                        circuitData.exercises = prog.exercises.map(e => ({ ...e, id: generateId(),
+                            checked: true }));
+                        saveCircuitData();
+                        renderCircuitExercises();
+                        renderCircuitProgramSelect();
+                        showToast('📂 Загружено: ' + prog.name);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.circuit-del-prog').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.idx);
+                    if (!confirm('Удалить программу?')) return;
+                    circuitData.programs.splice(idx, 1);
+                    saveCircuitData();
+                    renderCircuitPrograms();
+                    renderCircuitProgramSelect();
+                });
+            });
+        }
+
+        function renderCircuitProgramSelect() {
+            const sel = document.getElementById('programSelect');
+            sel.innerHTML = '<option value="">— Выбрать программу —</option>' +
+                (circuitData.programs || []).map((p, i) => `<option value="${i}">${p.name}</option>`).join('');
+        }
+
+        function renderCircuitStats() {
+            document.getElementById('statTotalWorkouts').textContent = circuitData.stats.totalWorkouts || 0;
+            document.getElementById('statTotalReps').textContent = circuitData.stats.totalReps || 0;
+            renderCircuitHistory();
+        }
+
+        function renderCircuitHistory() {
+            const container = document.getElementById('historyList');
+            if (!circuitData.history || circuitData.history.length === 0) {
+                container.innerHTML = '<div class="text-muted" style="padding:8px 0;">Нет записей</div>';
+                return;
+            }
+            const recent = [...circuitData.history].reverse().slice(0, 15);
+            container.innerHTML = recent.map(h => `
+                <div class="history-item">
+                    <span>${h.name || 'Круговая'}</span>
+                    <span class="date">${h.reps || 0} повт. · ${new Date(h.date).toLocaleDateString()}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderCircuitAll() {
+            renderCircuitExercises();
+            renderCircuitPrograms();
+            renderCircuitProgramSelect();
+            renderCircuitStats();
+        }
+
+        // Circuit workout logic
+        function circuitStartWorkout() {
+            const selected = getSelectedCircuitEx();
+            if (selected.length === 0) { showToast('⚠️ Отметьте упражнения'); return; }
+
+            cState.exercises = selected.map(e => ({ id: e.id, name: e.name, max: e.max, sets: getPyramid(e.max) }));
+            cState.currentExIndex = 0;
+            cState.currentSetIndex = 0;
+            cState.isResting = false;
+            cState.completedSets = 0;
+            cState.totalSets = selected.length * 5;
+            cState.workoutLog = [];
+            cState.startTime = Date.now();
+            cState.restAlerted = false;
+            cState.totalSeconds = 0;
+            cState.finishedEarly = false;
+
+            if (cState.timerInterval) clearInterval(cState.timerInterval);
+            if (cState.totalInterval) clearInterval(cState.totalInterval);
+
+            document.getElementById('circuitSetup').classList.add('hidden');
+            document.getElementById('circuitActive').classList.remove('hidden');
+            document.getElementById('circuitSummary').classList.add('hidden');
+
+            cState.active = true;
+            circuitUpdateUI();
+            circuitStartTotalTimer();
+            showToast('🏋️ Начинаем!');
+        }
+
+        function circuitStartTotalTimer() {
+            cState.totalInterval = setInterval(() => {
+                cState.totalSeconds++;
+                circuitUpdateTotalTime();
+            }, 1000);
+        }
+
+        function circuitUpdateTotalTime() {
+            const s = cState.totalSeconds;
+            document.getElementById('circuitTotalTime').textContent = formatTime(s);
+        }
+
+        function circuitUpdateUI() {
+            const ex = cState.exercises[cState.currentExIndex];
+            const setIdx = cState.currentSetIndex;
+            const completed = cState.completedSets;
+            const total = cState.totalSets;
+
+            document.getElementById('circuitProgress').textContent = completed;
+            document.getElementById('circuitTotalSets').textContent = total;
+            document.getElementById('circuitProgressFill').style.width = total > 0 ? Math.min(100, (completed / total *
+                100)) + '%' : '0%';
+
+            const badge = document.getElementById('circuitStatus');
+            if (cState.isResting) { badge.textContent = '😴 Отдых';
+                badge.className = 'status-badge resting'; } else { badge.textContent = '▶ Активно';
+                badge.className = 'status-badge'; }
+
+            if (ex && !cState.isResting) {
+                document.getElementById('circuitExName').textContent = ex.name;
+                document.getElementById('circuitExDetail').textContent = `подход ${setIdx+1} из 5 · макс: ${ex.max}`;
+                document.getElementById('circuitExTarget').textContent = ex.sets[setIdx] || 0;
+            } else if (ex && cState.isResting) {
+                document.getElementById('circuitExName').textContent = '😴 Отдых';
+                document.getElementById('circuitExDetail').textContent = `Следующий: ${ex.name}`;
+                document.getElementById('circuitExTarget').textContent = ex.sets[setIdx] || 0;
+            }
+
+            const timerEl = document.getElementById('circuitTimer');
+            if (cState.isResting) {
+                const s = Math.max(0, cState.timerSeconds);
+                timerEl.textContent = formatTime(s);
+                timerEl.className = s <= 5 ? 'timer-display resting-warning' : 'timer-display resting';
+            } else {
+                timerEl.textContent = '🏋️';
+                timerEl.className = 'timer-display';
+            }
+
+            document.getElementById('circuitCompleteBtn').disabled = cState.isResting || !cState.active;
+        }
+
+        function circuitStartRest() {
+            if (cState.timerInterval) clearInterval(cState.timerInterval);
+            cState.isResting = true;
+            cState.timerSeconds = 120;
+            cState.restAlerted = false;
+            circuitUpdateUI();
+
+            cState.timerInterval = setInterval(() => {
+                cState.timerSeconds--;
+                circuitUpdateUI();
+                if (cState.timerSeconds <= 5 && !cState.restAlerted) {
+                    cState.restAlerted = true;
+                    playBeep(600, 200, 1);
+                    vibrate(100);
+                }
+                if (cState.timerSeconds <= 0) {
+                    clearInterval(cState.timerInterval);
+                    cState.timerInterval = null;
+                    cState.isResting = false;
+                    playBeep(880, 300, 3);
+                    vibrate([300, 150, 300, 150, 400]);
+                    circuitAdvance();
+                }
+            }, 1000);
+        }
+
+        function circuitAdvance() {
+            const totalEx = cState.exercises.length;
+            const exIdx = cState.currentExIndex;
+            const setIdx = cState.currentSetIndex;
+
+            if (exIdx + 1 < totalEx) {
+                cState.currentExIndex++;
+                cState.isResting = false;
+                circuitUpdateUI();
+                showToast(`➡️ ${cState.exercises[cState.currentExIndex].name}`);
+                return;
+            }
+
+            if (setIdx + 1 < 5) {
+                cState.currentExIndex = 0;
+                cState.currentSetIndex++;
+                cState.isResting = false;
+                circuitUpdateUI();
+                showToast(`🔄 Круг ${cState.currentSetIndex+1}`);
+                return;
+            }
+
+            circuitFinish(false);
+        }
+
+        function circuitCompleteSet() {
+            if (!cState.active || cState.isResting) return;
+            const ex = cState.exercises[cState.currentExIndex];
+            const setIdx = cState.currentSetIndex;
+            const reps = ex.sets[setIdx] || 0;
+
+            cState.workoutLog.push({ exName: ex.name, setNum: setIdx + 1, reps, max: ex.max });
+            cState.completedSets++;
+            playBeep(600, 150, 1);
+            vibrate(100);
+
+            if (cState.completedSets >= cState.totalSets) { circuitFinish(false); return; }
+            circuitStartRest();
+            showToast('⏱ Отдых 2 минуты');
+        }
+
+        function circuitSkipRest() {
+            if (!cState.isResting) return;
+            if (cState.timerInterval) clearInterval(cState.timerInterval);
+            cState.isResting = false;
+            cState.restAlerted = false;
+            circuitAdvance();
+            showToast('⏭ Отдых пропущен');
+        }
+
+        function circuitFinish(early) {
+            cState.active = false;
+            cState.finishedEarly = early || false;
+            if (cState.timerInterval) clearInterval(cState.timerInterval);
+            if (cState.totalInterval) clearInterval(cState.totalInterval);
+
+            const totalReps = cState.workoutLog.reduce((s, l) => s + l.reps, 0);
+            const duration = cState.totalSeconds;
+            const durStr = `${Math.floor(duration/60)} мин ${duration%60} сек`;
+
+            cState.lastResult = { totalReps, duration: durStr, durationSeconds: duration, log: cState.workoutLog,
+                early: early || false };
+
+            document.getElementById('circuitActive').classList.add('hidden');
+            const summary = document.getElementById('circuitSummary');
+            summary.classList.remove('hidden');
+
+            let html = '';
+            if (early) html += `<div style="color:#d4a03a; font-weight:600;">⏹ Досрочное завершение</div>`;
+            html += `<div style="font-size:14px; margin:4px 0;">✅ Подходов: ${cState.workoutLog.length}</div>`;
+            html += `<div style="font-size:24px; font-weight:700; color:#4c8b3c;">${totalReps} повторений</div>`;
+            html += `<div class="text-muted" style="font-size:13px;">⏱ ${durStr}</div>`;
+            html +=
+                `<div style="margin-top:8px; max-height:120px; overflow-y:auto; text-align:left; font-size:12px; background:rgba(255,255,255,0.04); border-radius:8px; padding:6px 10px;">`;
+            cState.workoutLog.forEach(l => { html += `<div>• ${l.exName} — ${l.setNum}/5: ${l.reps} повт.</div>`; });
+            html += `</div>`;
+
+            document.getElementById('circuitSummaryContent').innerHTML = html;
+            document.getElementById('circuitSaveBtn').dataset.reps = totalReps;
+            document.getElementById('circuitSaveBtn').dataset.log = JSON.stringify(cState.workoutLog);
+            document.getElementById('circuitSaveBtn').disabled = false;
+            document.getElementById('circuitSaveBtn').textContent = '💾 Сохранить';
+
+            if (!early) {
+                playBeep(880, 400, 2);
+                vibrate([300, 200, 300]);
+            }
+            showToast(early ? '⏹ Остановлено' : '🏁 Тренировка завершена!');
+        }
+
+        function circuitSaveResult() {
+            const btn = document.getElementById('circuitSaveBtn');
+            const reps = parseInt(btn.dataset.reps) || 0;
+            const log = JSON.parse(btn.dataset.log || '[]');
+
+            circuitData.history.push({
+                date: Date.now(),
+                reps: reps,
+                name: cState.finishedEarly ? 'Досрочно' : 'Круговая',
+                details: log,
+                early: cState.finishedEarly
+            });
+            circuitData.stats.totalWorkouts = (circuitData.stats.totalWorkouts || 0) + 1;
+            circuitData.stats.totalReps = (circuitData.stats.totalReps || 0) + reps;
+
+            saveCircuitData();
+            btn.disabled = true;
+            btn.textContent = '✅ Сохранено';
+            showToast('💾 Сохранено!');
+        }
+
+        function circuitReset() {
+            cState.active = false;
+            if (cState.timerInterval) clearInterval(cState.timerInterval);
+            if (cState.totalInterval) clearInterval(cState.totalInterval);
+            document.getElementById('circuitActive').classList.add('hidden');
+            document.getElementById('circuitSummary').classList.add('hidden');
+            document.getElementById('circuitSetup').classList.remove('hidden');
+            document.getElementById('circuitSaveBtn').disabled = false;
+            document.getElementById('circuitSaveBtn').textContent = '💾 Сохранить';
+            document.getElementById('circuitTotalTime').textContent = '00:00';
+            showToast('🔄 Сброшено');
+        }
+
+        // Circuit event listeners
+        document.getElementById('circuitStartBtn').addEventListener('click', () => {
+            const sel = document.getElementById('programSelect');
+            if (sel.value !== '') {
+                const idx = parseInt(sel.value);
+                const prog = circuitData.programs[idx];
                 if (prog) {
-                    data.exercises = prog.exercises.map(e => ({ ...e, id: generateId(), checked: true }));
-                    saveData();
-                    renderExercises();
-                    updateProgramSelect();
-                    switchTab('tab-workout');
+                    circuitData.exercises = prog.exercises.map(e => ({ ...e, id: generateId(), checked: true }));
+                    saveCircuitData();
+                    renderCircuitExercises();
+                    renderCircuitProgramSelect();
                     showToast('📂 Загружено: ' + prog.name);
                 }
-            });
+            }
+            circuitStartWorkout();
         });
 
-        document.querySelectorAll('.delete-program').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (!confirm('Удалить программу?')) return;
-                const idx = parseInt(btn.dataset.idx);
-                data.programs.splice(idx, 1);
-                saveData();
-                renderPrograms();
-                updateProgramSelect();
-            });
+        document.getElementById('circuitCompleteBtn').addEventListener('click', circuitCompleteSet);
+        document.getElementById('circuitSkipRestBtn').addEventListener('click', circuitSkipRest);
+        document.getElementById('circuitFinishEarlyBtn').addEventListener('click', () => {
+            if (!cState.active) return;
+            if (confirm('Завершить досрочно?')) circuitFinish(true);
         });
-    }
+        document.getElementById('circuitStopBtn').addEventListener('click', () => {
+            if (!confirm('Остановить?')) return;
+            circuitReset();
+        });
+        document.getElementById('circuitSaveBtn').addEventListener('click', circuitSaveResult);
+        document.getElementById('circuitResetBtn').addEventListener('click', circuitReset);
 
-    function renderHistory() {
-        const container = document.getElementById('historyList');
-        const msg = document.getElementById('noHistoryMsg');
-        if (!data.history || data.history.length === 0) {
+        document.getElementById('addExBtn').addEventListener('click', () => {
+            const nameInput = document.getElementById('newExName');
+            const maxInput = document.getElementById('newExMax');
+            const name = nameInput.value.trim();
+            const max = parseInt(maxInput.value) || 10;
+            if (!name) { showToast('Введите название'); return; }
+            if (max < 1) { showToast('Максимум ≥ 1'); return; }
+            circuitData.exercises.push({ id: generateId(), name, max, checked: true });
+            saveCircuitData();
+            renderCircuitExercises();
+            renderCircuitProgramSelect();
+            nameInput.value = '';
+            maxInput.value = '10';
+            showToast('➕ ' + name);
+        });
+
+        document.getElementById('saveProgramBtn').addEventListener('click', () => {
+            const nameInput = document.getElementById('programNameInput');
+            const name = nameInput.value.trim();
+            if (!name) { showToast('Введите название'); return; }
+            const selected = getSelectedCircuitEx();
+            if (selected.length === 0) { showToast('Отметьте упражнения'); return; }
+            circuitData.programs.push({
+                id: generateId(),
+                name,
+                exercises: selected.map(e => ({ name: e.name, max: e.max }))
+            });
+            saveCircuitData();
+            renderCircuitPrograms();
+            renderCircuitProgramSelect();
+            nameInput.value = '';
+            showToast('💾 Программа "' + name + '" сохранена');
+        });
+
+        document.getElementById('selectAllEx').addEventListener('change', (e) => {
+            circuitData.exercises.forEach(ex => ex.checked = e.target.checked);
+            saveCircuitData();
+            renderCircuitExercises();
+        });
+
+        // ================================================================
+        // 4. РЕЖИМ 2: ТЮРЕМНАЯ КОЛОДА
+        // ================================================================
+
+        const PRISON_KEY = 'prisonDeckData_v3';
+
+        const DEFAULT_EXERCISES = {
+            "♥️": "Отжимания",
+            "♠️": "Подтягивания",
+            "♦️": "Приседания",
+            "♣️": "Скручивания"
+        };
+        const SUITS = ['♥️', '♠️', '♦️', '♣️'];
+        const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+        let prisonData = { dailyStats: {}, customExercises: { ...DEFAULT_EXERCISES } };
+
+        function loadPrisonData() {
+            try {
+                const raw = localStorage.getItem(PRISON_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    prisonData = parsed;
+                    if (!prisonData.customExercises) prisonData.customExercises = { ...DEFAULT_EXERCISES };
+                    if (!prisonData.dailyStats) prisonData.dailyStats = {};
+                }
+            } catch (e) { prisonData = { dailyStats: {}, customExercises: { ...DEFAULT_EXERCISES } }; }
+            // Гарантируем сегодняшний день
+            const today = getTodayKey();
+            if (!prisonData.dailyStats[today]) {
+                prisonData.dailyStats[today] = { totalReps: 0, exercises: {}, sets: {}, completedCards: 0 };
+            }
+            savePrisonData();
+            renderPrisonAll();
+        }
+
+        function savePrisonData() {
+            localStorage.setItem(PRISON_KEY, JSON.stringify(prisonData));
+        }
+
+        let pState = {
+            deck: [],
+            currentCard: null,
+            completedCards: 0,
+            isActive: false,
+            sessionReps: 0,
+            sessionSeconds: 0,
+            sessionInterval: null,
+            startTime: null,
+        };
+
+        let pActiveDay = null;
+
+        function buildPrisonDeck() {
+            const cards = [];
+            for (const suit of SUITS) {
+                for (const rank of RANKS) {
+                    let val = 10;
+                    if (rank === 'A') val = 11;
+                    else if (['J', 'Q', 'K'].includes(rank)) val = 10;
+                    else val = parseInt(rank, 10);
+                    cards.push({ suit, rank, value: val });
+                }
+            }
+            return cards;
+        }
+
+        function shufflePrison(deck) {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            return deck;
+        }
+
+        function getPrisonExercise(suit) {
+            return prisonData.customExercises[suit] || suit;
+        }
+
+        function prisonAddToDay(exercise, reps) {
+            if (!pState.isActive) return;
+            const today = getTodayKey();
+            if (!prisonData.dailyStats[today]) {
+                prisonData.dailyStats[today] = { totalReps: 0, exercises: {}, sets: {}, completedCards: 0 };
+            }
+            const day = prisonData.dailyStats[today];
+            day.totalReps = (day.totalReps || 0) + reps;
+            day.completedCards = (day.completedCards || 0) + 1;
+            if (!day.exercises[exercise]) day.exercises[exercise] = 0;
+            day.exercises[exercise] += reps;
+            if (!day.sets[exercise]) day.sets[exercise] = 0;
+            day.sets[exercise] += 1;
+            savePrisonData();
+            prisonUpdatePreview();
+        }
+
+        // Prison UI
+        function renderPrisonSuitConfig() {
+            const container = document.getElementById('pSuitConfigContainer');
             container.innerHTML = '';
-            msg.style.display = 'block';
-            return;
-        }
-        msg.style.display = 'none';
-        const recent = [...data.history].reverse().slice(0, 20);
-        container.innerHTML = recent.map(h => `
-            <div class="history-item">
-                <span>${h.name || 'Круговая'}</span>
-                <span class="date">${h.reps || 0} повт. · ${new Date(h.date).toLocaleDateString()}</span>
-            </div>
-        `).join('');
-    }
-
-    function renderStats() {
-        document.getElementById('statTotalWorkouts').textContent = data.stats.totalWorkouts || 0;
-        document.getElementById('statTotalReps').textContent = data.stats.totalReps || 0;
-    }
-
-    function updateProgramSelect() {
-        const sel = document.getElementById('programSelect');
-        sel.innerHTML = '<option value="">— Выбрать программу —</option>' +
-            (data.programs || []).map((p, i) => `<option value="${i}">${p.name}</option>`).join('');
-    }
-
-    // ===== ТРЕНИРОВКА =====
-    function getPyramid(max) {
-        return [
-            max,
-            Math.max(1, Math.round(max * 0.8)),
-            Math.max(1, Math.round(max * 0.6)),
-            Math.max(1, Math.round(max * 0.5)),
-            Math.max(1, Math.round(max * 0.5))
-        ];
-    }
-
-    function getSelectedExercises() {
-        return (data.exercises || []).filter(e => e.checked && e.max > 0);
-    }
-
-    let workoutState = {
-        active: false,
-        exercises: [],
-        currentExIndex: 0,
-        currentSetIndex: 0,
-        isResting: false,
-        timerSeconds: 120,
-        timerInterval: null,
-        completedSets: 0,
-        totalSets: 0,
-        workoutLog: [],
-        startTime: null,
-        restAlerted: false,
-        totalSeconds: 0,
-        totalInterval: null,
-        finishedEarly: false,
-        lastResult: null,
-    };
-
-    let audioCtx = null;
-
-    function playBeep(frequency = 800, duration = 200, count = 1) {
-        try {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            for (let i = 0; i < count; i++) {
-                setTimeout(() => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.frequency.value = frequency;
-                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration / 1000);
-                    osc.start(audioCtx.currentTime);
-                    osc.stop(audioCtx.currentTime + duration / 1000);
-                }, i * 300);
+            for (const suit of SUITS) {
+                const val = prisonData.customExercises[suit] || suit;
+                const row = document.createElement('div');
+                row.className = 'suit-config-row';
+                row.style.cssText =
+                    'display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.04); padding:6px 14px; border-radius:40px; margin-bottom:6px;';
+                row.innerHTML = `
+                    <span style="font-size:1.5rem; min-width:36px;">${suit}</span>
+                    <input type="text" value="${val.replace(/"/g, '&quot;')}" data-suit="${suit}" style="flex:1; background:#1a1b17; border:1px solid rgba(255,255,255,0.08); border-radius:30px; padding:8px 14px; font-family:inherit; color:#e8e9e4; font-size:14px; outline:none;">
+                `;
+                const input = row.querySelector('input');
+                input.addEventListener('change', (e) => {
+                    const newVal = e.target.value.trim() || suit;
+                    prisonData.customExercises[suit] = newVal;
+                    savePrisonData();
+                    if (pState.currentCard && pState.currentCard.suit === suit && pState.isActive) {
+                        prisonUpdateCardUI();
+                    }
+                });
+                container.appendChild(row);
             }
-        } catch (e) {}
-    }
-
-    function vibrate(pattern = [200, 100, 200]) {
-        try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
-    }
-
-    function notifyRestEnd() {
-        playBeep(880, 300, 3);
-        vibrate([300, 150, 300, 150, 400]);
-    }
-
-    function notifySetComplete() {
-        playBeep(600, 150, 1);
-        vibrate(100);
-        if (isTelegramApp()) {
-            try { tg.HapticFeedback.impactOccurred('light'); } catch (e) {}
-        }
-    }
-
-    function startWorkout() {
-        const selected = getSelectedExercises();
-        if (selected.length === 0) {
-            showToast('⚠️ Отметьте упражнения в базе (галочки)');
-            return;
         }
 
-        workoutState.exercises = selected.map(e => ({
-            id: e.id,
-            name: e.name,
-            max: e.max,
-            sets: getPyramid(e.max)
-        }));
+        function prisonUpdateCardUI() {
+            const card = pState.currentCard;
+            if (!card) return;
+            const suit = card.suit;
+            const rank = card.rank;
+            const exercise = getPrisonExercise(suit);
+            const isRed = suit === '♥️' || suit === '♦️';
+            const colorClass = isRed ? 'suit-red' : 'suit-black';
 
-        workoutState.currentExIndex = 0;
-        workoutState.currentSetIndex = 0;
-        workoutState.isResting = false;
-        workoutState.completedSets = 0;
-        workoutState.totalSets = selected.length * 5;
-        workoutState.workoutLog = [];
-        workoutState.startTime = Date.now();
-        workoutState.restAlerted = false;
-        workoutState.totalSeconds = 0;
-        workoutState.finishedEarly = false;
+            document.getElementById('pCornerTLRank').textContent = rank;
+            document.getElementById('pCornerTLSuit').textContent = suit;
+            document.getElementById('pCenterRank').textContent = rank;
+            document.getElementById('pCenterSuit').textContent = suit;
+            document.getElementById('pCornerBRRank').textContent = rank;
+            document.getElementById('pCornerBRSuit').textContent = suit;
 
-        if (workoutState.timerInterval) clearInterval(workoutState.timerInterval);
-        if (workoutState.totalInterval) clearInterval(workoutState.totalInterval);
-
-        document.getElementById('workoutSetup').classList.add('hidden');
-        document.getElementById('workoutActive').classList.remove('hidden');
-        document.getElementById('workoutSummary').style.display = 'none';
-
-        workoutState.active = true;
-        updateWorkoutUI();
-        startTotalTimer();
-        showToast('🏋️ Начинаем!');
-    }
-
-    function startTotalTimer() {
-        workoutState.totalInterval = setInterval(() => {
-            workoutState.totalSeconds++;
-            updateTotalTimeDisplay();
-        }, 1000);
-    }
-
-    function updateTotalTimeDisplay() {
-        const s = workoutState.totalSeconds;
-        document.getElementById('totalTimeDisplay').textContent = 
-            `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
-    }
-
-    function updateWorkoutUI() {
-        const ex = workoutState.exercises[workoutState.currentExIndex];
-        const setIdx = workoutState.currentSetIndex;
-        const completed = workoutState.completedSets;
-        const total = workoutState.totalSets;
-
-        document.getElementById('currentRound').textContent = setIdx + 1;
-        document.getElementById('progressFraction').textContent = completed;
-        document.getElementById('totalSetsNum').textContent = total;
-        document.getElementById('progressFill').style.width = Math.min(100, (completed / total * 100)) + '%';
-
-        const badge = document.getElementById('statusBadge');
-        if (workoutState.isResting) {
-            badge.textContent = '😴 Отдых';
-            badge.className = 'status-badge resting';
-        } else if (workoutState.active) {
-            badge.textContent = '▶ Активно';
-            badge.className = 'status-badge';
-        }
-
-        if (ex && !workoutState.isResting) {
-            document.getElementById('currentExName').textContent = ex.name;
-            document.getElementById('currentExDetail').textContent = `подход ${setIdx + 1} из 5 · макс: ${ex.max}`;
-            document.getElementById('currentExTarget').textContent = ex.sets[setIdx] || 0;
-        } else if (ex && workoutState.isResting) {
-            document.getElementById('currentExName').textContent = '😴 Отдых';
-            document.getElementById('currentExDetail').textContent = `Следующий: ${ex.name}`;
-            document.getElementById('currentExTarget').textContent = ex.sets[setIdx] || 0;
-        }
-
-        const timerEl = document.getElementById('timerDisplay');
-        if (workoutState.isResting) {
-            const s = Math.max(0, workoutState.timerSeconds);
-            timerEl.textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
-            timerEl.className = s <= 5 ? 'timer-display resting-warning' : 'timer-display resting';
-        } else {
-            timerEl.textContent = '🏋️';
-            timerEl.className = 'timer-display';
-        }
-
-        document.getElementById('completeSetBtn').disabled = workoutState.isResting || !workoutState.active;
-    }
-
-    function startRestTimer() {
-        if (workoutState.timerInterval) clearInterval(workoutState.timerInterval);
-        workoutState.isResting = true;
-        workoutState.timerSeconds = 120;
-        workoutState.restAlerted = false;
-        updateWorkoutUI();
-
-        workoutState.timerInterval = setInterval(() => {
-            workoutState.timerSeconds--;
-            updateWorkoutUI();
-
-            if (workoutState.timerSeconds <= 5 && !workoutState.restAlerted) {
-                workoutState.restAlerted = true;
-                playBeep(600, 200, 1);
-                vibrate(100);
-            }
-
-            if (workoutState.timerSeconds <= 0) {
-                clearInterval(workoutState.timerInterval);
-                workoutState.timerInterval = null;
-                workoutState.isResting = false;
-                notifyRestEnd();
-                advanceToNext();
-            }
-        }, 1000);
-    }
-
-    function advanceToNext() {
-        const totalEx = workoutState.exercises.length;
-        const exIdx = workoutState.currentExIndex;
-        const setIdx = workoutState.currentSetIndex;
-
-        if (exIdx + 1 < totalEx) {
-            workoutState.currentExIndex++;
-            workoutState.isResting = false;
-            updateWorkoutUI();
-            showToast(`➡️ ${workoutState.exercises[workoutState.currentExIndex].name}`);
-            return;
-        }
-
-        if (setIdx + 1 < 5) {
-            workoutState.currentExIndex = 0;
-            workoutState.currentSetIndex++;
-            workoutState.isResting = false;
-            updateWorkoutUI();
-            showToast(`🔄 Круг ${workoutState.currentSetIndex + 1}`);
-            return;
-        }
-
-        finishWorkout(false);
-    }
-
-    function completeSet() {
-        if (!workoutState.active || workoutState.isResting) return;
-
-        const ex = workoutState.exercises[workoutState.currentExIndex];
-        const setIdx = workoutState.currentSetIndex;
-        const reps = ex.sets[setIdx] || 0;
-
-        workoutState.workoutLog.push({ exName: ex.name, setNum: setIdx + 1, reps, max: ex.max });
-        workoutState.completedSets++;
-        notifySetComplete();
-
-        if (workoutState.completedSets >= workoutState.totalSets) {
-            finishWorkout(false);
-            return;
-        }
-
-        startRestTimer();
-        showToast('⏱ Отдых 2 минуты');
-    }
-
-    function skipRest() {
-        if (!workoutState.isResting) return;
-        if (workoutState.timerInterval) clearInterval(workoutState.timerInterval);
-        workoutState.isResting = false;
-        workoutState.restAlerted = false;
-        advanceToNext();
-        showToast('⏭ Отдых пропущен');
-    }
-
-    function finishWorkout(early = false) {
-        workoutState.active = false;
-        workoutState.finishedEarly = early;
-
-        if (workoutState.timerInterval) clearInterval(workoutState.timerInterval);
-        if (workoutState.totalInterval) clearInterval(workoutState.totalInterval);
-
-        const totalReps = workoutState.workoutLog.reduce((sum, log) => sum + log.reps, 0);
-        const duration = workoutState.totalSeconds;
-        const durationStr = `${Math.floor(duration / 60)} мин ${duration % 60} сек`;
-
-        workoutState.lastResult = { totalReps, duration: durationStr, durationSeconds: duration, log: workoutState.workoutLog, early };
-
-        document.getElementById('workoutActive').classList.add('hidden');
-        const summary = document.getElementById('workoutSummary');
-        summary.style.display = 'block';
-
-        let html = '';
-        if (early) html += `<div style="color:#ff9500; font-weight:600; margin-bottom:8px;">⏹ Досрочное завершение</div>`;
-        html += `<div style="font-size:15px; margin-bottom:8px;">✅ Выполнено подходов: ${workoutState.workoutLog.length}</div>`;
-        html += `<div style="font-size:28px; font-weight:700; color:var(--tg-theme-button-color, #007aff); margin:6px 0;">${totalReps} повторений</div>`;
-        html += `<div class="text-muted" style="font-size:13px;">⏱ ${durationStr}</div>`;
-        html += `<div style="margin-top:10px; max-height:140px; overflow-y:auto; text-align:left; font-size:13px; background:var(--tg-theme-secondary-bg-color, #f8f9fa); border-radius:8px; padding:8px 12px;">`;
-        if (workoutState.workoutLog.length === 0) {
-            html += `<div class="text-muted">Нет выполненных подходов</div>`;
-        } else {
-            workoutState.workoutLog.forEach(log => {
-                html += `<div>• ${log.exName} — ${log.setNum}/${5}: ${log.reps} повт.</div>`;
+            const els = document.querySelectorAll('#pCornerTLSuit, #pCenterSuit, #pCornerBRSuit, #pCornerTLRank, #pCenterRank, #pCornerBRRank');
+            els.forEach(el => {
+                el.classList.remove('suit-red', 'suit-black');
+                el.classList.add(colorClass);
             });
-        }
-        html += `</div>`;
 
-        document.getElementById('summaryContent').innerHTML = html;
-        document.getElementById('saveWorkoutBtn').dataset.reps = totalReps;
-        document.getElementById('saveWorkoutBtn').dataset.log = JSON.stringify(workoutState.workoutLog);
-        document.getElementById('saveWorkoutBtn').disabled = false;
-        document.getElementById('saveWorkoutBtn').textContent = '💾 Сохранить результат';
-        document.getElementById('shareStoryBtn').style.display = 'block';
-
-        if (!early) {
-            playBeep(880, 400, 2);
-            vibrate([300, 200, 300]);
-        }
-        showToast(early ? '⏹ Тренировка остановлена' : '🏁 Тренировка завершена!');
-    }
-
-    function finishEarly() {
-        if (!workoutState.active) return;
-        if (!confirm('Завершить досрочно? Прогресс будет сохранён.')) return;
-        finishWorkout(true);
-    }
-
-    async function saveWorkoutResult() {
-        const btn = document.getElementById('saveWorkoutBtn');
-        const reps = parseInt(btn.dataset.reps) || 0;
-        const log = JSON.parse(btn.dataset.log || '[]');
-
-        data.history.push({ date: Date.now(), reps, name: workoutState.finishedEarly ? 'Досрочно' : 'Круговая', details: log, early: workoutState.finishedEarly });
-        data.stats.totalWorkouts = (data.stats.totalWorkouts || 0) + 1;
-        data.stats.totalReps = (data.stats.totalReps || 0) + reps;
-        
-        await saveData();
-        renderStats();
-        renderHistory();
-        
-        btn.disabled = true;
-        btn.textContent = '✅ Сохранено';
-        if (isTelegramApp()) {
-            try { tg.HapticFeedback.notificationOccurred('success'); } catch (e) {}
-        }
-        showToast('💾 Результат сохранён' + (isTelegramApp() ? ' в облако!' : '!'));
-    }
-
-    function shareToStory() {
-        const result = workoutState.lastResult;
-        if (!result) { showToast('⚠️ Нет результата'); return; }
-
-        const text = `🏋️ Тренировка завершена!\n📊 Повторений: ${result.totalReps}\n⏱ Время: ${result.duration}\n🔥 #тренировка #спорт #lofi`;
-
-        if (isTelegramApp() && tg.shareToStory) {
-            try { tg.shareToStory(text); showToast('📤 В Stories!'); return; } catch (e) {}
+            document.getElementById('pExerciseLabel').textContent = exercise;
+            document.getElementById('pRepsLabel').textContent = `повторов: ${card.value}`;
+            document.getElementById('pCompletedCards').textContent = pState.completedCards;
         }
 
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(() => showToast('📋 Скопировано! Вставьте в Stories.'));
-        } else {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.position = 'fixed';
-            ta.style.opacity = '0';
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            ta.remove();
-            showToast('📋 Скопировано! Вставьте в Stories.');
+        function prisonUpdatePreview() {
+            const today = getTodayKey();
+            const data = prisonData.dailyStats[today] || { totalReps: 0, completedCards: 0 };
+            const totalAll = Object.values(prisonData.dailyStats).reduce((acc, d) => acc + (d.totalReps || 0), 0);
+            document.getElementById('prisonPreviewStats').innerHTML = `
+                <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>📅 Сегодня:</span><span>${data.completedCards || 0} карт</span></div>
+                <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>💪 Повторений:</span><span>${data.totalReps || 0}</span></div>
+                <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>🏆 Всего:</span><span>${totalAll} повтор.</span></div>
+            `;
         }
-    }
 
-    function resetWorkout() {
-        workoutState.active = false;
-        if (workoutState.timerInterval) clearInterval(workoutState.timerInterval);
-        if (workoutState.totalInterval) clearInterval(workoutState.totalInterval);
-        document.getElementById('workoutActive').classList.add('hidden');
-        document.getElementById('workoutSummary').style.display = 'none';
-        document.getElementById('workoutSetup').classList.remove('hidden');
-        document.getElementById('saveWorkoutBtn').disabled = false;
-        document.getElementById('saveWorkoutBtn').textContent = '💾 Сохранить результат';
-        document.getElementById('shareStoryBtn').style.display = 'block';
-        document.getElementById('totalTimeDisplay').textContent = '00:00';
-        showToast('🔄 Сброшено');
-    }
+        // Prison workout
+        function prisonStartWorkout() {
+            const freshDeck = shufflePrison(buildPrisonDeck());
+            pState.deck = [...freshDeck];
+            pState.completedCards = 0;
+            pState.isActive = true;
+            pState.sessionReps = 0;
+            pState.sessionSeconds = 0;
+            pState.startTime = Date.now();
 
-    function stopWorkout() {
-        if (!confirm('Остановить тренировку? Прогресс не сохранится.')) return;
-        resetWorkout();
-    }
+            if (pState.sessionInterval) clearInterval(pState.sessionInterval);
+            pState.sessionInterval = setInterval(() => {
+                if (pState.isActive && pState.startTime) {
+                    pState.sessionSeconds = Math.floor((Date.now() - pState.startTime) / 1000);
+                    document.getElementById('pSessionTime').textContent = formatTime(pState.sessionSeconds);
+                }
+            }, 1000);
 
-    // ===== СОБЫТИЯ =====
-    document.getElementById('addExBtn').addEventListener('click', () => {
-        const nameInput = document.getElementById('newExName');
-        const maxInput = document.getElementById('newExMax');
-        const name = nameInput.value.trim();
-        const max = parseInt(maxInput.value) || 10;
-        if (!name) { showToast('Введите название'); return; }
-        if (max < 1) { showToast('Максимум ≥ 1'); return; }
-        data.exercises.push({ id: generateId(), name, max, checked: true });
-        saveData();
-        renderExercises();
-        updateProgramSelect();
-        nameInput.value = '';
-        maxInput.value = '10';
-        showToast('➕ ' + name);
-    });
-
-    document.getElementById('saveProgramBtn').addEventListener('click', () => {
-        const nameInput = document.getElementById('programNameInput');
-        const name = nameInput.value.trim();
-        if (!name) { showToast('Введите название'); return; }
-        const selected = getSelectedExercises();
-        if (selected.length === 0) { showToast('Отметьте упражнения'); return; }
-        data.programs.push({ id: generateId(), name, exercises: selected.map(e => ({ name: e.name, max: e.max })) });
-        saveData();
-        renderPrograms();
-        updateProgramSelect();
-        nameInput.value = '';
-        showToast('💾 Программа "' + name + '" сохранена');
-    });
-
-    document.getElementById('startWorkoutBtn').addEventListener('click', () => {
-        const sel = document.getElementById('programSelect');
-        if (sel.value !== '') {
-            const idx = parseInt(sel.value);
-            const prog = data.programs[idx];
-            if (prog) {
-                data.exercises = prog.exercises.map(e => ({ ...e, id: generateId(), checked: true }));
-                saveData();
-                renderExercises();
-                showToast('📂 Загружено: ' + prog.name);
+            if (pState.deck.length > 0) {
+                pState.currentCard = pState.deck.pop();
+                prisonUpdateCardUI();
             }
+
+            document.getElementById('prisonMain').classList.add('hidden');
+            document.getElementById('prisonTrain').classList.remove('hidden');
+            document.getElementById('prisonStats').classList.add('hidden');
+            showToast('🃏 Колода перетасована!');
         }
-        startWorkout();
-    });
 
-    document.getElementById('completeSetBtn').addEventListener('click', completeSet);
-    document.getElementById('skipRestBtn').addEventListener('click', skipRest);
-    document.getElementById('stopWorkoutBtn').addEventListener('click', stopWorkout);
-    document.getElementById('finishEarlyBtn').addEventListener('click', finishEarly);
-    document.getElementById('saveWorkoutBtn').addEventListener('click', saveWorkoutResult);
-    document.getElementById('shareStoryBtn').addEventListener('click', shareToStory);
-    document.getElementById('resetWorkoutBtn').addEventListener('click', resetWorkout);
+        function prisonCompleteCard() {
+            if (!pState.isActive || !pState.currentCard) {
+                showToast('⚠️ Нет активной карты');
+                return;
+            }
+            const suit = pState.currentCard.suit;
+            const exercise = getPrisonExercise(suit);
+            const reps = pState.currentCard.value;
 
-    document.getElementById('clearStatsBtn').addEventListener('click', async () => {
-        if (!confirm('Удалить всю статистику?')) return;
-        data.history = [];
-        data.stats = { totalWorkouts: 0, totalReps: 0 };
-        await saveData();
-        renderStats();
-        renderHistory();
-        showToast('🗑 Очищено');
-    });
+            prisonAddToDay(exercise, reps);
+            pState.sessionReps += reps;
+            pState.completedCards++;
 
-    document.getElementById('selectAllEx').addEventListener('change', (e) => {
-        data.exercises.forEach(ex => ex.checked = e.target.checked);
-        saveData();
-        renderExercises();
-    });
+            if (pState.deck.length === 0) {
+                showToast('🎉 ПОЗДРАВЛЯЮ! Вся колода выполнена!');
+                prisonFinishWorkout();
+                return;
+            }
 
-    document.getElementById('newExName').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') document.getElementById('addExBtn').click();
-    });
-    document.getElementById('programNameInput').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') document.getElementById('saveProgramBtn').click();
-    });
+            pState.currentCard = pState.deck.pop();
+            prisonUpdateCardUI();
+            document.getElementById('pCompletedCards').textContent = pState.completedCards;
+            playBeep(600, 150, 1);
+            vibrate(100);
+        }
 
-    // ===== ЗАПУСК =====
-    loadAllData();
+        function prisonFinishWorkout() {
+            pState.isActive = false;
+            if (pState.sessionInterval) clearInterval(pState.sessionInterval);
+            const totalReps = pState.sessionReps;
+            const time = formatTime(pState.sessionSeconds);
+            showToast(`🏁 Тренировка завершена! ${totalReps} повторений за ${time}`);
+            document.getElementById('prisonTrain').classList.add('hidden');
+            document.getElementById('prisonMain').classList.remove('hidden');
+            prisonUpdatePreview();
+        }
 
-    document.addEventListener('touchend', (e) => {
-        const now = Date.now();
-        if (now - document.lastTouch < 300) e.preventDefault();
-        document.lastTouch = now;
-    }, { passive: false });
+        function prisonResetSession() {
+            if (!confirm('Сбросить текущую тренировку?')) return;
+            pState.isActive = false;
+            if (pState.sessionInterval) clearInterval(pState.sessionInterval);
+            document.getElementById('prisonTrain').classList.add('hidden');
+            document.getElementById('prisonMain').classList.remove('hidden');
+            showToast('🔄 Сброшено');
+        }
 
-    console.log('🏋️ Круговая тренировка (Telegram Mini App) загружена');
-</script>
+        // Prison stats
+        function prisonRenderDaySelector() {
+            const container = document.getElementById('pDaySelector');
+            const days = Object.keys(prisonData.dailyStats || {}).sort().reverse();
+            container.innerHTML = '';
+            if (!days.length) { container.innerHTML = '<div class="text-muted">Нет данных</div>'; return; }
+            days.forEach(day => {
+                const btn = document.createElement('button');
+                btn.className = 'day-btn';
+                btn.style.cssText =
+                    `background:${pActiveDay===day?'#4c8b3c':'rgba(255,255,255,0.06)'}; padding:6px 14px; border-radius:30px; font-size:12px; white-space:nowrap; border:none; color:#e8e9e4; cursor:pointer; font-family:inherit;`;
+                if (pActiveDay === day) btn.style.background = '#4c8b3c';
+                btn.textContent = day;
+                btn.addEventListener('click', () => { pActiveDay = day;
+                    prisonRenderDaySelector();
+                    prisonRenderDayStats(day); });
+                container.appendChild(btn);
+            });
+            if (!pActiveDay && days.length) pActiveDay = days[0];
+            if (pActiveDay) prisonRenderDayStats(pActiveDay);
+        }
+
+        function prisonRenderDayStats(day) {
+            const data = prisonData.dailyStats[day];
+            const container = document.getElementById('pDailyStatsContent');
+            if (!data) { container.innerHTML = '<div class="text-muted text-center" style="padding:16px;">Нет данных</div>'; return; }
+            let exHtml = '';
+            for (const [ex, reps] of Object.entries(data.exercises || {})) {
+                const sets = data.sets?.[ex] || 0;
+                exHtml +=
+                    `<div style="display:flex; justify-content:space-between; padding:6px 4px; border-bottom:1px solid rgba(255,255,255,0.04); font-size:13px;"><span>💪 ${ex}</span><span>${reps} повт. (${sets} сетов)</span></div>`;
+            }
+            container.innerHTML = `
+                <div style="font-weight:bold; background:rgba(76,139,60,0.2); border-radius:40px; padding:10px; text-align:center; margin-bottom:10px;">📇 Карт: ${data.completedCards || 0} / 52</div>
+                <div style="font-weight:bold; background:rgba(76,139,60,0.2); border-radius:40px; padding:10px; text-align:center; margin-bottom:10px;">🔥 Повторений: ${data.totalReps || 0}</div>
+                ${exHtml || '<div class="text-muted" style="padding:8px;">Нет упражнений</div>'}
+            `;
+        }
+
+        function prisonRenderAll() {
+            renderPrisonSuitConfig();
+            prisonUpdatePreview();
+            prisonRenderDaySelector();
+        }
+
+        // Prison event listeners
+        document.getElementById('prisonStartBtn').addEventListener('click', prisonStartWorkout);
+        document.getElementById('prisonStatsBtn').addEventListener('click', () => {
+            document.getElementById('prisonMain').classList.add('hidden');
+            document.getElementById('prisonTrain').classList.add('hidden');
+            document.getElementById('prisonStats').classList.remove('hidden');
+            prisonRenderDaySelector();
+        });
+        document.getElementById('prisonCompleteBtn').addEventListener('click', prisonCompleteCard);
+        document.getElementById('prisonFinishBtn').addEventListener('click', prisonFinishWorkout);
+        document.getElementById('prisonResetBtn').addEventListener('click', prisonResetSession);
+        document.getElementById('pBackFromStats').addEventListener('click', () => {
+            document.getElementById('prisonStats').classList.add('hidden');
+            document.getElementById('prisonMain').classList.remove('hidden');
+            prisonUpdatePreview();
+        });
+        document.getElementById('pResetDayBtn').addEventListener('click', () => {
+            if (!pActiveDay) { showToast('Выберите день'); return; }
+            if (!confirm(`Сбросить ${pActiveDay}?`)) return;
+            delete prisonData.dailyStats[pActiveDay];
+            savePrisonData();
+            prisonRenderDaySelector();
+            prisonUpdatePreview();
+            showToast('🗑️ День сброшен');
+        });
+        document.getElementById('pClearAllBtn').addEventListener('click', () => {
+            if (!confirm('Очистить ВСЮ историю?')) return;
+            prisonData.dailyStats = {};
+            const today = getTodayKey();
+            prisonData.dailyStats[today] = { totalReps: 0, exercises: {}, sets: {}, completedCards: 0 };
+            savePrisonData();
+            prisonRenderDaySelector();
+            prisonUpdatePreview();
+            showToast('⚠️ Вся история очищена');
+        });
+
+        // ================================================================
+        // 5. НАВИГАЦИЯ МЕЖДУ РЕЖИМАМИ
+        // ================================================================
+
+        document.querySelectorAll('.mode-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('.mode-content').forEach(c => c.classList.remove('active'));
+                document.getElementById('mode-' + tab.dataset.mode).classList.add('active');
+            });
+        });
+
+        // ================================================================
+        // 6. ЗАПУСК
+        // ================================================================
+
+        loadCircuitData();
+        loadPrisonData();
+        console.log('🏋️ Приложение загружено');
+    </script>
 </body>
 </html>
