@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Круговая тренировка</title>
+    <title>Круговая + Колода</title>
     <style>
-        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+        /* ===== ГЛОБАЛЬНЫЕ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -26,7 +26,6 @@
             margin: 0 auto;
         }
 
-        /* ===== КАРТОЧКИ ===== */
         .card {
             background: #2f312c;
             border-radius: 16px;
@@ -126,18 +125,15 @@
             color: #8e8e93;
             font-size: 13px;
         }
-
         .text-center {
             text-align: center;
         }
-
         .mt-2 {
             margin-top: 12px;
         }
         .mb-2 {
             margin-bottom: 12px;
         }
-
         .flex {
             display: flex;
         }
@@ -145,7 +141,7 @@
             gap: 8px;
         }
 
-        /* ===== РАДИО-ПЛЕЕР ===== */
+        /* ===== РАДИО ===== */
         .radio-player {
             background: #2f312c;
             border-radius: 14px;
@@ -363,7 +359,7 @@
             }
         }
 
-        /* ===== БАЗА УПРАЖНЕНИЙ ===== */
+        /* ===== БАЗА УПРАЖНЕНИЙ (КРУГОВАЯ) ===== */
         .exercise-item {
             display: flex;
             align-items: center;
@@ -413,6 +409,103 @@
 
         .delete-ex:active {
             opacity: 1;
+        }
+
+        /* ===== СПИСОК МАСТЕЙ (КОЛОДА) ===== */
+        .suit-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            gap: 12px;
+        }
+
+        .suit-item:last-child {
+            border-bottom: none;
+        }
+
+        .suit-icon {
+            font-size: 1.6rem;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .suit-exercise-name {
+            font-size: 14px;
+            flex: 1;
+            color: #e8e9e4;
+        }
+
+        .suit-edit-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(76, 139, 60, 0.15);
+            border: 1px solid rgba(76, 139, 60, 0.3);
+            border-radius: 30px;
+            padding: 4px 14px 4px 18px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+            font-size: 13px;
+            color: #4c8b3c;
+            font-weight: 600;
+            min-width: 80px;
+            justify-content: center;
+        }
+
+        .suit-edit-btn:active {
+            transform: scale(0.92);
+            background: rgba(76, 139, 60, 0.3);
+        }
+
+        .suit-edit-btn .pencil {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .suit-edit-btn.editing {
+            background: #1a1b17;
+            border-color: #4c8b3c;
+            padding: 4px 8px;
+        }
+
+        .suit-edit-btn input {
+            width: 80px;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4c8b3c;
+            text-align: center;
+            outline: none;
+            padding: 4px 0;
+            font-family: inherit;
+        }
+
+        .suit-edit-btn .edit-text {
+            display: inline;
+        }
+
+        .suit-edit-btn .edit-text.hidden {
+            display: none;
+        }
+
+        /* ===== АДАПТАЦИЯ ===== */
+        @media (max-width: 380px) {
+            .suit-edit-btn input {
+                width: 60px;
+                font-size: 12px;
+            }
+            .suit-icon {
+                font-size: 1.3rem;
+                min-width: 32px;
+            }
+            .suit-edit-btn {
+                font-size: 12px;
+                padding: 3px 10px 3px 14px;
+                min-width: 60px;
+            }
         }
 
         .add-row {
@@ -646,7 +739,7 @@
 
     <div class="app" id="app">
 
-        <!-- ===== РАДИО-ПЛЕЕР ===== -->
+        <!-- РАДИО -->
         <div class="radio-player">
             <div class="info">
                 <div class="title"><span class="dot" id="radioDot"></span> Lofi Radio</div>
@@ -658,31 +751,26 @@
             </div>
         </div>
 
-        <!-- ===== ВКЛАДКИ ===== -->
+        <!-- ВКЛАДКИ -->
         <div class="mode-tabs">
             <button class="mode-tab active" data-mode="circuit">🔄 Круговая</button>
             <button class="mode-tab" data-mode="prison">🃏 Колода</button>
         </div>
 
         <!-- ============================================================ -->
-        <!-- РЕЖИМ 1: КРУГОВАЯ ТРЕНИРОВКА -->
+        <!-- РЕЖИМ 1: КРУГОВАЯ -->
         <!-- ============================================================ -->
         <div id="mode-circuit" class="mode-content active">
-
             <div class="card">
                 <div class="card-title">Круговая тренировка <small>чередование</small></div>
-
                 <div id="circuitSetup">
                     <p class="text-muted mb-2">Выберите программу или отметьте упражнения в базе</p>
                     <select id="programSelect" class="btn" style="background:#1a1b17; border:1px solid rgba(255,255,255,0.1); margin-bottom:10px; color:#e8e9e4; width:100%; padding:12px; border-radius:12px; font-size:14px;">
                         <option value="">— Выбрать программу —</option>
                     </select>
                     <button class="btn btn-primary" id="circuitStartBtn">▶ Старт круговую</button>
-                    <div class="text-muted" style="font-size:12px; margin-top:6px; text-align:center;">
-                        Круг: подход 1 у всех → подход 2 → ... → подход 5
-                    </div>
+                    <div class="text-muted" style="font-size:12px; margin-top:6px; text-align:center;">Круг: подход 1 у всех → подход 2 → ... → подход 5</div>
                 </div>
-
                 <div id="circuitActive" class="hidden">
                     <div class="workout-header">
                         <div class="total-time"><span id="circuitTotalTime">00:00</span> <small>всего</small></div>
@@ -708,24 +796,17 @@
                         <button class="btn btn-secondary" id="circuitStopBtn">⏹ Стоп</button>
                     </div>
                 </div>
-
                 <div id="circuitSummary" class="hidden">
                     <div style="font-size:15px; margin-bottom:6px;">✅ Тренировка завершена!</div>
                     <div id="circuitSummaryContent"></div>
-                    <div class="btn-group">
-                        <button class="btn btn-primary" id="circuitSaveBtn">💾 Сохранить</button>
-                    </div>
+                    <div class="btn-group"><button class="btn btn-primary" id="circuitSaveBtn">💾 Сохранить</button></div>
                     <button class="btn btn-secondary mt-2" id="circuitResetBtn">🔄 Новая</button>
                 </div>
             </div>
 
-            <!-- База упражнений -->
             <div class="card">
                 <div class="card-title">База упражнений <small>максимум</small></div>
-                <div class="select-all-row">
-                    <input type="checkbox" id="selectAllEx" />
-                    <label for="selectAllEx">Выбрать все</label>
-                </div>
+                <div class="select-all-row"><input type="checkbox" id="selectAllEx" /><label for="selectAllEx">Выбрать все</label></div>
                 <div id="circuitExerciseList"></div>
                 <div class="add-row">
                     <input type="text" id="newExName" placeholder="Упражнение" />
@@ -734,7 +815,6 @@
                 </div>
             </div>
 
-            <!-- Сохранение программы -->
             <div class="card">
                 <div class="card-title">Сохранить как программу</div>
                 <div class="flex gap-2">
@@ -746,11 +826,10 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- РЕЖИМ 2: ТЮРЕМНАЯ КОЛОДА -->
+        <!-- РЕЖИМ 2: КОЛОДА -->
         <!-- ============================================================ -->
         <div id="mode-prison" class="mode-content">
 
-            <!-- Главный экран -->
             <div id="prisonMain">
                 <div class="card" style="text-align:center; padding:24px 16px;">
                     <div style="font-size:3.5rem; margin-bottom:8px;">🃟</div>
@@ -763,18 +842,19 @@
                 <div class="card">
                     <div class="card-title">🏆 Кратко</div>
                     <div id="prisonPreviewStats">
-                        <div class="stat-line" style="display:flex; justify-content:space-between; padding:4px 0;"><span>📅 Сегодня:</span><span>0 карт</span></div>
-                        <div class="stat-line" style="display:flex; justify-content:space-between; padding:4px 0;"><span>💪 Повторений:</span><span>0</span></div>
-                        <div class="stat-line" style="display:flex; justify-content:space-between; padding:4px 0;"><span>🏆 Всего:</span><span>0 повтор.</span></div>
+                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>📅 Сегодня:</span><span>0 карт</span></div>
+                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>💪 Повторений:</span><span>0</span></div>
+                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>🏆 Всего:</span><span>0 повтор.</span></div>
                     </div>
                 </div>
+
+                <!-- ===== НАСТРОЙКИ КОЛОДЫ — СПИСОК С КАРАНДАШОМ ===== -->
                 <div class="card">
-                    <div class="card-title">⚙️ Назначь упражнения</div>
+                    <div class="card-title">⚙️ Назначь упражнения <small>кликни по ✎</small></div>
                     <div id="pSuitConfigContainer"></div>
                 </div>
             </div>
 
-            <!-- Тренировка -->
             <div id="prisonTrain" class="hidden">
                 <div class="playing-card" style="background:linear-gradient(145deg, #fffcf0 0%, #f5f0e0 100%); border-radius:16px; padding:20px 12px 24px; margin-bottom:16px; box-shadow:0 8px 16px rgba(0,0,0,0.3); text-align:center; position:relative; border:1px solid #e8dbb8; color:#2c2b26;">
                     <div style="position:absolute; top:10px; left:12px; font-family:'Courier New',monospace; font-weight:bold; font-size:0.85rem; display:flex; flex-direction:column; align-items:center; line-height:1.2;">
@@ -807,14 +887,11 @@
                 <div class="text-muted" style="font-size:11px; text-align:center; margin-top:10px;">🔁 Только завершённые подходы засчитываются</div>
             </div>
 
-            <!-- Статистика -->
             <div id="prisonStats" class="hidden">
                 <div class="card">
                     <div class="card-title">📅 Статистика по дням</div>
                     <div class="day-selector" id="pDaySelector" style="display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; padding-bottom:6px;"></div>
-                    <div id="pDailyStatsContent">
-                        <div class="text-muted text-center" style="padding:16px;">Выберите день</div>
-                    </div>
+                    <div id="pDailyStatsContent"><div class="text-muted text-center" style="padding:16px;">Выберите день</div></div>
                     <div class="btn-group">
                         <button class="btn btn-danger btn-sm" id="pResetDayBtn" style="width:auto; padding:6px 14px;">🗑️ Сброс дня</button>
                         <button class="btn btn-secondary btn-sm" id="pClearAllBtn" style="width:auto; padding:6px 14px;">⚠️ Всю историю</button>
@@ -829,7 +906,7 @@
 
     <script>
         // ================================================================
-        // 0. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        // ВСПОМОГАТЕЛЬНЫЕ
         // ================================================================
 
         function showToast(msg) {
@@ -839,25 +916,18 @@
             div.className = 'toast-ios';
             div.textContent = msg;
             document.body.appendChild(div);
-            setTimeout(() => {
-                div.style.opacity = '0';
-                setTimeout(() => div.remove(), 400);
-            }, 2000);
+            setTimeout(() => { div.style.opacity = '0';
+                setTimeout(() => div.remove(), 400); }, 2000);
         }
 
         function generateId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 
-        function formatTime(sec) {
-            return `${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`;
-        }
+        function formatTime(sec) { return `${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; }
 
-        function getTodayKey() {
-            const d = new Date();
-            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-        }
+        function getTodayKey() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 
         // ================================================================
-        // 1. ЗВУК + ВИБРАЦИЯ
+        // ЗВУК
         // ================================================================
 
         let audioCtx = null;
@@ -878,34 +948,25 @@
                         osc.stop(audioCtx.currentTime + dur / 1000);
                     }, i * 250);
                 }
-            } catch (e) { /* тихо */ }
+            } catch (e) {}
         }
 
-        function vibrate(pattern = [100]) {
-            try {
-                if (navigator.vibrate) navigator.vibrate(pattern);
-            } catch (e) { /* тихо */ }
-        }
+        function vibrate(pattern = [100]) { try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {} }
 
         // ================================================================
-        // 2. РАДИО-ПЛЕЕР
+        // РАДИО
         // ================================================================
 
         (function initRadio() {
             const audio = new Audio('https://play.streamafrica.net/lofiradio');
             audio.loop = true;
             audio.volume = 0.5;
-
             let isPlaying = false;
             const btn = document.getElementById('radioToggleBtn');
             const slider = document.getElementById('radioVolume');
             const dot = document.getElementById('radioDot');
-
-            try {
-                const vol = localStorage.getItem('radio_volume_v2');
-                if (vol) { audio.volume = parseFloat(vol);
-                    slider.value = parseFloat(vol); }
-            } catch (e) {}
+            try { const vol = localStorage.getItem('radio_volume_v2'); if (vol) { audio.volume = parseFloat(vol);
+                    slider.value = parseFloat(vol); } } catch (e) {}
 
             function toggle() {
                 if (isPlaying) {
@@ -925,18 +986,16 @@
                     }).catch(() => showToast('⚠️ Не удалось запустить'));
                 }
             }
-
             slider.addEventListener('input', function() {
                 const vol = parseFloat(this.value);
                 audio.volume = vol;
                 localStorage.setItem('radio_volume_v2', vol.toString());
             });
-
             btn.addEventListener('click', toggle);
         })();
 
         // ================================================================
-        // 3. РЕЖИМ 1: КРУГОВАЯ ТРЕНИРОВКА
+        // КРУГОВАЯ
         // ================================================================
 
         const CIRCUIT_KEY = 'circuit_trainer_data_v3';
@@ -954,7 +1013,6 @@
                 stats: { totalWorkouts: 0, totalReps: 0 }
             };
         }
-
         let circuitData = getDefaultCircuitData();
 
         function loadCircuitData() {
@@ -963,11 +1021,8 @@
                 if (raw) {
                     const parsed = JSON.parse(raw);
                     circuitData = parsed;
-                    if (circuitData.exercises) {
-                        circuitData.exercises = circuitData.exercises.map(e => ({ ...e,
-                            checked: e.checked !== undefined ? e.checked : true
-                        }));
-                    }
+                    if (circuitData.exercises) { circuitData.exercises = circuitData.exercises.map(e => ({ ...e,
+                            checked: e.checked !== undefined ? e.checked : true })); }
                     if (!circuitData.stats) circuitData.stats = { totalWorkouts: 0, totalReps: 0 };
                     if (!circuitData.history) circuitData.history = [];
                     if (!circuitData.programs) circuitData.programs = [];
@@ -976,25 +1031,14 @@
             renderCircuitAll();
         }
 
-        function saveCircuitData() {
-            localStorage.setItem(CIRCUIT_KEY, JSON.stringify(circuitData));
-        }
+        function saveCircuitData() { localStorage.setItem(CIRCUIT_KEY, JSON.stringify(circuitData)); }
 
-        function getPyramid(max) {
-            return [
-                max,
-                Math.max(1, Math.round(max * 0.8)),
-                Math.max(1, Math.round(max * 0.6)),
-                Math.max(1, Math.round(max * 0.5)),
-                Math.max(1, Math.round(max * 0.5))
-            ];
-        }
+        function getPyramid(max) { return [max, Math.max(1, Math.round(max * 0.8)), Math.max(1, Math.round(max * 0.6)),
+                Math.max(1, Math.round(max * 0.5)), Math.max(1, Math.round(max * 0.5))
+            ]; }
 
-        function getSelectedCircuitEx() {
-            return (circuitData.exercises || []).filter(e => e.checked && e.max > 0);
-        }
+        function getSelectedCircuitEx() { return (circuitData.exercises || []).filter(e => e.checked && e.max > 0); }
 
-        // Circuit state
         let cState = {
             active: false,
             exercises: [],
@@ -1014,7 +1058,6 @@
             lastResult: null,
         };
 
-        // Circuit render
         function renderCircuitExercises() {
             const container = document.getElementById('circuitExerciseList');
             if (!circuitData.exercises || circuitData.exercises.length === 0) {
@@ -1037,23 +1080,18 @@
                         saveCircuitData(); }
                 });
             });
-
             document.querySelectorAll('.circuit-max-edit').forEach(el => {
                 el.addEventListener('click', () => {
                     const id = el.dataset.id;
                     const ex = circuitData.exercises.find(e => e.id === id);
                     if (!ex) return;
                     const val = prompt('Новый максимум для ' + ex.name + ':', ex.max);
-                    if (val !== null) {
-                        const num = parseInt(val);
-                        if (num > 0) { ex.max = num;
+                    if (val !== null) { const num = parseInt(val); if (num > 0) { ex.max = num;
                             saveCircuitData();
                             renderCircuitExercises();
-                            renderCircuitProgramSelect(); }
-                    }
+                            renderCircuitProgramSelect(); } }
                 });
             });
-
             document.querySelectorAll('.circuit-delete-ex').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
@@ -1064,7 +1102,6 @@
                     renderCircuitProgramSelect();
                 });
             });
-
             const allChecked = circuitData.exercises.every(e => e.checked);
             document.getElementById('selectAllEx').checked = allChecked;
         }
@@ -1077,10 +1114,7 @@
             }
             container.innerHTML = circuitData.programs.map((p, idx) => `
                 <div class="program-item">
-                    <div>
-                        <span class="p-name">${p.name}</span>
-                        <span class="p-count">${p.exercises.length} упр.</span>
-                    </div>
+                    <div><span class="p-name">${p.name}</span> <span class="p-count">${p.exercises.length} упр.</span></div>
                     <div class="program-actions">
                         <button class="btn btn-primary circuit-load-prog" data-idx="${idx}" style="width:auto; padding:4px 12px; font-size:12px;">Загрузить</button>
                         <button class="btn btn-danger circuit-del-prog" data-idx="${idx}" style="width:auto; padding:4px 12px; font-size:12px;">×</button>
@@ -1102,7 +1136,6 @@
                     }
                 });
             });
-
             document.querySelectorAll('.circuit-del-prog').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const idx = parseInt(btn.dataset.idx);
@@ -1121,39 +1154,16 @@
                 (circuitData.programs || []).map((p, i) => `<option value="${i}">${p.name}</option>`).join('');
         }
 
-        function renderCircuitStats() {
-            document.getElementById('statTotalWorkouts').textContent = circuitData.stats.totalWorkouts || 0;
-            document.getElementById('statTotalReps').textContent = circuitData.stats.totalReps || 0;
-            renderCircuitHistory();
-        }
-
-        function renderCircuitHistory() {
-            const container = document.getElementById('historyList');
-            if (!circuitData.history || circuitData.history.length === 0) {
-                container.innerHTML = '<div class="text-muted" style="padding:8px 0;">Нет записей</div>';
-                return;
-            }
-            const recent = [...circuitData.history].reverse().slice(0, 15);
-            container.innerHTML = recent.map(h => `
-                <div class="history-item">
-                    <span>${h.name || 'Круговая'}</span>
-                    <span class="date">${h.reps || 0} повт. · ${new Date(h.date).toLocaleDateString()}</span>
-                </div>
-            `).join('');
-        }
-
         function renderCircuitAll() {
             renderCircuitExercises();
             renderCircuitPrograms();
             renderCircuitProgramSelect();
-            renderCircuitStats();
         }
 
-        // Circuit workout logic
+        // Логика круговой
         function circuitStartWorkout() {
             const selected = getSelectedCircuitEx();
             if (selected.length === 0) { showToast('⚠️ Отметьте упражнения'); return; }
-
             cState.exercises = selected.map(e => ({ id: e.id, name: e.name, max: e.max, sets: getPyramid(e.max) }));
             cState.currentExIndex = 0;
             cState.currentSetIndex = 0;
@@ -1165,14 +1175,11 @@
             cState.restAlerted = false;
             cState.totalSeconds = 0;
             cState.finishedEarly = false;
-
             if (cState.timerInterval) clearInterval(cState.timerInterval);
             if (cState.totalInterval) clearInterval(cState.totalInterval);
-
             document.getElementById('circuitSetup').classList.add('hidden');
             document.getElementById('circuitActive').classList.remove('hidden');
             document.getElementById('circuitSummary').classList.add('hidden');
-
             cState.active = true;
             circuitUpdateUI();
             circuitStartTotalTimer();
@@ -1180,33 +1187,26 @@
         }
 
         function circuitStartTotalTimer() {
-            cState.totalInterval = setInterval(() => {
-                cState.totalSeconds++;
-                circuitUpdateTotalTime();
-            }, 1000);
+            cState.totalInterval = setInterval(() => { cState.totalSeconds++;
+                circuitUpdateTotalTime(); }, 1000);
         }
 
-        function circuitUpdateTotalTime() {
-            const s = cState.totalSeconds;
-            document.getElementById('circuitTotalTime').textContent = formatTime(s);
-        }
+        function circuitUpdateTotalTime() { const s = cState.totalSeconds;
+            document.getElementById('circuitTotalTime').textContent = formatTime(s); }
 
         function circuitUpdateUI() {
             const ex = cState.exercises[cState.currentExIndex];
             const setIdx = cState.currentSetIndex;
             const completed = cState.completedSets;
             const total = cState.totalSets;
-
             document.getElementById('circuitProgress').textContent = completed;
             document.getElementById('circuitTotalSets').textContent = total;
             document.getElementById('circuitProgressFill').style.width = total > 0 ? Math.min(100, (completed / total *
                 100)) + '%' : '0%';
-
             const badge = document.getElementById('circuitStatus');
             if (cState.isResting) { badge.textContent = '😴 Отдых';
                 badge.className = 'status-badge resting'; } else { badge.textContent = '▶ Активно';
                 badge.className = 'status-badge'; }
-
             if (ex && !cState.isResting) {
                 document.getElementById('circuitExName').textContent = ex.name;
                 document.getElementById('circuitExDetail').textContent = `подход ${setIdx+1} из 5 · макс: ${ex.max}`;
@@ -1216,17 +1216,13 @@
                 document.getElementById('circuitExDetail').textContent = `Следующий: ${ex.name}`;
                 document.getElementById('circuitExTarget').textContent = ex.sets[setIdx] || 0;
             }
-
             const timerEl = document.getElementById('circuitTimer');
             if (cState.isResting) {
                 const s = Math.max(0, cState.timerSeconds);
                 timerEl.textContent = formatTime(s);
                 timerEl.className = s <= 5 ? 'timer-display resting-warning' : 'timer-display resting';
-            } else {
-                timerEl.textContent = '🏋️';
-                timerEl.className = 'timer-display';
-            }
-
+            } else { timerEl.textContent = '🏋️';
+                timerEl.className = 'timer-display'; }
             document.getElementById('circuitCompleteBtn').disabled = cState.isResting || !cState.active;
         }
 
@@ -1236,7 +1232,6 @@
             cState.timerSeconds = 120;
             cState.restAlerted = false;
             circuitUpdateUI();
-
             cState.timerInterval = setInterval(() => {
                 cState.timerSeconds--;
                 circuitUpdateUI();
@@ -1260,7 +1255,6 @@
             const totalEx = cState.exercises.length;
             const exIdx = cState.currentExIndex;
             const setIdx = cState.currentSetIndex;
-
             if (exIdx + 1 < totalEx) {
                 cState.currentExIndex++;
                 cState.isResting = false;
@@ -1268,7 +1262,6 @@
                 showToast(`➡️ ${cState.exercises[cState.currentExIndex].name}`);
                 return;
             }
-
             if (setIdx + 1 < 5) {
                 cState.currentExIndex = 0;
                 cState.currentSetIndex++;
@@ -1277,7 +1270,6 @@
                 showToast(`🔄 Круг ${cState.currentSetIndex+1}`);
                 return;
             }
-
             circuitFinish(false);
         }
 
@@ -1286,12 +1278,10 @@
             const ex = cState.exercises[cState.currentExIndex];
             const setIdx = cState.currentSetIndex;
             const reps = ex.sets[setIdx] || 0;
-
             cState.workoutLog.push({ exName: ex.name, setNum: setIdx + 1, reps, max: ex.max });
             cState.completedSets++;
             playBeep(600, 150, 1);
             vibrate(100);
-
             if (cState.completedSets >= cState.totalSets) { circuitFinish(false); return; }
             circuitStartRest();
             showToast('⏱ Отдых 2 минуты');
@@ -1311,18 +1301,14 @@
             cState.finishedEarly = early || false;
             if (cState.timerInterval) clearInterval(cState.timerInterval);
             if (cState.totalInterval) clearInterval(cState.totalInterval);
-
             const totalReps = cState.workoutLog.reduce((s, l) => s + l.reps, 0);
             const duration = cState.totalSeconds;
             const durStr = `${Math.floor(duration/60)} мин ${duration%60} сек`;
-
             cState.lastResult = { totalReps, duration: durStr, durationSeconds: duration, log: cState.workoutLog,
                 early: early || false };
-
             document.getElementById('circuitActive').classList.add('hidden');
             const summary = document.getElementById('circuitSummary');
             summary.classList.remove('hidden');
-
             let html = '';
             if (early) html += `<div style="color:#d4a03a; font-weight:600;">⏹ Досрочное завершение</div>`;
             html += `<div style="font-size:14px; margin:4px 0;">✅ Подходов: ${cState.workoutLog.length}</div>`;
@@ -1332,17 +1318,13 @@
                 `<div style="margin-top:8px; max-height:120px; overflow-y:auto; text-align:left; font-size:12px; background:rgba(255,255,255,0.04); border-radius:8px; padding:6px 10px;">`;
             cState.workoutLog.forEach(l => { html += `<div>• ${l.exName} — ${l.setNum}/5: ${l.reps} повт.</div>`; });
             html += `</div>`;
-
             document.getElementById('circuitSummaryContent').innerHTML = html;
             document.getElementById('circuitSaveBtn').dataset.reps = totalReps;
             document.getElementById('circuitSaveBtn').dataset.log = JSON.stringify(cState.workoutLog);
             document.getElementById('circuitSaveBtn').disabled = false;
             document.getElementById('circuitSaveBtn').textContent = '💾 Сохранить';
-
-            if (!early) {
-                playBeep(880, 400, 2);
-                vibrate([300, 200, 300]);
-            }
+            if (!early) { playBeep(880, 400, 2);
+                vibrate([300, 200, 300]); }
             showToast(early ? '⏹ Остановлено' : '🏁 Тренировка завершена!');
         }
 
@@ -1350,17 +1332,10 @@
             const btn = document.getElementById('circuitSaveBtn');
             const reps = parseInt(btn.dataset.reps) || 0;
             const log = JSON.parse(btn.dataset.log || '[]');
-
-            circuitData.history.push({
-                date: Date.now(),
-                reps: reps,
-                name: cState.finishedEarly ? 'Досрочно' : 'Круговая',
-                details: log,
-                early: cState.finishedEarly
-            });
+            circuitData.history.push({ date: Date.now(), reps: reps, name: cState.finishedEarly ? 'Досрочно' :
+                    'Круговая', details: log, early: cState.finishedEarly });
             circuitData.stats.totalWorkouts = (circuitData.stats.totalWorkouts || 0) + 1;
             circuitData.stats.totalReps = (circuitData.stats.totalReps || 0) + reps;
-
             saveCircuitData();
             btn.disabled = true;
             btn.textContent = '✅ Сохранено';
@@ -1380,7 +1355,6 @@
             showToast('🔄 Сброшено');
         }
 
-        // Circuit event listeners
         document.getElementById('circuitStartBtn').addEventListener('click', () => {
             const sel = document.getElementById('programSelect');
             if (sel.value !== '') {
@@ -1396,7 +1370,6 @@
             }
             circuitStartWorkout();
         });
-
         document.getElementById('circuitCompleteBtn').addEventListener('click', circuitCompleteSet);
         document.getElementById('circuitSkipRestBtn').addEventListener('click', circuitSkipRest);
         document.getElementById('circuitFinishEarlyBtn').addEventListener('click', () => {
@@ -1432,11 +1405,8 @@
             if (!name) { showToast('Введите название'); return; }
             const selected = getSelectedCircuitEx();
             if (selected.length === 0) { showToast('Отметьте упражнения'); return; }
-            circuitData.programs.push({
-                id: generateId(),
-                name,
-                exercises: selected.map(e => ({ name: e.name, max: e.max }))
-            });
+            circuitData.programs.push({ id: generateId(), name, exercises: selected.map(e => ({ name: e.name,
+                    max: e.max })) });
             saveCircuitData();
             renderCircuitPrograms();
             renderCircuitProgramSelect();
@@ -1451,17 +1421,11 @@
         });
 
         // ================================================================
-        // 4. РЕЖИМ 2: ТЮРЕМНАЯ КОЛОДА
+        // КОЛОДА
         // ================================================================
 
         const PRISON_KEY = 'prisonDeckData_v3';
-
-        const DEFAULT_EXERCISES = {
-            "♥️": "Отжимания",
-            "♠️": "Подтягивания",
-            "♦️": "Приседания",
-            "♣️": "Скручивания"
-        };
+        const DEFAULT_EXERCISES = { "♥️": "Отжимания", "♠️": "Подтягивания", "♦️": "Приседания", "♣️": "Скручивания" };
         const SUITS = ['♥️', '♠️', '♦️', '♣️'];
         const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
@@ -1477,30 +1441,17 @@
                     if (!prisonData.dailyStats) prisonData.dailyStats = {};
                 }
             } catch (e) { prisonData = { dailyStats: {}, customExercises: { ...DEFAULT_EXERCISES } }; }
-            // Гарантируем сегодняшний день
             const today = getTodayKey();
-            if (!prisonData.dailyStats[today]) {
-                prisonData.dailyStats[today] = { totalReps: 0, exercises: {}, sets: {}, completedCards: 0 };
-            }
+            if (!prisonData.dailyStats[today]) { prisonData.dailyStats[today] = { totalReps: 0, exercises: {},
+                    sets: {}, completedCards: 0 }; }
             savePrisonData();
             renderPrisonAll();
         }
 
-        function savePrisonData() {
-            localStorage.setItem(PRISON_KEY, JSON.stringify(prisonData));
-        }
+        function savePrisonData() { localStorage.setItem(PRISON_KEY, JSON.stringify(prisonData)); }
 
-        let pState = {
-            deck: [],
-            currentCard: null,
-            completedCards: 0,
-            isActive: false,
-            sessionReps: 0,
-            sessionSeconds: 0,
-            sessionInterval: null,
-            startTime: null,
-        };
-
+        let pState = { deck: [], currentCard: null, completedCards: 0, isActive: false, sessionReps: 0,
+            sessionSeconds: 0, sessionInterval: null, startTime: null };
         let pActiveDay = null;
 
         function buildPrisonDeck() {
@@ -1517,24 +1468,17 @@
             return cards;
         }
 
-        function shufflePrison(deck) {
-            for (let i = deck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [deck[i], deck[j]] = [deck[j], deck[i]];
-            }
-            return deck;
-        }
+        function shufflePrison(deck) { for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (
+                    i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]]; } return deck; }
 
-        function getPrisonExercise(suit) {
-            return prisonData.customExercises[suit] || suit;
-        }
+        function getPrisonExercise(suit) { return prisonData.customExercises[suit] || suit; }
 
         function prisonAddToDay(exercise, reps) {
             if (!pState.isActive) return;
             const today = getTodayKey();
-            if (!prisonData.dailyStats[today]) {
-                prisonData.dailyStats[today] = { totalReps: 0, exercises: {}, sets: {}, completedCards: 0 };
-            }
+            if (!prisonData.dailyStats[today]) { prisonData.dailyStats[today] = { totalReps: 0, exercises: {},
+                    sets: {}, completedCards: 0 }; }
             const day = prisonData.dailyStats[today];
             day.totalReps = (day.totalReps || 0) + reps;
             day.completedCards = (day.completedCards || 0) + 1;
@@ -1546,33 +1490,114 @@
             prisonUpdatePreview();
         }
 
-        // Prison UI
+        // ===== НАСТРОЙКИ КОЛОДЫ — СПИСОК С КАРАНДАШОМ =====
+
         function renderPrisonSuitConfig() {
             const container = document.getElementById('pSuitConfigContainer');
             container.innerHTML = '';
+
             for (const suit of SUITS) {
-                const val = prisonData.customExercises[suit] || suit;
-                const row = document.createElement('div');
-                row.className = 'suit-config-row';
-                row.style.cssText =
-                    'display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.04); padding:6px 14px; border-radius:40px; margin-bottom:6px;';
-                row.innerHTML = `
-                    <span style="font-size:1.5rem; min-width:36px;">${suit}</span>
-                    <input type="text" value="${val.replace(/"/g, '&quot;')}" data-suit="${suit}" style="flex:1; background:#1a1b17; border:1px solid rgba(255,255,255,0.08); border-radius:30px; padding:8px 14px; font-family:inherit; color:#e8e9e4; font-size:14px; outline:none;">
-                `;
-                const input = row.querySelector('input');
-                input.addEventListener('change', (e) => {
-                    const newVal = e.target.value.trim() || suit;
-                    prisonData.customExercises[suit] = newVal;
-                    savePrisonData();
-                    if (pState.currentCard && pState.currentCard.suit === suit && pState.isActive) {
-                        prisonUpdateCardUI();
-                    }
+                const currentExercise = prisonData.customExercises[suit] || suit;
+
+                const item = document.createElement('div');
+                item.className = 'suit-item';
+
+                // Иконка масти
+                const icon = document.createElement('span');
+                icon.className = 'suit-icon';
+                icon.textContent = suit;
+
+                // Название упражнения (отображается всегда)
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'suit-exercise-name';
+                nameSpan.textContent = currentExercise;
+
+                // Кнопка редактирования с карандашом
+                const editBtn = document.createElement('button');
+                editBtn.className = 'suit-edit-btn';
+                editBtn.dataset.suit = suit;
+
+                // Текст внутри кнопки (показывает текущее название)
+                const textSpan = document.createElement('span');
+                textSpan.className = 'edit-text';
+                textSpan.textContent = currentExercise;
+
+                // Иконка карандаша
+                const pencilSpan = document.createElement('span');
+                pencilSpan.className = 'pencil';
+                pencilSpan.textContent = '✎';
+
+                editBtn.appendChild(textSpan);
+                editBtn.appendChild(pencilSpan);
+
+                // Клик по кнопке — редактирование
+                editBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+
+                    // Если уже редактируем — ничего не делаем
+                    if (editBtn.querySelector('input')) return;
+
+                    const currentVal = prisonData.customExercises[suit] || suit;
+
+                    // Скрываем текст и карандаш
+                    textSpan.classList.add('hidden');
+                    pencilSpan.style.display = 'none';
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = currentVal;
+                    input.maxLength = 30;
+                    input.spellcheck = false;
+
+                    editBtn.classList.add('editing');
+                    editBtn.appendChild(input);
+
+                    input.focus();
+                    input.select();
+
+                    const finishEdit = () => {
+                        const newVal = input.value.trim() || suit;
+                        if (newVal !== currentVal) {
+                            prisonData.customExercises[suit] = newVal;
+                            savePrisonData();
+                            renderPrisonSuitConfig();
+                            if (pState.currentCard && pState.currentCard.suit === suit && pState.isActive) {
+                                prisonUpdateCardUI();
+                            }
+                            showToast(`✅ ${suit} → ${newVal}`);
+                        } else {
+                            // Возвращаем как было
+                            textSpan.classList.remove('hidden');
+                            pencilSpan.style.display = 'inline';
+                            editBtn.classList.remove('editing');
+                            if (input.parentNode) input.remove();
+                        }
+                    };
+
+                    const cancelEdit = () => {
+                        textSpan.classList.remove('hidden');
+                        pencilSpan.style.display = 'inline';
+                        editBtn.classList.remove('editing');
+                        if (input.parentNode) input.remove();
+                    };
+
+                    input.addEventListener('blur', finishEdit);
+                    input.addEventListener('keydown', (ev) => {
+                        if (ev.key === 'Enter') { input.blur();
+                            ev.preventDefault(); }
+                        if (ev.key === 'Escape') { cancelEdit();
+                            ev.preventDefault(); }
+                    });
                 });
-                container.appendChild(row);
+
+                item.appendChild(icon);
+                item.appendChild(nameSpan);
+                item.appendChild(editBtn);
+                container.appendChild(item);
             }
         }
 
+        // Prison UI
         function prisonUpdateCardUI() {
             const card = pState.currentCard;
             if (!card) return;
@@ -1581,20 +1606,16 @@
             const exercise = getPrisonExercise(suit);
             const isRed = suit === '♥️' || suit === '♦️';
             const colorClass = isRed ? 'suit-red' : 'suit-black';
-
             document.getElementById('pCornerTLRank').textContent = rank;
             document.getElementById('pCornerTLSuit').textContent = suit;
             document.getElementById('pCenterRank').textContent = rank;
             document.getElementById('pCenterSuit').textContent = suit;
             document.getElementById('pCornerBRRank').textContent = rank;
             document.getElementById('pCornerBRSuit').textContent = suit;
-
-            const els = document.querySelectorAll('#pCornerTLSuit, #pCenterSuit, #pCornerBRSuit, #pCornerTLRank, #pCenterRank, #pCornerBRRank');
-            els.forEach(el => {
-                el.classList.remove('suit-red', 'suit-black');
-                el.classList.add(colorClass);
-            });
-
+            const els = document.querySelectorAll(
+                '#pCornerTLSuit, #pCenterSuit, #pCornerBRSuit, #pCornerTLRank, #pCenterRank, #pCornerBRRank');
+            els.forEach(el => { el.classList.remove('suit-red', 'suit-black');
+                el.classList.add(colorClass); });
             document.getElementById('pExerciseLabel').textContent = exercise;
             document.getElementById('pRepsLabel').textContent = `повторов: ${card.value}`;
             document.getElementById('pCompletedCards').textContent = pState.completedCards;
@@ -1611,7 +1632,6 @@
             `;
         }
 
-        // Prison workout
         function prisonStartWorkout() {
             const freshDeck = shufflePrison(buildPrisonDeck());
             pState.deck = [...freshDeck];
@@ -1620,7 +1640,6 @@
             pState.sessionReps = 0;
             pState.sessionSeconds = 0;
             pState.startTime = Date.now();
-
             if (pState.sessionInterval) clearInterval(pState.sessionInterval);
             pState.sessionInterval = setInterval(() => {
                 if (pState.isActive && pState.startTime) {
@@ -1628,12 +1647,10 @@
                     document.getElementById('pSessionTime').textContent = formatTime(pState.sessionSeconds);
                 }
             }, 1000);
-
             if (pState.deck.length > 0) {
                 pState.currentCard = pState.deck.pop();
                 prisonUpdateCardUI();
             }
-
             document.getElementById('prisonMain').classList.add('hidden');
             document.getElementById('prisonTrain').classList.remove('hidden');
             document.getElementById('prisonStats').classList.add('hidden');
@@ -1648,17 +1665,14 @@
             const suit = pState.currentCard.suit;
             const exercise = getPrisonExercise(suit);
             const reps = pState.currentCard.value;
-
             prisonAddToDay(exercise, reps);
             pState.sessionReps += reps;
             pState.completedCards++;
-
             if (pState.deck.length === 0) {
                 showToast('🎉 ПОЗДРАВЛЯЮ! Вся колода выполнена!');
                 prisonFinishWorkout();
                 return;
             }
-
             pState.currentCard = pState.deck.pop();
             prisonUpdateCardUI();
             document.getElementById('pCompletedCards').textContent = pState.completedCards;
@@ -1731,7 +1745,7 @@
             prisonRenderDaySelector();
         }
 
-        // Prison event listeners
+        // Prison события
         document.getElementById('prisonStartBtn').addEventListener('click', prisonStartWorkout);
         document.getElementById('prisonStatsBtn').addEventListener('click', () => {
             document.getElementById('prisonMain').classList.add('hidden');
@@ -1768,7 +1782,7 @@
         });
 
         // ================================================================
-        // 5. НАВИГАЦИЯ МЕЖДУ РЕЖИМАМИ
+        // НАВИГАЦИЯ
         // ================================================================
 
         document.querySelectorAll('.mode-tab').forEach(tab => {
@@ -1781,7 +1795,7 @@
         });
 
         // ================================================================
-        // 6. ЗАПУСК
+        // ЗАПУСК
         // ================================================================
 
         loadCircuitData();
